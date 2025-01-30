@@ -25,9 +25,6 @@
 % Images
 \RequirePackage{graphicx}
 
-% Diagrams
-\RequirePackage{tikz}
-
 % General Hyperlinks
 \RequirePackage{hyperref}
 \hypersetup{
@@ -36,6 +33,46 @@
   filecolor=magenta,
   urlcolor=cyan,
 }
+
+% =================================================================== $
+% Custom graph styling - from the tikzit style files
+\RequirePackage{tikz}
+\usetikzlibrary{backgrounds}
+\usetikzlibrary{arrows}
+\usetikzlibrary{shapes,shapes.geometric,shapes.misc}
+
+\tikzstyle{tikzfig}=[baseline=-0.25em,scale=0.5]
+
+% Standard layers used in .tikz files
+\pgfdeclarelayer{edgelayer}
+\pgfdeclarelayer{nodelayer}
+\pgfsetlayers{background,edgelayer,nodelayer,main}
+
+% Style for blank nodes
+\tikzstyle{none}=[inner sep=0mm]
+
+% Include a .tikz file
+\newcommand{\tikzfig}[1]{%
+{\tikzstyle{every picture}=[tikzfig]
+\IfFileExists{#1.tikz}
+  {\input{#1.tikz}}
+  {%
+    \IfFileExists{./figures/#1.tikz}
+      {\input{./figures/#1.tikz}}
+      {\tikz[baseline=-0.5em]{\node[draw=red,font=\color{red},fill=red!10!white] {\textit{#1}};}}%
+  }}%
+}
+
+% The same as \tikzfig, but in a {center} environment
+\newcommand{\ctikzfig}[1]{%
+\begin{center}\rm
+  \tikzfig{#1}
+\end{center}}
+
+% Fix strange self-loops, which are PGF/TikZ default
+\tikzstyle{every loop}=[]
+
+% =================================================================== $
 
 % Colour palette for custon environments
 \definecolor{blue_dark}{RGB}{0,20,110}
@@ -100,6 +137,8 @@
 \newenvironment{prf}[1][\proofname]{\textbf{#1:} }{\hfill$\square$}
 \newenvironment{corollary}[1][Corollary]{\textbf{#1:} }{}
 \newenvironment{note}[1][Note]{\textbf{#1:} }{}
+
+% =================================================================== $
 
 % Commonly used \mathbb symbol shortcuts
 \let\P\undefined
@@ -226,9 +265,6 @@
 \DeclareMathOperator{\range}{range}
 \DeclareMathOperator{\code}{code}
 
-% Custom Graph Styling
-\RequirePackage{tikzit}
-
 % Marks the end of a lecture in the notes
 \newcommand{\lectureend}[1]{
   \vspace{1em}
@@ -236,6 +272,8 @@
   \noindent\textbf{\small{End of Lecture #1}}
   \vspace{1em}
 }
+
+% =================================================================== $
 
 % For contents page
 \RequirePackage{tocloft}
@@ -380,6 +418,7 @@
   \renewcommand{\headrulewidth}{0pt}
 }
 
+% Fancy header styles
 \renewcommand{\headrulewidth}{0.3pt}
 \fancyhead[L]{\small\textbf{\thepage} $\; \cdot \;$ \small\textbf{\@headertitle}}
 \fancyhead[R]{\small\textbf{\@name}}
