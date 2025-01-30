@@ -29,7 +29,7 @@
 \RequirePackage{tikz}
 
 % General Hyperlinks
-\usepackage{hyperref}
+\RequirePackage{hyperref}
 \hypersetup{
   colorlinks=true,
   linkcolor=black,
@@ -238,7 +238,7 @@
 }
 
 % For contents page
-\usepackage{tocloft}
+\RequirePackage{tocloft}
 \renewcommand{\cftsecfont}{\bfseries}
 \renewcommand{\cftsecpagefont}{\bfseries}
 \renewcommand{\cftsubsecfont}{\bfseries}
@@ -246,23 +246,48 @@
 \renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
 \renewcommand{\cftsubsecleader}{\cftdotfill{\cftdotsep}}
 
-% Details of a set of lecture notes for the cover
+% Basic course information
 \newcommand{\course}[1]{\def\@course{#1}}
 \newcommand{\term}[1]{\def\@term{#1}}
 \newcommand{\lecturer}[1]{\def\@lecturer{#1}}
+\newcommand{\tripospart}[1]{\def\@tripospart{#1}}
+\newcommand{\university}[1]{\def\@university{#1}}
+
+% Author information
 \newcommand{\name}[1]{\def\@name{#1}}
 \newcommand{\email}[1]{\def\@email{#1}}
+\newcommand{\website}[1]{\def\@website{#1}}
+
+% Optional elements
+\newcommand{\subtitle}[1]{\def\@subtitle{#1}}
+\newcommand{\version}[1]{\def\@version{#1}}
+\newcommand{\disclaimer}[1]{\def\@disclaimer{#1}}
+
+% For problem sets (preserved from original)
 \newcommand{\psetnumber}[1]{\def\@psetnumber{#1}}
 
-% Creates the cover with one of two formats
-\newcommand{\makecover}{
+% Define some nice colors (you can adjust these)
+\definecolor{coverblue}{RGB}{0, 62, 114}
+\definecolor{darkgray}{RGB}{64, 64, 64}
+
+% Helper command for the decorative line
+\newcommand{\decorativeline}{%
+  \begin{center}
+    \begin{tikzpicture}
+      \draw[coverblue, thick] (0,0) -- (2,0);
+      \draw[coverblue, thick] (2.5,0) -- (4.5,0);
+      \draw[coverblue, thick] (5,0) -- (7,0);
+    \end{tikzpicture}
+  \end{center}
+}
+
+\newcommand{\makecover}{%
   \begingroup
   \newpage
-  \centering
-
-  % If a problem sheet number is specified, use it
-  \ifcsname @psetnumber\endcsname
+  \thispagestyle{empty}
   
+  % If this is a problem set...
+  \ifcsname @psetnumber\endcsname
     \gdef\@headertitle{\@course}
   
     \thispagestyle{plain}
@@ -274,28 +299,78 @@
     
     \setcounter{secnumdepth}{-1}
     \endgroup
-    
-  % Otherwise, these are lecture notes
   \else
-  
     \gdef\@headertitle{\@course}
-  
-	\thispagestyle{plain}
-    \vspace*{3cm}
-    {\Huge \@course \par}
-    \vspace{1cm}
-    {\large Lectured by \@lecturer, \@term \par}
-    \vspace{1cm}
-    {\large Notes taken by \@name \  (\texttt{\@email}) \par}
-    \vspace{2cm}
-    \vfill
     
+    \begin{center}
+      \vspace*{-0.5cm}
+      
+      % Top matter
+      {\Large \textcolor{darkgray}{\@university} \par}
+      \vspace{0.3cm}
+      {\small \textcolor{darkgray}{\@tripospart} \par}
+      
+      \vspace{2cm}
+      
+      % Decorative element
+      \decorativeline
+      \vspace{1.5cm}
+      
+      % Course title
+      {\Huge \textcolor{coverblue}{\textbf{\@course}} \par}
+      \ifcsname @subtitle\endcsname
+        \vspace{0.5cm}
+        {\Large \textcolor{darkgray}{\@subtitle} \par}
+      \fi
+      
+      \vspace{1.5cm}
+      \decorativeline
+      
+      \vspace{1.5cm}
+      
+      % Lecture information
+      {\large Lectured by \@lecturer, \@term \par}
+      \vspace{2.8cm}
+      
+      % Author information in a subtle box
+      \begin{tikzpicture}
+        \node[inner sep=1.5em, rounded corners, 
+              fill=coverblue!5, text=darkgray] {
+          \begin{tabular}{c}
+            Notes by \@name \\
+            \ttfamily\small \@email \\
+            \ifcsname @website\endcsname
+              \small\url{\@website}
+            \fi
+          \end{tabular}
+        };
+      \end{tikzpicture}
+      
+      \vfill
+      
+      % Version and disclaimer in a footer-like area
+      \begin{tikzpicture}
+        \node[inner sep=1.5em, text width=0.8\textwidth, 
+              align=center, text=darkgray] {
+          \ifcsname @version\endcsname
+            {\small Version \@version}\\[0.3cm]
+          \fi
+          {\small\itshape 
+            \ifcsname @disclaimer\endcsname
+              \@disclaimer
+            \fi
+          }
+        };
+      \end{tikzpicture}
+      
+      \vspace{1cm}
+    \end{center}
+    
+    % Table of contents
     \newpage
     \tableofcontents
-    
     \endgroup
     \newpage
-  
   \fi
 }
 
