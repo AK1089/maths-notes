@@ -326,14 +326,15 @@
   
   % If this is a problem set...
   \ifcsname @psetnumber\endcsname
-    \gdef\@headertitle{\@course}
-  
-    \thispagestyle{plain}
-    {\Huge \@course \par}
-    \vspace{0.5cm}
-    {\large Problem Sheet \@psetnumber \par}
-    \vspace{0.2cm}
-    {\large \@name \  (\texttt{\@email}) \par}
+  	\begin{center}
+	    \gdef\@headertitle{\@course}  
+	    \thispagestyle{plain}
+	    {\Huge \@course \par}
+	    \vspace{0.5cm}
+	    {\large Problem Sheet \@psetnumber \par}
+	    \vspace{0.2cm}
+	    {\large \@name \  (\texttt{\@email}) \par}
+  	\end{center}
     
     \setcounter{secnumdepth}{-1}
     \endgroup
