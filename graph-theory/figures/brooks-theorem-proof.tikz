@@ -1,0 +1,36 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=red dot] (0) at (-1.5, -1.25) {};
+		\node [style=red dot] (1) at (-1.75, -2) {};
+		\node [style=red dot] (2) at (-1.75, -3.75) {};
+		\node [style=red dot] (3) at (-2.5, -2.75) {};
+		\node [style=red dot] (6) at (-2, -4.75) {};
+		\node [style=teal dot] (7) at (1.25, -2) {};
+		\node [style=teal dot] (8) at (1.25, -3.75) {};
+		\node [style=blue dot] (9) at (4.25, -1) {};
+		\node [style=blue dot] (10) at (3.25, -1.5) {};
+		\node [style=blue dot] (11) at (5.5, -2.25) {};
+		\node [style=blue dot] (12) at (3.5, -2.5) {};
+		\node [style=blue dot] (13) at (5, -4) {};
+		\node [style=blue dot] (15) at (4.5, -5) {};
+		\node [style=blue dot] (16) at (3.25, -3.75) {};
+		\node [style=none] (17) at (1.25, -0.75) {separator};
+		\node [style=none] (18) at (-3, 0) {$\Delta = 6$};
+		\node [style=none] (19) at (1.25, -6) {internal edges in $G_1$ and $G_2$ omitted};
+		\node [style=blue dot] (20) at (4.5, -2.75) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw (7) to (0);
+		\draw (1) to (7);
+		\draw (7) to (3);
+		\draw (7) to (2);
+		\draw (7) to (6);
+		\draw (8) to (6);
+		\draw (2) to (8);
+		\draw (8) to (3);
+		\draw (8) to (1);
+		\draw (8) to (0);
+		\draw (7) to (10);
+		\draw (16) to (8);
+	\end{pgfonlayer}
+\end{tikzpicture}

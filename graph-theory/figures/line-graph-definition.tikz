@@ -1,0 +1,61 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=red dot] (0) at (-4, -3) {};
+		\node [style=red dot] (1) at (-4, -1) {};
+		\node [style=red dot] (2) at (-2, -3) {};
+		\node [style=red dot] (3) at (-2, -1) {};
+		\node [style=red dot] (4) at (-2, 1) {};
+		\node [style=red dot] (5) at (-2, 3) {};
+		\node [style=red dot] (6) at (4, 0) {};
+		\node [style=red dot] (7) at (4, -3) {};
+		\node [style=red dot] (8) at (-4, 3) {};
+		\node [style=red dot] (9) at (-4, 1) {};
+		\node [style=red dot] (10) at (6, -1) {};
+		\node [style=red dot] (11) at (2, -1) {};
+		\node [style=red dot] (12) at (4, 3) {};
+		\node [style=red dot] (13) at (2, 1) {};
+		\node [style=red dot] (14) at (4, 5) {};
+		\node [style=red dot] (15) at (6, 1) {};
+		\node [style=none] (16) at (-3, 3) {};
+		\node [style=none] (17) at (-2, 2) {};
+		\node [style=none] (18) at (-2, 0) {};
+		\node [style=none] (19) at (-3, 0) {};
+		\node [style=none] (20) at (-3, -1) {};
+		\node [style=none] (21) at (-3, -3) {};
+		\node [style=none] (22) at (-2, -2) {};
+		\node [style=none] (23) at (-4, -2) {};
+		\node [style=none] (24) at (-4, 4.5) {$G$};
+		\node [style=none] (25) at (1, 6) {};
+		\node [style=none] (26) at (1, -4.25) {};
+		\node [style=none] (27) at (6.5, -2.75) {$L(G)$};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw (0) to (2);
+		\draw (2) to (3);
+		\draw (3) to (1);
+		\draw (1) to (0);
+		\draw (4) to (3);
+		\draw (5) to (4);
+		\draw (4) to (1);
+		\draw (5) to (8);
+		\draw [style=teal arrow, in=180, out=-45] (21.center) to (7);
+		\draw [style=teal arrow, in=-135, out=45, looseness=0.75] (23.center) to (11);
+		\draw [style=teal arrow, bend right=15] (22.center) to (10);
+		\draw [style=teal arrow, in=-165, out=30] (20.center) to (6);
+		\draw [style=teal arrow, in=180, out=30, looseness=1.25] (16.center) to (14);
+		\draw [style=teal arrow, in=180, out=30] (17.center) to (12);
+		\draw [style=teal arrow, in=-165, out=15] (18.center) to (15);
+		\draw [style=teal arrow, bend left=15, looseness=0.50] (19.center) to (13);
+		\draw (7) to (11);
+		\draw (7) to (10);
+		\draw (13) to (11);
+		\draw (11) to (6);
+		\draw (15) to (10);
+		\draw (10) to (6);
+		\draw (6) to (13);
+		\draw (6) to (15);
+		\draw (13) to (12);
+		\draw (15) to (12);
+		\draw (12) to (14);
+	\end{pgfonlayer}
+\end{tikzpicture}

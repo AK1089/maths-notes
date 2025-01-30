@@ -1,0 +1,40 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=red dot] (0) at (-4, 1) {};
+		\node [style=red dot] (1) at (-2, 3) {};
+		\node [style=red dot] (4) at (2, -1) {};
+		\node [style=teal dot] (6) at (0, -1) {};
+		\node [style=teal dot] (7) at (-2, 1) {};
+		\node [style=teal dot] (10) at (2, 1) {};
+		\node [style=blue dot] (13) at (1, 0) {};
+		\node [style=blue dot] (17) at (-2, -1) {};
+		\node [style=blue dot] (18) at (4, 1) {};
+		\node [style=blue dot] (22) at (0, 3) {};
+		\node [style=red dot] (23) at (0, 1) {};
+		\node [style=red dot] (24) at (2, 3) {};
+		\node [style=blue dot] (25) at (7, 0) {};
+		\node [style=red dot] (26) at (7, 2) {};
+		\node [style=teal dot] (27) at (7, 1) {};
+		\node [style=none] (28) at (8, 2) {1};
+		\node [style=none] (29) at (8, 1) {2};
+		\node [style=none] (30) at (8, 0) {3};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw (0) to (7);
+		\draw (7) to (1);
+		\draw (7) to (22);
+		\draw (18) to (10);
+		\draw (10) to (4);
+		\draw (4) to (6);
+		\draw (6) to (23);
+		\draw (23) to (10);
+		\draw (7) to (17);
+		\draw (17) to (6);
+		\draw (17) to (23);
+		\draw [style=highlight line] (24) to (22);
+		\draw [style=highlight line] (22) to (23);
+		\draw [style=highlight line] (23) to (13);
+		\draw [style=highlight line] (13) to (4);
+		\draw [style=highlight line] (4) to (18);
+	\end{pgfonlayer}
+\end{tikzpicture}

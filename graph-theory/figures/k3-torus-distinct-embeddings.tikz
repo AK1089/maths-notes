@@ -1,0 +1,61 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (0) at (-10, 0) {};
+		\node [style=none] (1) at (-3, 0) {};
+		\node [style=none] (2) at (-8.5, 0.5) {};
+		\node [style=none] (3) at (-4.5, 0.5) {};
+		\node [style=none] (4) at (-8, 0) {};
+		\node [style=none] (5) at (-5, 0) {};
+		\node [style=none] (6) at (-6.5, -2.75) {normal version};
+		\node [style=none] (7) at (-6.5, -3.5) {$v - e + f = 2$};
+		\node [style=red dot] (8) at (-6.5, 1.5) {};
+		\node [style=red dot] (9) at (-7.75, 0.75) {};
+		\node [style=red dot] (10) at (-5.25, 0.75) {};
+		\node [style=none] (11) at (-1, 0) {};
+		\node [style=none] (12) at (6, 0) {};
+		\node [style=none] (13) at (0.5, 0.5) {};
+		\node [style=none] (14) at (4.5, 0.5) {};
+		\node [style=none] (15) at (1, 0) {};
+		\node [style=none] (16) at (4, 0) {};
+		\node [style=none] (17) at (2.5, -2.75) {ring version};
+		\node [style=none] (18) at (2.5, -3.5) {$v - e + f = 1$};
+		\node [style=red dot] (19) at (2.5, 1.5) {};
+		\node [style=red dot] (20) at (0, -0.75) {};
+		\node [style=red dot] (21) at (5, -0.75) {};
+		\node [style=none] (22) at (8, 0) {};
+		\node [style=none] (23) at (15, 0) {};
+		\node [style=none] (24) at (9.5, 0.5) {};
+		\node [style=none] (25) at (13.5, 0.5) {};
+		\node [style=none] (26) at (10, 0) {};
+		\node [style=none] (27) at (13, 0) {};
+		\node [style=none] (28) at (11.5, -2.75) {cutoff version};
+		\node [style=none] (29) at (11.5, -3.5) {$v - e + f = 1$};
+		\node [style=red dot] (30) at (11, 0.75) {};
+		\node [style=red dot] (31) at (11, 1.5) {};
+		\node [style=none] (32) at (10.5, 0.25) {};
+		\node [style=none] (33) at (10.5, 2) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [bend left=90] (0.center) to (1.center);
+		\draw [bend right=90] (0.center) to (1.center);
+		\draw [bend left] (4.center) to (5.center);
+		\draw [bend right=45, looseness=1.50] (2.center) to (3.center);
+		\draw [bend left=90] (11.center) to (12.center);
+		\draw [bend right=90] (11.center) to (12.center);
+		\draw [bend left] (15.center) to (16.center);
+		\draw [bend right=45, looseness=1.50] (13.center) to (14.center);
+		\draw [style=highlight line] (9) to (8);
+		\draw [style=highlight line] (8) to (10);
+		\draw [style=highlight line] (10) to (9);
+		\draw [style=highlight line, in=75, out=0] (19) to (21);
+		\draw [style=highlight line, bend left] (21) to (20);
+		\draw [style=highlight line, in=180, out=105] (20) to (19);
+		\draw [bend left=90] (22.center) to (23.center);
+		\draw [bend right=90] (22.center) to (23.center);
+		\draw [bend left] (26.center) to (27.center);
+		\draw [bend right=45, looseness=1.50] (24.center) to (25.center);
+		\draw [style=highlight line, bend left=15] (33.center) to (31);
+		\draw [style=highlight line, bend left=15] (31) to (30);
+		\draw [style=highlight line, bend left=15, looseness=1.25] (30) to (32.center);
+	\end{pgfonlayer}
+\end{tikzpicture}

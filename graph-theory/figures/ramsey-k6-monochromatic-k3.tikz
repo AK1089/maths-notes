@@ -1,0 +1,27 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=red dot] (0) at (-1.25, 2) {};
+		\node [style=red dot] (1) at (1.25, 2) {};
+		\node [style=red dot] (2) at (-2.25, 0) {};
+		\node [style=red dot] (3) at (-1.25, -2) {};
+		\node [style=red dot] (4) at (1.25, -2) {};
+		\node [style=red dot] (5) at (2.25, 0) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=red line] (0) to (2);
+		\draw [style=red line] (0) to (1);
+		\draw [style=red line] (1) to (5);
+		\draw [style=red line] (5) to (4);
+		\draw [style=red line] (4) to (3);
+		\draw [style=red line] (3) to (2);
+		\draw [style=red line] (0) to (4);
+		\draw [style=red line] (3) to (1);
+		\draw [style=red line] (5) to (2);
+		\draw [style=blue line] (0) to (5);
+		\draw [style=blue line] (5) to (3);
+		\draw [style=blue line] (3) to (0);
+		\draw [style=blue line] (1) to (4);
+		\draw [style=blue line] (4) to (2);
+		\draw [style=blue line] (2) to (1);
+	\end{pgfonlayer}
+\end{tikzpicture}

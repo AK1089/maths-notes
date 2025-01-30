@@ -1,0 +1,72 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (0) at (0, 0) {};
+		\node [style=none] (1) at (9.5, 0) {};
+		\node [style=none] (2) at (-2, 0) {};
+		\node [style=none] (3) at (10, 0) {};
+		\node [style=none] (4) at (-4, 0) {};
+		\node [style=none] (5) at (10.5, 0) {};
+		\node [style=none] (6) at (4.5, 0) {};
+		\node [style=none] (7) at (9, 0) {};
+		\node [style=none] (8) at (3.75, 0) {$\dots$};
+		\node [style=red dot] (9) at (-5.75, 0) {};
+		\node [style=red dot] (10) at (-2.5, 1.75) {};
+		\node [style=red dot] (11) at (-2.75, 1) {};
+		\node [style=red dot] (12) at (-3.25, 0.25) {};
+		\node [style=red dot] (13) at (-2.25, -1.25) {};
+		\node [style=red dot] (15) at (-2.75, -0.5) {};
+		\node [style=red dot] (17) at (-0.75, 1.75) {};
+		\node [style=red dot] (18) at (0.25, 1.75) {};
+		\node [style=red dot] (20) at (-0.75, -0.75) {};
+		\node [style=red dot] (21) at (0, -1.5) {};
+		\node [style=red dot] (22) at (0.75, -2.5) {};
+		\node [style=red dot] (23) at (2.5, 1.75) {};
+		\node [style=red dot] (24) at (1.75, 0) {};
+		\node [style=red dot] (25) at (2.25, -0.75) {};
+		\node [style=red dot] (26) at (2.75, -1.5) {};
+		\node [style=red dot] (28) at (1.5, -1.5) {};
+		\node [style=red dot] (30) at (-1, 0.25) {};
+		\node [style=none] (32) at (3, 0.5) {};
+		\node [style=none] (33) at (3, 0.25) {};
+		\node [style=none] (34) at (3, 0) {};
+		\node [style=none] (35) at (3, -0.25) {};
+		\node [style=none] (36) at (3, -0.5) {};
+		\node [style=red dot] (37) at (1.5, 0.75) {};
+		\node [style=none] (38) at (-1.25, 4.25) {$A_1$};
+		\node [style=none] (39) at (-0.5, 3) {$A_2$};
+		\node [style=none] (40) at (1.25, 2.5) {$A_3$};
+		\node [style=none] (41) at (4.5, 1.25) {$A_n$};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [bend right=90] (0.center) to (1.center);
+		\draw [bend right=90] (1.center) to (0.center);
+		\draw [bend right=90] (2.center) to (3.center);
+		\draw [bend right=90] (3.center) to (2.center);
+		\draw [bend right=90] (4.center) to (5.center);
+		\draw [bend right=90] (5.center) to (4.center);
+		\draw [bend right=90] (6.center) to (7.center);
+		\draw [bend right=90] (7.center) to (6.center);
+		\draw [style=red line] (9) to (10);
+		\draw [style=red line] (9) to (11);
+		\draw [style=red line] (9) to (12);
+		\draw [style=red line] (9) to (15);
+		\draw [style=red line] (13) to (9);
+		\draw [style=blue line] (15) to (17);
+		\draw [style=blue line] (18) to (15);
+		\draw [style=blue line] (15) to (20);
+		\draw [style=blue line] (15) to (21);
+		\draw [style=blue line] (15) to (22);
+		\draw [style=blue line] (30) to (15);
+		\draw [style=red line] (30) to (24);
+		\draw [style=red line] (30) to (25);
+		\draw [style=red line] (30) to (28);
+		\draw [style=red line] (30) to (26);
+		\draw [style=red line] (30) to (23);
+		\draw [style=blue line] (24) to (32.center);
+		\draw [style=blue line] (24) to (33.center);
+		\draw [style=blue line] (24) to (34.center);
+		\draw [style=blue line] (24) to (35.center);
+		\draw [style=blue line] (36.center) to (24);
+		\draw [style=red line] (37) to (30);
+	\end{pgfonlayer}
+\end{tikzpicture}

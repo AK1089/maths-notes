@@ -1,0 +1,43 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=red dot] (0) at (0, 2.5) {};
+		\node [style=red dot] (1) at (2.25, 0.75) {};
+		\node [style=red dot] (2) at (1.5, -2) {};
+		\node [style=red dot] (3) at (-1.5, -2) {};
+		\node [style=red dot] (4) at (-2.25, 0.75) {};
+		\node [style=red dot] (5) at (0, 5) {};
+		\node [style=red dot] (6) at (4.5, 1.5) {};
+		\node [style=red dot] (7) at (3, -4) {};
+		\node [style=red dot] (8) at (-3, -4) {};
+		\node [style=red dot] (9) at (-4.5, 1.5) {};
+		\node [style=red dot] (10) at (-12, 2.5) {};
+		\node [style=red dot] (11) at (-9.75, 0.75) {};
+		\node [style=red dot] (12) at (-10.5, -2) {};
+		\node [style=red dot] (13) at (-13.5, -2) {};
+		\node [style=red dot] (14) at (-14.25, 0.75) {};
+		\node [style=none] (15) at (-12, 6.5) {$k = 2$};
+		\node [style=none] (16) at (0, 6.5) {$k = 3$};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw (5) to (6);
+		\draw (6) to (7);
+		\draw (7) to (8);
+		\draw (8) to (9);
+		\draw (9) to (5);
+		\draw (5) to (0);
+		\draw (4) to (9);
+		\draw (3) to (8);
+		\draw (2) to (7);
+		\draw (1) to (6);
+		\draw (0) to (3);
+		\draw (3) to (1);
+		\draw (1) to (4);
+		\draw (4) to (2);
+		\draw (2) to (0);
+		\draw (10) to (11);
+		\draw (11) to (12);
+		\draw (12) to (13);
+		\draw (13) to (14);
+		\draw (14) to (10);
+	\end{pgfonlayer}
+\end{tikzpicture}

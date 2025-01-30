@@ -1,0 +1,33 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=red dot] (0) at (-1, 1) {};
+		\node [style=red dot] (1) at (1, 1) {};
+		\node [style=red dot] (2) at (-1, -1) {};
+		\node [style=red dot] (3) at (1, -1) {};
+		\node [style=red dot] (4) at (0, 2) {};
+		\node [style=red dot] (5) at (2, 2) {};
+		\node [style=red dot] (6) at (0, 0) {};
+		\node [style=red dot] (7) at (2, 0) {};
+		\node [style=red dot] (8) at (-1, -1) {};
+		\node [style=teal dot] (9) at (2, 2) {};
+		\node [style=teal dot] (10) at (-1, 1) {};
+		\node [style=teal dot] (11) at (0, 0) {};
+		\node [style=teal dot] (12) at (1, -1) {};
+		\node [style=none] (13) at (1, 3) {};
+		\node [style=none] (14) at (1, -2) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw (0) to (8);
+		\draw (8) to (3);
+		\draw (3) to (7);
+		\draw (7) to (6);
+		\draw (6) to (8);
+		\draw (6) to (4);
+		\draw (0) to (4);
+		\draw (5) to (7);
+		\draw (0) to (1);
+		\draw (5) to (1);
+		\draw (4) to (5);
+		\draw (1) to (3);
+	\end{pgfonlayer}
+\end{tikzpicture}

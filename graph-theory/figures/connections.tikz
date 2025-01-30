@@ -1,0 +1,49 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=red dot] (0) at (-6, 1) {};
+		\node [style=red dot] (1) at (-4, 1) {};
+		\node [style=red dot] (2) at (-4, -1) {};
+		\node [style=red dot] (3) at (-6, -1) {};
+		\node [style=red dot] (4) at (-8, -1) {};
+		\node [style=red dot] (5) at (-2, 1) {};
+		\node [style=red dot] (6) at (-6, -3) {};
+		\node [style=red dot] (7) at (-2, -1) {};
+		\node [style=red dot] (8) at (-4, -3) {};
+		\node [style=red dot] (9) at (-2, -1) {};
+		\node [style=none] (10) at (-6.5, 1.5) {$x$};
+		\node [style=none] (11) at (-1.5, -1.5) {$y$};
+		\node [style=red dot] (12) at (4, 1) {};
+		\node [style=red dot] (13) at (6, 1) {};
+		\node [style=red dot] (15) at (4, -1) {};
+		\node [style=red dot] (16) at (2, -1) {};
+		\node [style=red dot] (17) at (8, 1) {};
+		\node [style=red dot] (18) at (4, -3) {};
+		\node [style=red dot] (19) at (8, -1) {};
+		\node [style=red dot] (20) at (6, -3) {};
+		\node [style=red dot] (21) at (8, -1) {};
+		\node [style=none] (22) at (3.5, 1.5) {$x'$};
+		\node [style=none] (23) at (8.5, -1.5) {$y'$};
+		\node [style=none] (24) at (0, 2.25) {};
+		\node [style=none] (25) at (0, -3.5) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw (3) to (4);
+		\draw (6) to (3);
+		\draw (3) to (2);
+		\draw (0) to (4);
+		\draw (9) to (8);
+		\draw (8) to (6);
+		\draw (1) to (9);
+		\draw (15) to (16);
+		\draw (18) to (15);
+		\draw (12) to (16);
+		\draw (21) to (20);
+		\draw (13) to (21);
+		\draw (17) to (13);
+		\draw (17) to (21);
+		\draw [style=highlight line] (0) to (2);
+		\draw [style=highlight line] (2) to (1);
+		\draw [style=highlight line] (1) to (5);
+		\draw [style=highlight line] (5) to (9);
+	\end{pgfonlayer}
+\end{tikzpicture}

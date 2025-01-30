@@ -1,0 +1,25 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=red dot] (0) at (0, 2.5) {};
+		\node [style=red dot] (1) at (2.25, 0.75) {};
+		\node [style=red dot] (2) at (1.5, -2) {};
+		\node [style=red dot] (3) at (-1.5, -2) {};
+		\node [style=red dot] (4) at (-2.25, 0.75) {};
+		\node [style=none] (5) at (9.75, 0.5) {$A = \begin{pmatrix} 0 & 1 & 0 & 0 & 1 \\ 1 & 0 & 1 & 1 & 1 \\ 0 & 1 & 0 & 1 & 0 \\ 0 & 1 & 1 & 0 & 1 \\ 1 & 1 & 0 & 1 & 0 \end{pmatrix}$};
+		\node [style=none] (6) at (0, 3.25) {1};
+		\node [style=none] (7) at (3, 1) {2};
+		\node [style=none] (8) at (-3, 1) {5};
+		\node [style=none] (9) at (2, -2.75) {3};
+		\node [style=none] (10) at (-2, -2.75) {4};
+		\node [style=none] (11) at (4.5, 0.5) {$\implies$};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw (0) to (1);
+		\draw (1) to (2);
+		\draw (2) to (3);
+		\draw (3) to (4);
+		\draw (4) to (0);
+		\draw (1) to (4);
+		\draw (3) to (1);
+	\end{pgfonlayer}
+\end{tikzpicture}

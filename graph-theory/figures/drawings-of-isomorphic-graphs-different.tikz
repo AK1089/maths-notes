@@ -1,0 +1,37 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=red dot] (0) at (-1, 1) {};
+		\node [style=red dot] (1) at (1, 1) {};
+		\node [style=red dot] (2) at (-1.75, 0) {};
+		\node [style=red dot] (3) at (1.75, 0) {};
+		\node [style=red dot] (4) at (-1, -1) {};
+		\node [style=red dot] (5) at (1, -1) {};
+		\node [style=none] (13) at (3.75, 0) {$\cong$};
+		\node [style=red dot] (14) at (6.5, 1) {};
+		\node [style=red dot] (15) at (8.5, 1) {};
+		\node [style=red dot] (16) at (5.75, 0) {};
+		\node [style=red dot] (17) at (9.25, 0) {};
+		\node [style=red dot] (18) at (6.5, -1) {};
+		\node [style=red dot] (19) at (8.5, -1) {};
+		\node [style=none] (20) at (4, 2) {};
+		\node [style=none] (21) at (4, -2) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw (0) to (1);
+		\draw (1) to (3);
+		\draw (3) to (5);
+		\draw (5) to (4);
+		\draw (4) to (2);
+		\draw (2) to (0);
+		\draw [bend left=90, looseness=2.50] (1) to (5);
+		\draw [bend right=90, looseness=2.50] (0) to (4);
+		\draw (14) to (15);
+		\draw (15) to (17);
+		\draw (17) to (19);
+		\draw (19) to (18);
+		\draw (18) to (16);
+		\draw (16) to (14);
+		\draw (15) to (19);
+		\draw [bend right=90, looseness=2.50] (14) to (18);
+	\end{pgfonlayer}
+\end{tikzpicture}

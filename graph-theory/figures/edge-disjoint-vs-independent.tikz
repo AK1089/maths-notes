@@ -1,0 +1,42 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=red dot] (0) at (-2, 0) {};
+		\node [style=red dot] (1) at (0, 0) {};
+		\node [style=red dot] (2) at (2, 0) {};
+		\node [style=red dot] (3) at (0, 2) {};
+		\node [style=red dot] (4) at (0, -2) {};
+		\node [style=red dot] (5) at (6, 0) {};
+		\node [style=red dot] (6) at (8, 0) {};
+		\node [style=red dot] (7) at (10, 0) {};
+		\node [style=red dot] (8) at (8, 2) {};
+		\node [style=red dot] (9) at (8, -2) {};
+		\node [style=none] (10) at (4, 3) {vertex in common};
+		\node [style=none] (11) at (4, 2.25) {};
+		\node [style=none] (12) at (-2.75, 0) {$a$};
+		\node [style=none] (13) at (2.75, 0) {$b$};
+		\node [style=none] (14) at (5.25, 0) {$a$};
+		\node [style=none] (15) at (10.75, 0) {$b$};
+		\node [style=none] (16) at (4, 4) {};
+		\node [style=none] (17) at (4, -3) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw (0) to (1);
+		\draw (1) to (2);
+		\draw (3) to (2);
+		\draw (4) to (0);
+		\draw [style=highlight line] (3) to (0);
+		\draw [style=highlight line] (3) to (1);
+		\draw [style=highlight line] (1) to (4);
+		\draw [style=highlight line] (4) to (2);
+		\draw (8) to (7);
+		\draw (9) to (5);
+		\draw [style=highlight line] (6) to (5);
+		\draw [style=highlight line] (6) to (7);
+		\draw (8) to (5);
+		\draw (9) to (6);
+		\draw (6) to (8);
+		\draw (9) to (7);
+		\draw [style=teal arrow, bend right=15] (11.center) to (1);
+		\draw [style=teal arrow, bend left=15] (11.center) to (6);
+	\end{pgfonlayer}
+\end{tikzpicture}
