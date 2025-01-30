@@ -1,0 +1,311 @@
+% Avish's Maths Notes LaTeX Package
+\ProvidesPackage{mathsnotes}
+
+% Page Formatting
+\RequirePackage[a4paper, left=3cm,top=3cm,right=3cm]{geometry}
+\setlength{\parindent}{0pt}
+
+% Maths symbols & theorem library
+\RequirePackage{amsmath, amssymb, amsthm, thmtools}
+
+% Formatting
+\RequirePackage{parskip}
+
+% Fancy Pages (for headers)
+\RequirePackage{fancyhdr}
+\RequirePackage{lastpage}
+\pagestyle{fancy}
+\fancyhf{}
+
+% Tables and Boxes
+\RequirePackage[table]{xcolor}
+\RequirePackage{colortbl}
+\RequirePackage{mdframed}
+
+% Images
+\RequirePackage{graphicx}
+
+% Diagrams
+\RequirePackage{tikz}
+
+% General Hyperlinks
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  filecolor=magenta,
+  urlcolor=cyan,
+}
+
+% Colour palette for custon environments
+\definecolor{blue_dark}{RGB}{0,20,110}
+\definecolor{blue_light}{RGB}{240,249,255}
+\definecolor{red_dark}{RGB}{142,20,20}
+\definecolor{red_light}{RGB}{255,247,247}
+\definecolor{green_dark}{RGB}{10,90,20}
+\definecolor{green_light}{RGB}{247,255,246}
+\definecolor{yellow_dark}{RGB}{102,51,0}
+\definecolor{yellow_light}{RGB}{255,253,240}
+\definecolor{grey_dark}{RGB}{50,50,50}
+\definecolor{grey_light}{RGB}{248,248,248}
+
+% Command to name a colour
+\newcommand{\theoremcolor}{}
+
+% Theorem boxes
+\newtheoremstyle{boxed}
+ {12pt}{12pt}{\normalfont}{0pt}
+ {\bfseries\color{\theoremcolor}}{\\[6pt]}{0pt}{}
+
+% Create inner environments using the box style
+\theoremstyle{boxed}
+\newtheorem{theoreminner}{Theorem}[section]
+\newtheorem{definitioninner}[theoreminner]{Definition}
+\newtheorem{exampleinner}[theoreminner]{Example}
+\newtheorem{propinner}[theoreminner]{Proposition}
+\newtheorem{remarkinner}[theoreminner]{Remark}
+\newtheorem{corollaryinner}[theoreminner]{Corollary}
+\newtheorem{noteinner}[theoreminner]{Note}
+
+% More styling: helper function to add styles
+\newcommand{\makeenvironment}[4]{%
+ \newenvironment{#1}[1][]{%
+   \renewcommand{\theoremcolor}{#2}%
+   \begin{mdframed}[
+     backgroundcolor=#3,
+     leftline=true,
+     linecolor=\theoremcolor,
+     linewidth=2pt,
+     rightline=false,
+     topline=false,
+     bottomline=false,
+     innertopmargin=2pt,
+     innerbottommargin=8pt,
+     skipabove=12pt,
+     skipbelow=12pt
+   ]
+   % Use the inner environment
+   \begin{#4inner}[##1]
+ }{\end{#4inner}\end{mdframed}}
+}
+
+% Create the basic five types of environment
+\makeenvironment{theorem}{blue_dark}{blue_light}{theorem}
+\makeenvironment{definition}{red_dark}{red_light}{definition}
+\makeenvironment{example}{green_dark}{green_light}{example}
+\makeenvironment{proposition}{blue_dark}{blue_light}{prop}
+\makeenvironment{remark}{grey_dark}{grey_light}{remark}
+
+% Inline environments for proofs/corollaries/notes
+\newenvironment{prf}[1][\proofname]{\textbf{#1:} }{\hfill$\square$}
+\newenvironment{corollary}[1][Corollary]{\textbf{#1:} }{}
+\newenvironment{note}[1][Note]{\textbf{#1:} }{}
+
+% Commonly used \mathbb symbol shortcuts
+\let\P\undefined
+\newcommand{\B}{\mathbb{B}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\K}{\mathbb{K}}
+\newcommand{\M}{\mathbb{M}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\P}{\mathbb{P}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\T}{\mathbb{T}}
+\newcommand{\W}{\mathbb{W}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\x}{\mathbf{x}}
+
+% Calligraphic letters
+\newcommand{\calA}{\mathcal{A}}
+\newcommand{\calB}{\mathcal{B}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\calD}{\mathcal{D}}
+\newcommand{\calE}{\mathcal{E}}
+\newcommand{\calF}{\mathcal{F}}
+\newcommand{\calG}{\mathcal{G}}
+\newcommand{\calH}{\mathcal{H}}
+\newcommand{\calI}{\mathcal{I}}
+\newcommand{\calJ}{\mathcal{J}}
+\newcommand{\calK}{\mathcal{K}}
+\newcommand{\calL}{\mathcal{L}}
+\newcommand{\calM}{\mathcal{M}}
+\newcommand{\calN}{\mathcal{N}}
+\newcommand{\calO}{\mathcal{O}}
+\newcommand{\calP}{\mathcal{P}}
+\newcommand{\calQ}{\mathcal{Q}}
+\newcommand{\calR}{\mathcal{R}}
+\newcommand{\calS}{\mathcal{S}}
+\newcommand{\calT}{\mathcal{T}}
+\newcommand{\calU}{\mathcal{U}}
+\newcommand{\calV}{\mathcal{V}}
+\newcommand{\calW}{\mathcal{W}}
+\newcommand{\calX}{\mathcal{X}}
+\newcommand{\calY}{\mathcal{Y}}
+\newcommand{\calZ}{\mathcal{Z}}
+
+% Some nice commands for easy common notation
+\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}
+\newcommand{\floor}[1]{\left\lfloor#1\right\rfloor}
+\newcommand{\ceil}[1]{\left\lceil#1\right\rceil}
+\newcommand{\pd}[2]{\frac{\partial #1}{\partial #2}}
+
+% Quantum Mechanics
+\newcommand{\bra}[1]{\left\langle #1 \right\vert}
+\newcommand{\ket}[1]{\left\vert #1 \right\rangle}
+\newcommand{\braket}[2]{\left\langle #1 \middle\vert #2 \right\rangle}
+\newcommand{\ketbra}[2]{\left\vert #1 \middle\rangle\!\!\middle\langle #2 \right\vert}
+\newcommand{\angled}[1]{\left\langle #1 \right\rangle}
+
+% Set definitions made easier
+\newcommand{\powerset}[1]{\wp\left(#1\right)}
+\newcommand{\lb}{\left\lbrace}
+\newcommand{\rb}{\right\rbrace}
+\newcommand{\set}[1]{\lb #1 \rb}
+\newcommand{\divides}{\mid}
+\newcommand{\notdivides}{\nmid}
+
+% Words or text used frequently
+\newcommand{\suchthat}{\mathrel{\, \text{s.t.}}}
+\newcommand{\otherwise}{\mathrel{\, \text{otherwise}}}
+\newcommand{\with}{\mathrel{\, \text{with}}}
+\newcommand{\where}{\mathrel{\, \text{where}}}
+\newcommand{\LHS}{\mathrm{LHS}}
+\newcommand{\RHS}{\mathrm{RHS}}
+
+% Number Theory
+\newcommand{\hcf}[2]{\mathrm{hcf} \! \left(#1, \, #2\right)}
+\newcommand{\Zby}[1]{\mathbb{Z}/#1\mathbb{Z}}
+\newcommand{\Zbygp}[1]{(\mathbb{Z}/#1\mathbb{Z})^\times}
+\newcommand{\legendre}[2]{\left( \frac{#1}{#2} \right)}
+
+% Automata
+\newcommand{\arrow}[1]{\stackrel{#1}{\longrightarrow}}
+\newcommand{\Ra}{\Rightarrow}
+
+% Intervals
+\newcommand{\Rnneg}{[0, \infty]}
+\newcommand{\Rnnegfinite}{[0, \infty)}
+\newcommand{\Rpos}{(0, \infty]}
+\newcommand{\Rposfinite}{(0, \infty)}
+
+% Inequalities
+\renewcommand{\leq}{\leqslant}
+\renewcommand{\geq}{\geqslant}
+\newcommand{\preferred}{\succcurlyeq}
+\newcommand{\preferredstrict}{\succ}
+\newcommand{\dispreferred}{\preccurlyeq}
+\newcommand{\dispreferredstrict}{\prec}
+
+% Expected Utility
+\newcommand{\EU}[1]{ \mathbb{E} \left[ U \! \left( #1 \right) \right] }
+
+% Summation
+\newcommand{\ninn}{n \in \mathbb{N}}
+
+% Renaming some common symbols
+\newcommand{\eps}{\varepsilon}
+\newcommand{\diff}{\setminus}
+\newcommand{\subs}{\subseteq}
+
+% Not-implies
+\newcommand{\notimplies}{%
+  \mathrel{{\ooalign{\hidewidth$\not\phantom{=}$\hidewidth\cr$\implies$}}}}
+
+% Function names which don't come by default
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\var}{Var}
+\DeclareMathOperator{\cov}{Cov}
+\DeclareMathOperator{\ord}{ord}
+\DeclareMathOperator{\disc}{disc}
+\DeclareMathOperator{\dom}{dom}
+\DeclareMathOperator{\range}{range}
+\DeclareMathOperator{\code}{code}
+
+% Custom Graph Styling
+\RequirePackage{tikzit}
+
+% Marks the end of a lecture in the notes
+\newcommand{\lectureend}[1]{
+  \vspace{1em}
+  \noindent\rule{0.5\textwidth}{0.4pt} \\
+  \noindent\textbf{\small{End of Lecture #1}}
+  \vspace{1em}
+}
+
+% For contents page
+\usepackage{tocloft}
+\renewcommand{\cftsecfont}{\bfseries}
+\renewcommand{\cftsecpagefont}{\bfseries}
+\renewcommand{\cftsubsecfont}{\bfseries}
+\renewcommand{\cftsubsecpagefont}{\bfseries}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftsubsecleader}{\cftdotfill{\cftdotsep}}
+
+% Details of a set of lecture notes for the cover
+\newcommand{\course}[1]{\def\@course{#1}}
+\newcommand{\term}[1]{\def\@term{#1}}
+\newcommand{\lecturer}[1]{\def\@lecturer{#1}}
+\newcommand{\name}[1]{\def\@name{#1}}
+\newcommand{\email}[1]{\def\@email{#1}}
+\newcommand{\psetnumber}[1]{\def\@psetnumber{#1}}
+
+% Creates the cover with one of two formats
+\newcommand{\makecover}{
+  \begingroup
+  \newpage
+  \centering
+
+  % If a problem sheet number is specified, use it
+  \ifcsname @psetnumber\endcsname
+  
+    \gdef\@headertitle{\@course}
+  
+    \thispagestyle{plain}
+    {\Huge \@course \par}
+    \vspace{0.5cm}
+    {\large Problem Sheet \@psetnumber \par}
+    \vspace{0.2cm}
+    {\large \@name \  (\texttt{\@email}) \par}
+    
+    \setcounter{secnumdepth}{-1}
+    \endgroup
+    
+  % Otherwise, these are lecture notes
+  \else
+  
+    \gdef\@headertitle{\@course}
+  
+	\thispagestyle{plain}
+    \vspace*{3cm}
+    {\Huge \@course \par}
+    \vspace{1cm}
+    {\large Lectured by \@lecturer, \@term \par}
+    \vspace{1cm}
+    {\large Notes taken by \@name \  (\texttt{\@email}) \par}
+    \vspace{2cm}
+    \vfill
+    
+    \newpage
+    \tableofcontents
+    
+    \endgroup
+    \newpage
+  
+  \fi
+}
+
+% Define the style for the cover page: clear header and footer
+\fancypagestyle{plain}{%
+  \fancyhf{}
+  \renewcommand{\headrulewidth}{0pt}
+}
+
+\renewcommand{\headrulewidth}{0.3pt}
+\fancyhead[L]{\small\textbf{\thepage} $\; \cdot \;$ \small\textbf{\@headertitle}}
+\fancyhead[R]{\small\textbf{\@name}}
+
