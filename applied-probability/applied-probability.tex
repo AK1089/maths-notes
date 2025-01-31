@@ -1,0 +1,376 @@
+% ================================================================== %
+\documentclass{article}
+\usepackage{mathsnotes}
+
+% Course Details
+\course{Applied Probability}
+\term{Lent 2024--25}
+\lecturer{Sourav Sarkar}
+\tripospart{Part II of the Mathematical Tripos}
+\university{University of Cambridge}
+\name{Avish Kumar}
+\email{ak2461@cam.ac.uk}
+\website{https://ak1089.github.io/maths/notes}
+\version{1.4}
+\disclaimer{These notes are unofficial and may contain errors. While they are written and published with permission, they are not endorsed by the lecturer or University.}
+
+% Auxiliary files
+\input{../graphs.tikzstyles}
+
+% Format the document
+\begin{document}
+\makecover
+% ================================================================== %
+
+\section{Continuous-Time Markov Chains}
+\subsection{The Markov Property}
+
+A \textit{stochastic process}, or sometimes just a \textit{process}, is a sequence of random variables $X = (X_n)_{\ninn_0}$.
+
+\begin{definition}[Markov Chain]
+    A stochastic process is said to have the \textit{Markov} property if the future and the past are independent, given the present. That is, for any $k > n$, the conditional distribution of $X_k$ given $X_1 \dots X_n$ (the future given the past and present) is the same as that given $X_n$ alone (only the present).
+    
+    The process $X$ is called a discrete-time Markov Chain with state space $I$ if:
+	\[
+	\forall x_0, x_1, \dots x_n \in I, \ \P[X_n = x_n \mid X_{n-1} = x_{n-1}, \dots, X_0 = x_0] = \P[X_n = x_n \mid X_{n-1} = x_{n-1}].
+	\]
+	If these probabilities are independent of $n$, then the chain is called time-homogeneous. We then write $P = (P_{xy})_{x,y\in I}$ for the transition matrix with $P_{xy} = \P[X_n = y \mid X_{n-1} = x]$. This is a stochastic matrix, which means all entries are nonnegative and all rows sum to 1.
+\end{definition}
+
+
+
+
+
+
+A time-homogeneous discrete-time Markov Chain has an initial distribution $\mu_0 : I \to [0, 1]$, where $\mu_0(x) = \P[X_0 = x]$ for all $x \in I$. It also has a transition matrix $P$, as described. From now on, we take the state space $I$ to be some countable (possibly finite) set.
+
+\begin{note}
+	There is some space $(\Omega, \calF, \P)$ with respect to which probabilities are defined, but we do not consider it in detail in this course.
+\end{note}
+
+\begin{definition}[Continuous-Time Process]
+    We now consider a \textit{continuous-time} process: if $X_t = (X(t): t \geq 0)$ is a right-continuous function taking values in $I$, then we call $X = X_t$: a continuous-time random process if:
+	\begin{enumerate}
+    	\item for all $t \geq 0$, $X(t)$ is a random variable with values in $I$.
+	    \item for all $\omega \in \Omega$, $t \mapsto X_t(\omega)$ has right-continuous sample paths: for all $t$. That is, there is some $\eps > 0$ such that $X_s(\omega) = X_t(\omega)$ for all $s \in [t, t+\eps]$.
+	\end{enumerate}
+\end{definition}
+   A right-continuous random process is determined by its finite-dimensional distributions:
+\[
+\P[X_{t_0} = i_0, \dots , X_{t_n} = i_n] : n \in \N, t_k \geq 0, i_k \in I.
+\]
+That is, a random process is determined by all finite experiments on it. (We do not prove this).
+
+For every $\omega \in \Omega$, the path $t \mapsto X_t(\omega)$ of a right-continuous process remains constant for some time. There are thus three possibilities for such a path:
+\begin{enumerate}
+    \item The path makes infinitely many jumps, but only finitely many within any finite interval. For example, if $X_t$ makes a jump at each integer $t \in \N$, then this case holds.
+    \item The path makes finitely many jumps in its entire lifetime, before being absorbed in a state. This means that $\exists \, T$ with $X_t = X_T$ for all $t > T$.
+    \item There is a single finite interval within which the path makes infinitely many jumps. For example, if $X_t$ makes a jump at times $1 - 2^n$ for $\ninn$, then it will make infinitely many jumps in the first second. Here, $T=1$ is called the explosion time, and the process starts again after it. We usually ignore everything after the first explosion time.
+\end{enumerate}
+
+\begin{definition}[Jump Times]
+    The \textit{jump times} $J_i$ for $i = 0, 1, 2 \dots$ (when the process changes value) and the \textit{holding times} $S_i$ for $i = 1, 2, 3 \dots$ (the duration between successive jumps) are formally given by:
+	\[
+	J_0 = 0, \qquad J_{n+1} = \inf \set{t > J_n : J_t \neq J_n}, \qquad \text{ and } S_n = J_{n+1} - J_n.
+	\]
+If there are only finitely many jumps, then we take $\inf \varnothing = \infty$, and $\infty - \infty = \infty$, so that these are all well-defined. In this case, we define $X_\infty = \lim_{t \to \infty} X_t$, which is then well-defined.
+
+The first explosion time $\zeta$ is then defined as the supremum of the jump times $\sup J_n$. We thus set $X_t = \infty$ for all $t \geq \zeta$, adjoining a new state $\infty$ to $I$ if needed.
+\end{definition}
+
+With these definitions in mind, we may define a Markov process, which is the continuous-time equivalent of a Markov chain.
+
+\begin{definition}[Markov Process]
+    A continuous-time right-continuous random process $X = (X_t)_{t \geq 0}$ is called a Markov process if for all $i_1 \dots i_n \in I$ and all $0 < t_1 < \dots < t_n$, we have
+	\[
+	\P[X_{t_n} = i_n \mid X_{t_{n-1}} = i_{n-1}, \dots, X_{t_0} = i_0] = \P[X_n = x_n \mid X_{t_{n-1}} = i_{n-1}].
+	\]
+	For all $h > 0$, note that $Z_n = X_{h n}$ is a discrete-time Markov chain.
+	
+	The transition probabilities are now a function $P_{ij}(s, t) = \P[X_t = j \mid X_s = i]$ for $s \leq t$ and $i, j \in I$. We call this process time-homogeneous if $P_{ij}(s, t)$ can be expressed as a function of $t-s$, the time difference, independently of $s$: $P_{ij}(s, t) = P_{ij}(0, t-s)$ for all $t > 0$.
+\end{definition}
+
+
+Much like the discrete-time case, continuous-time Markov processes on some state space $I$ are characterised by two things: an initial distribution $\lambda_i = \P[X_0 = i]$ for $i \in I$, and an uncountably infinite family of transition matrices $P(t)_{t \geq 0}$.
+
+This family is called the \textit{transition semigroup} of the Markov process. $P(0) = 0$, and for all $t \geq 0$, $P(t)$ is a stochatic matrix.
+\begin{proposition}[Transition Semigroup]
+	The transition semigroup of any Markov Process also satisfies the semigroup property:
+	\[
+		P(t+s) = P(t)P(s) \quad \forall s, t \geq 0.
+	\]
+\end{proposition}
+\begin{prf}
+	This can be shown algebraically using the Markov property:
+	\begin{align*}
+    	P_{xz}(t+s) &= \P[X_{t+s} = z \mid X_0 = x] \\
+	    &= \sum_{y \in I} \P[X_{t+s} = z \mid X_t = y, X_0 = x] \times \P[X_t = y \mid X_0 = x] \\
+    	&= \sum_{y \in I} \P[X_{t+s} = z \mid X_t = y] \times \P[X_t = y \mid X_0 = x] \\
+	    &= \sum_{y \in I} P_{xy}(s) \times P_{yz}(t)
+	\end{align*}
+	which is precisely the definition of $P(t)P(s)$.
+\end{prf}
+
+% ================================================================== %
+
+\subsection{Holding Times}
+
+\begin{note}
+	From now on, we suppose that all Markov chains are right-continuous, time-homogeneous, continuous-time, and take values within a countable state space $I$. 
+\end{note}
+
+Let's say $X$ is such a Markov chain which starts at $x$. How long does it stay there? We call $S_x$ the ``holding time at $x$". How long is this holding time? Since $X$ is right-continuous, $S_x > 0$. Now suppose that $s, t \geq 0$. We have
+\begin{align*}
+    \P[S_x > t+s \mid S_x > s] &= \P \Big[X_u = x  \; \forall u \in [0, t+s] \mid  X_u = x \: \forall u \in [0, s] \Big] \\
+    &= \P \Big[X_u = x  \; \forall u \in [s, t+s] \mid  X_s = x \Big] \text{ by the Markov property} \\
+    &= \P \Big[X_u = x  \; \forall u \in [0, t] \mid  X_0 = x \Big] \text{ by time-homogeneity} \\
+    &= \P \left[S_x > t \right]
+\end{align*}
+Therefore $S_x$ has the \textit{memoryless property} for any state $x \in I$.
+
+\begin{theorem}[Memoryless Property]
+    Let $X$ be a positive random variable. Then $X$ has the memoryless property
+    \[
+	\P \left[ X > t+s \mid X > s \right] \implies \P \left[ X > t \right] \qquad \forall s, t \geq 0
+	\]
+	if and only if $X$ is exponentially distributed.
+\end{theorem}
+\begin{prf}
+    $(\Rightarrow)$ We have $\P[X > s + t \mid X > s] = e^{-\lambda(s+t)}/e^{-\lambda s} = e^{-\lambda t} = \P[X > t]$.
+    
+    $(\Leftarrow)$ Set $G(t) = \P[X > t]$: the probability $X$ exceeds a given value. Then the memoryless property gives us the condition on $G$:
+    \[
+	G(t+s) = \P[X > t+s] = \P \left[ X > t+s \mid X > s \right] \times \P[X > s] = \P[X > t]\times \P[X > s] = G(t)G(s).
+	\]
+	Since $X > 0$ almost surely, there is some $n$ such that $G(1/n) = \P[X > 1/n] > 0$. Then $G(1)$ can be written as $G(1) = G(1/n + \dots + 1/n) = G(1/n)^n > 0$. Therefore we can set $G(1) = e^{-\lambda}$ for some $\lambda \geq 0$ (since $G(1) \leq 1$).
+	
+	Therefore for all $k \in \N$ , we have $G(k) = G(1 + \dots + 1) = F(1)^k = e^{-k\lambda}$. This means that for all $p, q \in \N$, we must have $G(p/q) = G(1/q)^p$, but $G(1/q)^q = G(1)$, so this is $e^{-(p/q)\lambda}$.
+	
+	Thus for any $t \geq 0$, we have $r, s \in \Q$ with $r\leq t \leq s$. Since $G$ is decreasing, $G(s) \leq G(t) \leq G(r)$. Thus if $s \downarrow t$ and $r \uparrow t$, we have $G(t) = e^{-\lambda t}$ for all $t \geq 0$.
+	
+	But then $\P[X \leq t] = 1 - e^{-\lambda t}$ for all $t$, which is the definition of $X \sim \mathrm{Exponential}(\lambda)$.
+\end{prf}
+
+% ================================================================== %
+
+\subsection{The Poisson Process}
+
+Now we consider the canonical continuous-time Markov chain: the Poisson process on $\R^+$.
+
+\begin{definition}[Basic Poisson Process]
+    Suppose that $S_1, S_2, \dots$ is a sequence of iid. random variables, with $S \sim \mathrm{Exp}(\lambda)$. Define the jump times $J_0 = 0, \, J_1 = S_1, \, J_n = S_1 + \dots + S_n$. Then set $X_t = i$ if $J_i \leq t < J_{i+1}$ for $i \in \N_0$.
+    
+    Then $X$ is called a Poisson process on $\R^+$ with parameter $\lambda$. Note that $X$ is right-continuous and non-decreasing.
+\end{definition}
+\begin{note}
+	We sometimes refer to the jumps $J_i$ as the \textit{points} of a Poisson process, so that $X_t$ is the number of points in the interval $[0, t]$.
+\end{note}
+
+\begin{theorem}[Markov Property of Poisson Processes]
+    Let $(X_t)_{t \geq 0}$ be a Poisson process with parameter $\lambda$, written $\mathrm{PP}(\lambda)$. Then for any $s \geq 0$, the process $(X_{s+t} - X_{s})_{t\geq 0}$ is also $\mathrm{PP}(\lambda)$ and is independent of $(X_r)_{r < s}$.
+\end{theorem}
+\begin{prf}
+    Set $Y_t = X_{s+t} - X_s$ for $t \geq 0$. Then let $i \in \N_0$ and condition on $X_s = i$. Then the jump times for the process $Y$ are given by $J_{i+1} - s, \, J_{i+2}-s, \dots$ since $J_i < s$.
+    
+    The holding times are given by $T_1 = J_{i+1} - s = J_{i} + S_{i+1} - s = S_{i+1} - (s-J_i)$, and future times are $T_j = S_{i+j}$, where $J$ and $S$ are the jump times and holding times of $X$.
+    
+    Since $\set{X_s = i} = \set{J_i \leq s} \cup \set{S_{i+1} > s - J_i}$, the distribution of $T_1$ conditioned on $X_s = i$ is:
+    \[
+	\P[T_1 > t \mid X_s = i] = \P[S_{i+1} > s - J_i + t \mid J_i \leq s, s_{i+1} > s - J_i]
+	\]
+	Using the independence of $S_{i+1}$ and $J_i$, this is simply $P[S_{i+1} > t]$ by memorylessness. But the $S_{i}$ are independent, so we just see that $T_1 \sim \mathrm{Exp}(\lambda)$.
+	
+	Moreover, the times $T_j$ for $j \geq 2$ are independent of $S_k$ for $k \leq i + 1$, and hence independent of $(X_r)_{r < s}$, and so they are distributed in the same way.
+\end{prf}
+
+\begin{definition}[Stopping Time]
+    A random variable $T$ with values in $[0, \infty]$ is called a \textit{stopping time} if for all $t \in \R$, the event $\set{T \leq t}$ depends only on $(X_s)_{s \leq t}$. That is, a stopping time is an event whereby ``you know when you have hit it".
+    
+    The random variable $T = \inf \set{t: X_t \geq 2} $ is thus a stopping time, since we can stop when we first hit 2, but the event $T = \inf \set{t:X_t = \sup (X_i)}$ is not, since we don't know if we will later hit a larger value.
+\end{definition}
+
+\begin{theorem}[Strong Markov Property]
+    Let $(X_t)_{t \geq 0} \sim \mathrm{PP}(\lambda)$, with $T$ a stopping time. Then conditioning on $T < \infty$, the process $(X_{s+T} - X_T)_{s \geq 0}$ is also $\mathrm{PP}(\lambda)$ and independent of $(X_r)_{r \leq T}$.
+    
+\end{theorem}
+
+The following theorem gives three equivalent characterisations of Poisson Processes. Any of these can be used to define the process,
+
+\begin{theorem}[Poisson Process Formulations]
+	\label{poisson-process-definitions}
+    Let $(X_t)$ be an increasing right-continuous process taking values in $\N_0$ with $X_0 = 0$. Also, let $\lambda > 0$ be a constant. Then the following definitions of a Poisson Process are equivalent:
+    \begin{enumerate}
+    	\item The holding times $S_1, \, S_2 \dots$ are iid. exponential random variables with parameter $\lambda$ and the jump chain is $Y_n = n$. This is the traditional definition of a Poisson process.
+    	\item $X$ has independent increments and as $h \downarrow 0$, we have the two relations (uniformly in $t$) $\P[X_{t+h} - X_t = 1] = \lambda h + \calO(h)$, and  $\P[X_{t+h} - X_t = 0] = 1 - \lambda h + \calO(h)$.
+    	\item $X$ has independent and \textit{stationary} increments, and $X_t \sim \mathrm{Poisson}(\lambda t)$ for all $t \geq 0$. That is, the increment process is shift-invariant: the process $(X_{t+s}-X_s)_{t\geq 0}$ has the same distribution as $(X_t)_{t \geq 0}$, which is therefore time-homogeneous.
+	\end{enumerate}
+	All of these uniquely define the Poisson Process on $\R^+$.
+\end{theorem}
+\begin{prf}
+    ($1 \Ra 2$) If the holding times are iid. exponential random variables, then the increments are independent and stationary. Thus uniformly in $t$, as $h \downarrow 0$, we have
+    \[
+	\P[X_{t+h} - X_t = 0] = \P[X_h = 0] = \P[S_1 > h] = e^{-\lambda h} = 1 - \lambda h + \calO(h),
+	\]
+	where equalities arise from stationarity, definition of holding times, the exponential distribution, and the Taylor expansion of the exponential function. Also,
+	\begin{align*}
+    	\P[X_{t+h} - X_t \geq 1] &= \P[X_h \geq 1] = \P[S_1 \leq h] = 1 - e^{-\lambda h} = \lambda h + \calO(h) \\
+    	\P[X_{t+h} - X_t \geq 2] &= \P[X_h \geq 2] = \P[S_1 + S_2 \leq h] \\
+    	&\leq \P[S_1 \leq h, S_2 \leq h] = \P[S_1 \leq h] \times \P[S_2 \leq h] \text{ by independence} \\
+    	&= (1 - e^{-\lambda h})^2 = \calO(\lambda h)
+    \end{align*}
+    Therefore the probability $\P[X_{t+h} - X_t = 1]$ is $\lambda h + \calO(h)$ uniformly in $t$.
+\end{prf}
+
+\begin{prf}
+    ($2 \Ra 3$) If $X$ has independent increments and the probabilities converge uniformly in the way described, $X$ must have stationary increments. Thus we may simply prove $X_t \sim \mathrm{Poisson}(\lambda t)$.
+    
+    Since the increments of $X$ are independent and $X$ is increasing, we have
+    \[
+	p_j(t + h) = \P[X_{t+h} = j] = \sum_{i=0}^j \P[X_t = j-i] \times \P[(X_{t+h} - X_t) = i]
+	\]
+	For small $h$, we can assume $i = 0, 1$: the contribution from other terms is at most $\calO(h)$. Thus
+	\begin{align*}
+    	p_j(t + h) &= \P[X_t = j] \times \P[(X_{t+h} - X_t) = 0] \\
+    	&+ \P[X_t = j-1] \times \P[(X_{t+h} - X_t) = 1]  + \calO(h)
+	\end{align*}
+	Using the properties given by (2), we can simplify this to
+	\[
+	p_j(t+h) = p_j(t) (1-\lambda h) + p_{j-1}(t) \lambda h + \calO(h)
+	\]
+	which means as $h \downarrow 0$, we get $p_j'(t) = -\lambda p_j(t) + \lambda p_{j -1} t$. Differentiating $e^{\lambda t} p_j(t)$ yields
+	\[
+	\frac{\mathrm d}{\mathrm dt} \left( e^{\lambda t} p_j(t) \right) = e^{\lambda t} p_j'(t) + \lambda e^{\lambda t} p_j(t) = \lambda e^{\lambda t} p_{j-1}(t)
+	\]
+	For $j = 0$ we get $p_0 (t+h) = p_0 (t)(1-\lambda h + \calO(h))$, so $p_0'(t) = -\lambda p_0(t)$. This gives $p_0(t) = ce^{-\lambda x}$, which combined with the condition $p_0(0) = 0$ gives $p_0(t) = e^{-\lambda x}$.
+	
+	Now by induction, we get $p_j(t) = e^{-\lambda t} \times (\lambda t)^j / j!$, so $X_t \sim \mathrm{Poisson}(\lambda t)$ for all $t$ as required.
+\end{prf}
+
+\begin{prf}
+	($3 \Ra 1$) Observe that (3) determines the finite-dimensional distributions of $X$. If the increments are independent and stationary, with $X_t \sim \mathrm{Poisson}(\lambda t)$ for all $t$, then for $t_1 < \dots < t_n$ and $k_1, \dots, k_n$ we have
+	\begin{align*}
+    	\P[X_{t_1} = k_1, \dots, X_{t_n} = k_n] &= \P[X_{t_1} = k_1, X_{t_2}-X_{t_1} = k_2-k_1, \dots, X_{t_n}X_{t_{n-1}} = k_n- k_{n-1}] \\
+    	&= \P[X_{t_1} = k_1] \times \dots \times \P[X_{t_n}-X_{t_{n-1}} = k_n- k_{n-1}] \\
+    	&= \underbrace{\P[X_{t_1} = k_1]}_{\sim \mathrm{Poisson}(\lambda t_1)} \times \dots \times \underbrace{\P[X_{t_n-t_{n-1}} = k_n- k_{n-1}]}_{\sim \mathrm{Poisson}(\lambda (t_n - t_{n-1}))}
+	\end{align*}
+	which is therefore determinate. Since the finite-dimensional distributions of a right-continuous process define it uniquely, and we already know a process with these distributions, it must be the correct one, and therefore $X$ must be a Poisson process.
+\end{prf}
+
+\begin{prf}
+    (overall) Therefore (1), (2), and (3) are equivalent definitions of the Poisson process, and so we may use properties from any of them in future.
+\end{prf}
+
+\begin{theorem}[The Superposition Principle]
+    Suppose that $X \sim \mathrm{PP} (\lambda)$ and $Y \sim \mathrm{PP} (\mu)$ are independent. Then we may \textit{superpose} the two to obtain a new process $Z = X + Y$ (which this jumps whenever either $X$ or $Y$ jump), which is also a Poisson Process with rate $\lambda + \mu$.
+\end{theorem}
+\begin{prf}
+    We use the fact that the increments $X_t \sim \mathrm{Poisson}(\lambda t)$ and $Y_t \sim \mathrm{Poisson}(\mu t)$ of the two processes are all independent. Therefore the increments $Z_t \sim (\mathrm{Poisson}(\lambda t) + \mathrm{Poisson}(\mu t))$, which we know is also a Poisson random variable with rate $\lambda + \mu$. Thus $Z \sim \mathrm{PP}(\lambda + \mu)$.
+\end{prf}
+
+\begin{note}
+	We can also prove this by expanding the second definition of the Poisson Process.
+\end{note}
+
+\begin{theorem}[Thinning Property]
+    Suppose $X \sim \mathrm{PP} (\lambda)$, and keep each point with probability $p$ (deleting them otherwise), all independently of each other. Then the result is also a Poisson process with parameter $p \lambda$.
+    
+    More generally, colour all the points of a Poisson process with the colours $c_1 \dots c_m$, each with probability $p_1 \dots p_m$ where $\sum p_i = 1$. Then the result is $m$ independent Poisson processes, with parameters $p_i\lambda$ for $1 \leq i \leq \lambda$.
+    
+    Formally, let $X \sim \mathrm{PP} (\lambda)$ and $(Z_i)_{i \geq 0}$ be a sequence of iid. Bernoulli random variables, with success probability $p$. Let $Y$ be a process with jumps at time $t$ if and only if $X$ jumps at $t$ and $Z_{X_i} = 1$. Then $Y \sim \mathrm{PP} (p\lambda)$ and $X-Y \sim \mathrm{PP} ((1-p)\lambda)$, and these are  independent.
+\end{theorem}
+
+\begin{prf}
+    We use the infinitesimal definition from (\ref{poisson-process-definitions}). The independence of $Y$ follows from that of $X$. Then we have
+    \begin{align*}
+    	\P[Y_{t+h} - Y_t = 1] &= p \times \P[X_{t+h} - X_t = 1] + \calO(h) \\
+    	&= p \lambda h + \calO(h) \\
+    	\P[Y_{t+h} - Y_t = 0] &= p \times \P[X_{t+h} - X_t = 0] + (1-p) \times \P[X_{t+h} - X_t = 1] + \calO(h) \\
+    	&= 1 - \lambda h + (1-p)(\lambda h + \calO(h)) + \calO(h) \\
+    	&= 1 - p \lambda h + \calO(h)
+	\end{align*}
+	Thus $Y \sim \mathrm{PP}(p\lambda)$. Similarly, $X - Y \sim \mathrm{PP}((1-p)\lambda)$.
+	
+	To prove independence, since both processes are right-continuous and increasing, we need only prove that the finite-dimensional distributions are independent. That is, show for all $t_1 < \dots < t_k$, $m_1 < \dots < m_k$, and $n_1 < \dots < n_k$ we have
+	\begin{align*}
+    	& \P[Y_{t_1} = n_1 \dots Y_{t_k} = n_k, \, (X-Y)_{t_1} = m_1 \dots (X-Y)_{t_k} = m_k] \\
+    	= \; &\P[Y_{t_1} = n_1 \dots Y_{t_k} = n_k] \times \P[(X-Y)_{t_1} = m_1 \dots (X-Y)_{t_k} = m_k]
+	\end{align*}
+	We will show this for $k=1$: the general case follows similarly. We see that
+	\begin{align*}
+    	\P[Y_t = n, X_t - Y_t = m] &= \P[Y_t = n] \times \P[X_t - Y_t = m] \\
+    	&= \P[Y_t = n \mid X_t = m+n] \times \P[X_t = m + n] \\
+    	&= \binom{m+n}{n} \times p^n (1-p)^m \times e^{-\lambda t} \times \frac{(\lambda t)^{m+n}}{(m+n)!} \\
+    	&= \frac{e^{-\lambda t p} \times (\lambda t p)^n}{n!} \times \frac{e^{-\lambda t (1-p)} \times (\lambda t (1-p))^m}{m!} \\
+    	&= \P[Y_t = n] \times \P[X_t - Y_t = m],
+	\end{align*}
+	proving the result.
+\end{prf}
+
+\begin{theorem}[Uniform Order Statistics]
+    Let $X \sim \mathrm{PP}(\lambda)$. Conditional on the event $\set{X_t = n}$, the jump times $J_1 \dots J_n$ have a joint density equal to
+    \[
+	f(t_1 \dots t_n) = \frac{n!}{t^n} \textbf{1}_{\set{0 \leq t_1 \leq \dots \leq t_n \leq t}}
+	\]
+	where the correcting factor of $n!$ in the numerator is to account for the permutations.
+	
+	That is, the jump times have the order statistics of $n$ iid. $\mathrm{Uniform}[0, \, t]$ random variables.
+\end{theorem}
+\begin{prf}
+    Since $S_1, \, S_2 \dots$ are iid. $\mathrm{Exponential}(\lambda)$ random variables, the joint density is:
+    \[
+	\lambda^{n+1} e^{-\lambda(S_1 + \dots + S_{n+1})} \textbf{1}_{\set{S_1 \dots S_{n+1} > 0}}
+	\]
+	Thus the jump times $J_1 = S_1$, $J_2 = S_1 + S_2$ and so on have the joint density:
+	\[
+	g(t_1 \dots t_{n+1}) = \lambda^{n+1} e^{-\lambda t_{n+1}} \textbf{1}_{\set{0 \leq t_1 \leq \dots \leq t_n \leq t}}
+	\]
+	where we use the fact that $t_{n+1}$ is the sum of the first $n+1$ holding times, the Jacobian of the transformation has determinant 1, and positivity can be rewritten as an order condition.
+	
+	Now, we take $A \subs \R^n$. We must have
+	\begin{align*}
+    	\P[(J_1 \dots J_n) \in A, X_t = n] &= \P[(J_1 \dots J_n) \in A, J_n \leq t < J_{n+1}] \\
+    	&= \int_{(t_1 \dots t_n) \in A, t_n \leq t < t_{n+1}} \lambda^{n+1} e^{-\lambda t_{n+1}} \textbf{1}_{\set{0 \leq t_1 \leq \dots \leq t_n \leq t_{n+1}}} \\
+    	&= \int_{(t_1 \dots t_n) \in A} \int_{t_{n+1} = t}^\infty \lambda^{n+1} e^{-\lambda t_{n+1}} \textbf{1}_{\set{0 \leq t_1 \leq \dots \leq t_n \leq t}} \\
+    	&= \int_{(t_1 \dots t_n) \in A} \lambda^{n+1} e^{-\lambda t} \textbf{1}_{\set{0 \leq t_1 \leq \dots \leq t_n \leq t}}
+	\end{align*}
+	Dividing this by $\P[X_t = n] = e^{-t\lambda} (\lambda t)^n / n!$ yields
+	\[
+	\P[(J_1 \dots J_n) \in A, X_t = n] = \int_{(t_1 \dots t_n) \in A} \frac{n!}{t^n} \times \textbf{1}_{\set{0 \leq t_1 \leq \dots \leq t_n \leq t}}
+	\]
+	exactly as required.
+\end{prf}
+
+% ================================================================== %
+
+\subsection{Birth Process}
+
+We now move from Poisson processes in particular to considering a slightly more general process: the birth process.
+
+\begin{definition}[Birth Process]
+    For each $i$, let $S_i \sim \mathrm{Exponential}(q_i)$ be independent. Set $J_i = S_1 + \dots + S_i$ and $X_t = i$ if $J_i \leq t < J_{i+1}$.
+        
+    A \textit{simple birth process} takes $q_i = i \lambda$ for some $\lambda > 0$.
+\end{definition}
+
+\begin{note}
+	A Poisson process of parameter $\lambda$ is also a birth process with parameters $q_i = \lambda$ for all $i$.
+\end{note}
+
+\begin{note}
+	The simple birth process represents a population of a species, where each individual gives birth with intervals given by Exponential$(\lambda)$ random variables.
+\end{note}
+
+\begin{proposition}[I]
+    Let $(T_k)_{k \geq 1}$ be a sequence of independent random variables with $T_k \sim \mathrm{Exponential}(q_k)$ and $0 < q = \sum_{k} < \infty$. Define $T = \inf_k T_k$. Then we have
+    \begin{enumerate}
+    	\item $T \sim \mathrm{Exponential}(q)$.
+    	\item The infimum is almost surely attained at a unique point $K$, with $\P[K = k] = q_k/q$.
+    	\item $T$ and $K$ are independent of each other.
+	\end{enumerate}
+\end{proposition}
+\begin{prf}
+    In Example Sheet 1.
+\end{prf}
+
+
+\end{document}
