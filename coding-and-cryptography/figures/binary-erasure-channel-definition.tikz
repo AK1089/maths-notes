@@ -1,0 +1,21 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=light blue] (0) at (-3, 1.5) {\texttt{0}};
+		\node [style=light blue] (1) at (-3, -1.5) {\texttt{1}};
+		\node [style=none] (4) at (0, 3.25) {$1-p$};
+		\node [style=none] (6) at (0, -3.25) {$1-p$};
+		\node [style=none] (7) at (0, 0) {$p$};
+		\node [style=yellow dot] (8) at (3, 3) {\texttt{0}};
+		\node [style=yellow dot] (9) at (3, -3) {\texttt{1}};
+		\node [style=none] (10) at (10.75, 0) {$P = \begin{pmatrix}
+	1-p & p & 0 \\ 0 & p & 1-p
+\end{pmatrix}$};
+		\node [style=yellow dot] (11) at (3, 0) {\texttt{*}};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=transition] (0) to (8);
+		\draw [style=transition] (1) to (9);
+		\draw [style=transition] (0) to (11);
+		\draw [style=transition] (1) to (11);
+	\end{pgfonlayer}
+\end{tikzpicture}

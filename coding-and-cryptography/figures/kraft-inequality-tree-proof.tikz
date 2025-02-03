@@ -1,0 +1,49 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=yellow dot] (0) at (0, 7) {};
+		\node [style=red dot] (1) at (-2, 4) {};
+		\node [style=red dot] (2) at (2, 4) {};
+		\node [style=red dot] (3) at (-3, 1) {};
+		\node [style=red dot] (4) at (-1, 1) {};
+		\node [style=red dot] (5) at (1, 1) {};
+		\node [style=red dot] (6) at (3, 1) {};
+		\node [style=none] (15) at (-1.5, 5.5) {\texttt{0}};
+		\node [style=none] (16) at (1.5, 5.5) {\texttt{1}};
+		\node [style=none] (17) at (-3, 2.5) {\texttt{0}};
+		\node [style=none] (18) at (-1, 2.5) {\texttt{1}};
+		\node [style=none] (19) at (1, 2.5) {\texttt{0}};
+		\node [style=none] (20) at (3, 2.5) {\texttt{1}};
+		\node [style=none] (21) at (-3.5, -2) {};
+		\node [style=none] (22) at (-2.5, -2) {};
+		\node [style=none] (23) at (-1.5, -2) {};
+		\node [style=none] (24) at (-0.5, -2) {};
+		\node [style=none] (25) at (0.5, -2) {};
+		\node [style=none] (26) at (1.5, -2) {};
+		\node [style=none] (27) at (2.5, -2) {};
+		\node [style=none] (28) at (3.5, -2) {};
+		\node [style=none] (29) at (-3.5, -2.5) {$\vdots$};
+		\node [style=none] (30) at (-2.5, -2.5) {$\vdots$};
+		\node [style=none] (31) at (-1.5, -2.5) {$\vdots$};
+		\node [style=none] (32) at (-0.5, -2.5) {$\vdots$};
+		\node [style=none] (33) at (0.5, -2.5) {$\vdots$};
+		\node [style=none] (34) at (1.5, -2.5) {$\vdots$};
+		\node [style=none] (35) at (2.5, -2.5) {$\vdots$};
+		\node [style=none] (36) at (3.5, -2.5) {$\vdots$};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=transition] (0) to (1);
+		\draw [style=transition] (1) to (3);
+		\draw [style=transition] (1) to (4);
+		\draw [style=transition] (0) to (2);
+		\draw [style=transition] (2) to (5);
+		\draw [style=transition] (2) to (6);
+		\draw [style=transition] (3) to (21.center);
+		\draw [style=transition] (3) to (22.center);
+		\draw [style=transition] (4) to (23.center);
+		\draw [style=transition] (4) to (24.center);
+		\draw [style=transition] (5) to (25.center);
+		\draw [style=transition] (5) to (26.center);
+		\draw [style=transition] (6) to (27.center);
+		\draw [style=transition] (6) to (28.center);
+	\end{pgfonlayer}
+\end{tikzpicture}
