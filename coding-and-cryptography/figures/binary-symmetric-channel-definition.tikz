@@ -8,7 +8,7 @@
 		\node [style=yellow dot] (8) at (3, 3) {\texttt{0}};
 		\node [style=yellow dot] (9) at (3, -2) {\texttt{1}};
 		\node [style=none] (10) at (10.75, 0.5) {$P = \begin{pmatrix}
-	1-p & p & 0 \\ 0 & p & 1-p
+	1-p & p \\ p & 1-p
 \end{pmatrix}$};
 	\end{pgfonlayer}
 	\begin{pgfonlayer}{edgelayer}

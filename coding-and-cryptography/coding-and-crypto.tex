@@ -11,7 +11,7 @@
 \name{Avish Kumar}
 \email{ak2461@cam.ac.uk}
 \website{https://ak1089.github.io/maths/notes}
-\version{1.5}
+\version{1.6}
 \disclaimer{These notes are unofficial and may contain errors. While they are written and published with permission, they are not endorsed by the lecturer or University.}
 
 % Auxiliary files
@@ -422,6 +422,8 @@ Now, we may prove our target theorem.
 
 \
 
+% ================================================================== %
+
 \subsection{Coding Sequences}
 
 In Shannon's Noiseless Coding Theorem (\ref{shannon-noiseless-coding-theorem}) we don't always attain the lower bound $H(X) / \log a$. However, by coding longer \textit{sequences} we can make our code more efficient and closer to this bound.
@@ -508,5 +510,119 @@ We now present an alternative definition of the asymptotic equipartition propert
 \begin{corollary}
     A memoryless source has information rate equal to its entropy $H(X)$.
 \end{corollary}
+
+% ================================================================== %
+
+\pagebreak
+\section{Error Control Codes}
+
+Recall our initial schematic of a code from \ref{source-encoder-channel-receiver-decoder}. In the previous section, we considered the problem of sending coded messages when the channel was \textit{noiseless}, that is when we had a perfect guarantee that the message we sent would be accurately received. Now, we consider the case when this does not hold, because our channel is \textit{noisy}. Examples of such channels can be found in \ref{binary-symmetric-erasure-channel}.
+
+\begin{definition}[Binary Code]
+    An $[n, m]$ \textit{binary code} is a subset $C \subs \set{\texttt{0}, \texttt{1}}^n$ of size $m$. We say that $C$ has length $n$. The elements of $C$ are called \textit{codewords}.
+\end{definition}
+
+\begin{note}
+	By this definition, since all elements of $C$ have length $n$, $C$ is a \textit{block code}, where all $m$ of the codewords are of equal length. As seen previously, all block codes are prefix-free.
+\end{note}
+
+We use an $[n, m]$-code to send one of $m$ possible messages through a binary symmetric channel (\ref{binary-symmetric-erasure-channel}) making $n$ uses of the channel.
+
+\begin{definition}[Information Rate]
+	\label{information-rate}
+    The \textit{information rate} of an $[n, m]$ binary code $C$ is defined as $\rho(C) = \log(m)/n$.
+\end{definition}
+
+\begin{corollary}
+    Since $C \subs \set{\texttt{0}, \texttt{1}}^n$ is of size $m$, $\rho(C) \leq 1$, with equality if and only if $C = \set{\texttt{0}, \texttt{1}}^n$ (or equivalently if $m = 2^n$). Similarly, a code of size $m=1$ has information rate 0. 
+\end{corollary}
+
+The error rate depends on the \textit{decoding rule}. We consider three possible rules:
+\begin{enumerate}
+    \item The \textit{ideal observer} decoding rule decodes $x \in \set{\texttt{0}, \texttt{1}}^n$ as the codeword $c \in C$ which maximises the probability $\P[c \text{ sent} \mid x \text{ received}]$.
+    \item The \textit{maximum likelihood} decoding rule decodes $x \in \set{\texttt{0}, \texttt{1}}^n$ as the codeword $c \in C$ which maximises the probability $\P[x \text{ received} \mid c \text{ sent}]$.
+    \item The \textit{minimum distance} decoding rule decodes $x \in \set{\texttt{0}, \texttt{1}}^n$ as the codeword $c \in C$ which has the fewest digits changed: that is, minimising $\#\set{1 \leq i \leq n : x_i \neq c_i}$.
+\end{enumerate}
+
+\begin{note}
+	For each of these, some convention is needed in case of a tie (when the codeword chosen is not unique). We could choose one at random, or arbitrarily yet consistently, or ask for the message to be sent again.
+\end{note}
+
+\begin{proposition}[Decoder Agreement 1]
+	\label{decoder-agreement-ideal-observer-max-likelihood}
+    If all messages in $C$ are equally likely to be sent, then the \textit{ideal observer} decoder method and the \textit{maximum likelihood} decoder method agree.
+\end{proposition}
+\begin{prf}
+    By Bayes' rule, we can calculate the probability:
+    \[
+	\P[c \text{ sent} \mid x \text{ received}] = \frac{\P[c \text{ sent}, \, x \text{ received}]}{\P[x \text{ received}]} = \frac{\P[c \text{ sent}]}{\P[x \text{ received}]} \times \P[x \text{ received} \mid c \text{ sent}]
+	\]
+	but having received any $x$, this last fraction is equal for all $c$, and so the two probabilities must be equal to each other. The methods thus assign equal ``scores" to all codewords, so must agree.
+\end{prf}
+
+\begin{definition}[Hamming Distance]
+	\label{hamming-distance}
+    For $x, y \in \set{\texttt{0}, \texttt{1}}^n$, the \textit{Hamming distance} between $x$ and $y$ is the scoring rule used by the minimum distance observer $d(x, y) = \#\set{1 \leq i \leq n : x_i \neq c_i}$. Notice that this is a metric!
+\end{definition}
+
+\begin{proposition}[Decoder Agreement 2]
+	\label{decoder-agreement-max-likelihood-min-distance}
+    If $p < 1/2$, then the \textit{maximum likelihood} decoder method and the \textit{minimum distance} decoder method agree.
+\end{proposition}
+\begin{prf}
+	Suppose $d(x, c) = r$. Then we can calculate the probability explicitly as:
+	\[
+	\P[x \text{ received} \mid c \text{ sent}] = p^r(1-p)^{r-n} = (1-p)^n
+ \times \left( \frac{p}{1-p} \right)^{n-r}
+	\]
+	When $p < 1/2$, this last fraction is less than 1. Therefore choosing $c$ to maximise this probability is the same as choosing $c$ to minimise $d(x, c)$.
+\end{prf}
+
+\begin{note}
+	As mentioned in \ref{binary-symmetric-erasure-channel}, we usually take $p < 1/2$ in general. If $p > 1/2$, then our bit is flipped most of the time, so it would make more sense to send the opposite bit, in which case our bit is now mostly correct (as if $p < 1/2$). If $p = 1/2$, we have an entirely useless channel which simply outputs a stream of random bits with no correlation to what we sent, which is uninteresting.
+\end{note}
+
+\begin{example}[Encoding Codewords]
+    Suppose we have the codewords ``\texttt{000}" and ``\texttt{111}" which are  sent with probabilities $\alpha = 0.9$ and $1-\alpha = 0.1$ respectively. We use a BSC with error probability $p = 1/4$.
+    
+    If we receive the string ``\texttt{110}", how should we decode it?
+    
+    Clearly, the \textit{minimum distance} decoder (and therefore the \textit{maximum likelihood} decoder too, by Proposition \ref{decoder-agreement-max-likelihood-min-distance}) will decode the string as ``\texttt{111}".
+    
+    However, the \textit{ideal observer} decoder will calculate the odds ratio as:
+    \[
+	\underbrace{\ 9:1 \ }_{\text{prior of \texttt{000} vs \texttt{111}}} \times \underbrace{\ (3/64) : (9/64) \ }_{\text{odds of two flips vs one flip}} = \underbrace{\ 3 : 1 \ }_{\text{posterior odds ratio}}
+	\]
+	giving a probability of $3/4$ that ``\texttt{000}" was sent, and thus choosing it as the most likely of the two codewords to have been sent, having received ``\texttt{110}".
+\end{example}
+
+\begin{note}
+	The \textit{ideal observer} rule is also known as the \textit{minimum error} rule. It seems much better, but it requires knowing the prior probabilities of each codeword being sent. From now on, we use the other two methods, since they are equivalent.
+\end{note}
+
+\begin{definition}[Error Detecting/Correcting]
+	\label{error-detecting-correcting}
+	$C$ is $d$-error \textit{detecting} if changing at most $d$ letters of a codeword cannot give you another codeword. Equivalently, the diameter of $C$ under the Hamming metric (\ref{hamming-distance}) is more than $d$.
+	
+	$C$ is $e$-error \textit{correcting} if the knowledge that the string received as at most $e$ errors is sufficient to determine with certainty which codeword was sent.
+\end{definition}
+
+We often consider the \textit{repetition code} of length $n$. Here, the codewords we want to send are just the $n$-long strings of all \texttt{0}s and all \texttt{1}s, where we simply repeat a single bit we want to send. This is an $[n, 2]$ binary code. We can detect $n-1$ errors, and correct anything less than $n/2$ errors, which is fairly good for a code! Unfortunately, the information rate (\ref{information-rate}) is only $1/n$.
+
+\begin{note}
+	The information rate seems like a good definition! In this example we used $n$ bits of channel space to send 1 bit of actual information, and had an information rate of $1/n$. In fact, this holds in general: the information rate can be thought of as the ``bits per bit" of a code.
+\end{note}
+
+\begin{example}[Simple Parity Check Code]
+    The \textit{simple parity check code} of length $n$, also known as the \textit{paper tape code}, is another common code example. Here, we view the first $n-1$ bits as the actual information to communicate, and use the last bit as a free bit to enforce the rule that the total number of \texttt{1}s in the codeword is even. That is:
+    \[
+	C = \set{(x_1 \dots x_n) \in \set{\texttt{0}, \texttt{1}}^n : \sum_{i=1}^n x_i \equiv 0 \pmod 2}
+	\]
+	is the set of codewords, which is an $[n, 2^{n-1}]$ code. It is 1-error detecting, but it cannot correct any errors (0-error correcting). Its information rate is $1- 1/n$, which is a lot better.
+\end{example}
+
+\begin{note}
+	Suppose we change our code $C$ to use the same permutation to reorder each codeword. Then we get a code with the same information rate, error detection capabilities, and so forth. We say such a code is \textit{permutationally equivalent}.
+\end{note}
 
 \end{document}
