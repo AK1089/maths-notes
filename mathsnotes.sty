@@ -265,6 +265,15 @@
 \DeclareMathOperator{\range}{range}
 \DeclareMathOperator{\code}{code}
 
+% Binary set
+\newcommand{\binset}{\set{\texttt{0}, \texttt{1}}}
+
+% ^th
+\let\th\undefined
+\newcommand{\th}{^{\text{th}}}
+
+% =================================================================== $
+
 % Marks the end of a lecture in the notes
 \newcommand{\lectureend}[1]{
   \vspace{1em}
@@ -272,8 +281,6 @@
   \noindent\textbf{\small{End of Lecture #1}}
   \vspace{1em}
 }
-
-% =================================================================== $
 
 % For contents page
 \RequirePackage{tocloft}

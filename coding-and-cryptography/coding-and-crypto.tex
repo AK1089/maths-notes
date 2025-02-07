@@ -11,7 +11,7 @@
 \name{Avish Kumar}
 \email{ak2461@cam.ac.uk}
 \website{https://ak1089.github.io/maths/notes}
-\version{1.6}
+\version{1.7}
 \disclaimer{These notes are unofficial and may contain errors. While they are written and published with permission, they are not endorsed by the lecturer or University.}
 
 % Auxiliary files
@@ -82,13 +82,13 @@ We often identify the channel with its \textit{channel matrix} $P$, which is the
 
 \begin{example}[Binary Symmetric/Erasure Channel]
 	\label{binary-symmetric-erasure-channel}
-	For example, a Binary Symmetric Channel with probability $0 \leq p \leq 1$ of error is a DMC over the binary alphabet $\Sigma_1 = \Sigma_2 = \set{\texttt{0}, \texttt{1}}$. In particular, any bit sent has a probability $p$ of being flipped by the channel due to noise. This can be seen in the below diagram.
+	For example, a Binary Symmetric Channel with probability $0 \leq p \leq 1$ of error is a DMC over the binary alphabet $\Sigma_1 = \Sigma_2 = \binset$. In particular, any bit sent has a probability $p$ of being flipped by the channel due to noise. This can be seen in the below diagram.
 
 	\ \ctikzfig{binary-symmetric-channel-definition} \
 
 	Usually, we assume $p < 0.5$. If $p > 0.5$, then we can just pre-flip the bits sent to reduce the error probability (since any bit is likely flipped back by the channel). If $p = 0.5$, then every single bit received is equally likely to be \texttt{0} and \texttt{1}, independently of what was actually transmitted, so the channel is entirely useless (pure noise).
 
-	A Binary Erasure Channel is similar, taking $\Sigma_1 = \set{\texttt{0}, \texttt{1}}$ but $\Sigma_2 = \set{\texttt{0}, \texttt{1}, \texttt{*}}$, with the \texttt{*} understood to be an \textit{erasure}. Each bit transmitted has a probability $0 \leq p \leq 1$ of being erased, making it unreadable, and is transmitted correctly otherwise (never flipped), giving:
+	A Binary Erasure Channel is similar, taking $\Sigma_1 = \binset$ but $\Sigma_2 = \set{\texttt{0}, \texttt{1}, \texttt{*}}$, with the \texttt{*} understood to be an \textit{erasure}. Each bit transmitted has a probability $0 \leq p \leq 1$ of being erased, making it unreadable, and is transmitted correctly otherwise (never flipped), giving:
 
 	\ \ctikzfig{binary-erasure-channel-definition} \
 
@@ -149,7 +149,7 @@ However, not every function $f: \Sigma_1 \to \Sigma_2^*$ works as a code.
 \begin{prf}
     Firstly, if $f$ is not injective, then $f(x) = f(y)$ where $x \neq y \in \Sigma_1$. But then the encoding of $x$ and $y$ when treated as members of $\Sigma_1^*$ is the same, violating injectivity of $f^*$.
     
-    However, this is not a sufficient condition. Suppose $\Sigma_1 = \set{1, 2, 3, 4}$ and $\Sigma_2 = \set{\texttt{0}, \texttt{1}}$. Define
+    However, this is not a sufficient condition. Suppose $\Sigma_1 = \set{1, 2, 3, 4}$ and $\Sigma_2 = \binset$. Define
     \[
 	f(1) = \texttt{0} \qquad f(2) = \texttt{1} \qquad f(3) = \texttt{00} \qquad f(4) = \texttt{01}
 	\]
@@ -182,7 +182,7 @@ How do we construct decipherable codes? There are a few basic properties of code
     
     \ \ctikzfig{kraft-inequality-tree-proof}
     
-    ($\Leftarrow$) Conversely, we can construct a prefix-free code with word lengths $s_1 < s_2 < \cdots < s_m$. Choose codewords sequentially, ensuring that any previous codewords are not prefixes. Suppose that the $r$th codeword has no valid code available. Then constructing the tree above gives
+    ($\Leftarrow$) Conversely, we can construct a prefix-free code with word lengths $s_1 < s_2 < \cdots < s_m$. Choose codewords sequentially, ensuring that any previous codewords are not prefixes. Suppose that the $r^\text{th}$ codeword has no valid code available. Then constructing the tree above gives
     \[
 	\sum_{i=1}^{r-1} a^{-s_i} = 1 \implies \sum_{i=1}^{m} a^{-s_i} > 1
 	\]
@@ -196,11 +196,11 @@ How do we construct decipherable codes? There are a few basic properties of code
 \begin{prf}
 	Let $f: \Sigma_1 \to \Sigma_2^*$ be a decipherable code with word lengths $s_1 \dots s_m$, where $s = \max s_i$. For any $r \in \N$, we must have
 	\[
-	\left( \sum_{i=1}^m a^{-s_i} \right)^r = \left( \sum_{\ell=1}^{rs} b_\ell a^{-\ell} \right)^r
+	\left( \sum_{i=1}^m a^{-s_i} \right)^r = \left( \sum_{\ell=1}^{rs} b_\ell a^{-\ell} \right)
 	\]
 	where $b_\ell$ is the number of ways of choosing $r$ codewords with total length $\ell$. Since $f$ is decipherable, we know that $b_\ell \leq \abs{\Sigma_2}^\ell = a^\ell$, since no string can be the encoding of more than one set of codewords. This means that we can write
 	\[
-	\left( \sum_{i=1}^m a^{-s_i} \right)^r \leq  \left( \sum_{\ell=1}^{rs} a^\ell a^{-\ell} \right)^r = rs \implies \left( \sum_{i=1}^m a^{-s_i} \right) \leq (rs)^{1/r}
+	\left( \sum_{i=1}^m a^{-s_i} \right)^r \leq  \left( \sum_{\ell=1}^{rs} a^\ell a^{-\ell} \right) = rs \implies \left( \sum_{i=1}^m a^{-s_i} \right) \leq (rs)^{1/r}
 	\]
 	But this is true for any $r$, and $(rs)^{1/r} \to 1$ as $r \to \infty$. Therefore the left hand side of the inequality is at most 1, which is exactly the statement of Kraft's inequality.
 \end{prf}
@@ -515,11 +515,12 @@ We now present an alternative definition of the asymptotic equipartition propert
 
 \pagebreak
 \section{Error Control Codes}
+\subsection{Binary Codes}
 
 Recall our initial schematic of a code from \ref{source-encoder-channel-receiver-decoder}. In the previous section, we considered the problem of sending coded messages when the channel was \textit{noiseless}, that is when we had a perfect guarantee that the message we sent would be accurately received. Now, we consider the case when this does not hold, because our channel is \textit{noisy}. Examples of such channels can be found in \ref{binary-symmetric-erasure-channel}.
 
 \begin{definition}[Binary Code]
-    An $[n, m]$ \textit{binary code} is a subset $C \subs \set{\texttt{0}, \texttt{1}}^n$ of size $m$. We say that $C$ has length $n$. The elements of $C$ are called \textit{codewords}.
+    An $[n, m]$ \textit{binary code} is a subset $C \subs \binset^n$ of size $m$. We say that $C$ has length $n$. The elements of $C$ are called \textit{codewords}.
 \end{definition}
 
 \begin{note}
@@ -534,14 +535,14 @@ We use an $[n, m]$-code to send one of $m$ possible messages through a binary sy
 \end{definition}
 
 \begin{corollary}
-    Since $C \subs \set{\texttt{0}, \texttt{1}}^n$ is of size $m$, $\rho(C) \leq 1$, with equality if and only if $C = \set{\texttt{0}, \texttt{1}}^n$ (or equivalently if $m = 2^n$). Similarly, a code of size $m=1$ has information rate 0. 
+    Since $C \subs \binset^n$ is of size $m$, $\rho(C) \leq 1$, with equality if and only if $C = \binset^n$ (or equivalently if $m = 2^n$). Similarly, a code of size $m=1$ has information rate 0. 
 \end{corollary}
 
 The error rate depends on the \textit{decoding rule}. We consider three possible rules:
 \begin{enumerate}
-    \item The \textit{ideal observer} decoding rule decodes $x \in \set{\texttt{0}, \texttt{1}}^n$ as the codeword $c \in C$ which maximises the probability $\P[c \text{ sent} \mid x \text{ received}]$.
-    \item The \textit{maximum likelihood} decoding rule decodes $x \in \set{\texttt{0}, \texttt{1}}^n$ as the codeword $c \in C$ which maximises the probability $\P[x \text{ received} \mid c \text{ sent}]$.
-    \item The \textit{minimum distance} decoding rule decodes $x \in \set{\texttt{0}, \texttt{1}}^n$ as the codeword $c \in C$ which has the fewest digits changed: that is, minimising $\#\set{1 \leq i \leq n : x_i \neq c_i}$.
+    \item The \textit{ideal observer} decoding rule decodes $x \in \binset^n$ as the codeword $c \in C$ which maximises the probability $\P[c \text{ sent} \mid x \text{ received}]$.
+    \item The \textit{maximum likelihood} decoding rule decodes $x \in \binset^n$ as the codeword $c \in C$ which maximises the probability $\P[x \text{ received} \mid c \text{ sent}]$.
+    \item The \textit{minimum distance} decoding rule decodes $x \in \binset^n$ as the codeword $c \in C$ which has the fewest digits changed: that is, minimising $\#\set{1 \leq i \leq n : x_i \neq c_i}$.
 \end{enumerate}
 
 \begin{note}
@@ -550,7 +551,7 @@ The error rate depends on the \textit{decoding rule}. We consider three possible
 
 \begin{proposition}[Decoder Agreement 1]
 	\label{decoder-agreement-ideal-observer-max-likelihood}
-    If all messages in $C$ are equally likely to be sent, then the \textit{ideal observer} decoder method and the \textit{maximum likelihood} decoder method agree.
+    If all messages in $C$ are equally likely to be sent, then the \textit{ideal observer} decoder method and the \textit{maximum likelihood} decoder method agree on how to decode any received message.
 \end{proposition}
 \begin{prf}
     By Bayes' rule, we can calculate the probability:
@@ -560,14 +561,16 @@ The error rate depends on the \textit{decoding rule}. We consider three possible
 	but having received any $x$, this last fraction is equal for all $c$, and so the two probabilities must be equal to each other. The methods thus assign equal ``scores" to all codewords, so must agree.
 \end{prf}
 
+Now, we use the \textit{minimum distance} rule as the basis for a definition.
+
 \begin{definition}[Hamming Distance]
 	\label{hamming-distance}
-    For $x, y \in \set{\texttt{0}, \texttt{1}}^n$, the \textit{Hamming distance} between $x$ and $y$ is the scoring rule used by the minimum distance observer $d(x, y) = \#\set{1 \leq i \leq n : x_i \neq c_i}$. Notice that this is a metric!
+    For $x, y \in \binset^n$, the \textit{Hamming distance} between $x$ and $y$ is the scoring rule used by the minimum distance observer $d(x, y) = \#\set{1 \leq i \leq n : x_i \neq c_i}$. Notice that this is a metric!
 \end{definition}
 
 \begin{proposition}[Decoder Agreement 2]
 	\label{decoder-agreement-max-likelihood-min-distance}
-    If $p < 1/2$, then the \textit{maximum likelihood} decoder method and the \textit{minimum distance} decoder method agree.
+    If $p < 1/2$, then the \textit{maximum likelihood} decoder method and the \textit{minimum distance} decoder method agree on how to decode any received message.
 \end{proposition}
 \begin{prf}
 	Suppose $d(x, c) = r$. Then we can calculate the probability explicitly as:
@@ -602,7 +605,7 @@ The error rate depends on the \textit{decoding rule}. We consider three possible
 
 \begin{definition}[Error Detecting/Correcting]
 	\label{error-detecting-correcting}
-	$C$ is $d$-error \textit{detecting} if changing at most $d$ letters of a codeword cannot give you another codeword. Equivalently, the diameter of $C$ under the Hamming metric (\ref{hamming-distance}) is more than $d$.
+	$C$ is $d$-error \textit{detecting} if changing at most $d$ letters of a codeword never produces a different codeword. Equivalently, this is the minimum separation distance of $C$.
 	
 	$C$ is $e$-error \textit{correcting} if the knowledge that the string received as at most $e$ errors is sufficient to determine with certainty which codeword was sent.
 \end{definition}
@@ -616,7 +619,7 @@ We often consider the \textit{repetition code} of length $n$. Here, the codeword
 \begin{example}[Simple Parity Check Code]
     The \textit{simple parity check code} of length $n$, also known as the \textit{paper tape code}, is another common code example. Here, we view the first $n-1$ bits as the actual information to communicate, and use the last bit as a free bit to enforce the rule that the total number of \texttt{1}s in the codeword is even. That is:
     \[
-	C = \set{(x_1 \dots x_n) \in \set{\texttt{0}, \texttt{1}}^n : \sum_{i=1}^n x_i \equiv 0 \pmod 2}
+	C = \set{(x_1 \dots x_n) \in \binset^n : \sum_{i=1}^n x_i \equiv 0 \pmod 2}
 	\]
 	is the set of codewords, which is an $[n, 2^{n-1}]$ code. It is 1-error detecting, but it cannot correct any errors (0-error correcting). Its information rate is $1- 1/n$, which is a lot better.
 \end{example}
@@ -624,5 +627,109 @@ We often consider the \textit{repetition code} of length $n$. Here, the codeword
 \begin{note}
 	Suppose we change our code $C$ to use the same permutation to reorder each codeword. Then we get a code with the same information rate, error detection capabilities, and so forth. We say such a code is \textit{permutationally equivalent}.
 \end{note}
+
+In the 1940s, Richard Hamming was working at Bell Labs on an old computer which used punch cards to store and run code. Since users of punch cards were prone to making errors, there were safety checks built in to the machines, so that they could detect malformed input, and loudly alert the operators with bright flashing lights and loud noises. Hamming was frustrated by this, and was said to have remarked ``Damn it, if the machine can detect the error, why can't it correct it?"
+
+This experience influenced  him to create the original \textit{error-correcting Hamming code}.
+
+\begin{example}[Hamming's Original 1950 Code]
+    Let $C \in \binset^7$ be defined by the 7-tuples which satisfy the congruences:
+    \begin{align*}
+    	c_1 + c_3 + c_5 + c_7 &\equiv 0 \pmod 2 \\
+    	c_2 + c_3 + c_6 + c_7 &\equiv 0 \pmod 2 \\
+    	c_4 + c_5 + c_6 + c_7 &\equiv 0 \pmod 2
+	\end{align*}
+	Since there are three of these congruences, the size of $C$ is $2^{7-3} = 16$. This means that $C$ is a [7, 16] code, and thus has information rate $4/7$.
+	
+	Suppose we receive some $x \in \binset^7$. Then we form the \textit{syndrome} $z_x = (z_1, z_2, z_4)$, where:
+	\begin{align*}
+    	z_1 &= x_1 + x_3 + x_5 + x_7 \\
+    	z_2 &= x_2 + x_3 + x_6 + x_7 \\
+    	z_4 &= x_4 + x_5 + x_6 + x_7
+	\end{align*}
+	with addition taken modulo 7. For any $x \in C$, by construction we have $z_x = (0, 0, 0)$.
+	
+	If $d(x, c) = 1$ for some $c \in C$, then the place where they differ is given by $z_1 + 2z_2 + 4z_3$. This is because if $x = c + e_i$, where $e_i$ is a vector with all \texttt{0}s except for a \texttt{1} in the $i\th$ place, then the syndrome of $x$ is the syndrome of $e_i$, which is the binary expansion of $i$ for all $1 \leq i \leq 7$.
+	
+	This is because, for example, $x_3$ appears in the definitions of $z_1$ and $z_2$ only, since $3 = \texttt{110}_2$ and so only bits 1 and 2 would be affected.
+	
+	Thus our code $C$ corrects any single error! However, it doesn't correct two: for example, the string $\texttt{1110000} \in C$ could be corrupted to $\texttt{1000000}$, which would be decoded as \texttt{0000000}.
+\end{example}
+
+Now recall that in the definition of the Hamming distance (\ref{hamming-distance}), we stated that this was a metric. We now prove this formally.
+
+\begin{proposition}[Hamming Metric]
+    The \textit{Hamming distance} $d(x, y) = \#\set{1 \leq i \leq n : x_i \neq c_i}$ is a metric on $\binset^n$.
+\end{proposition}
+\begin{prf}
+    Clearly $d(x, y) \geq 0$, as the count of a set. If $d(x, y) = 0$, then $x$ and $y$ differ in zero places, and so they must be the same: conversely, $d(x, x)$ is clearly 0. Also, the symmetry of the definition gives us the relation $d(x, y) = d(y, x)$. So we only need to show the triangle inequality, using:
+    \[
+	\set{1 \leq i \leq n : x_i \neq z_i} \subs \set{1 \leq i \leq n : x_i \neq y_i} \cup \set{1 \leq i \leq n : y_i \neq z_i}
+	\]
+	which yields $d(x, z) \leq d(x, y) + d(y, z)$. Equivalently, it is the sum metric on $n$ copies of the discrete metric on $\binset$, which is therefore a metric itself.
+\end{prf}
+
+\begin{definition}[Minimum Distance]
+    The \textit{minimum distance} of a code $C \subs \binset^n$ is the smallest Hamming distance between two distinct codewords. An [$n$, $m$] code with minimum distance $d$ is sometimes referred to as an [$n$, $m$, $d$] code. For example, Hamming's original code is a [7, 16, 3] code.
+\end{definition}
+
+\begin{note}
+	We have $m \leq 2^n$, with equality if and only if $C = \binset^n$. This is called the \textit{trivial code}.
+\end{note}
+
+From this definition, we can prove some bounds on how ``good" a code can be (\ref{error-detecting-correcting}).
+
+\begin{proposition}[Error Bounds]
+    Let $C$ be a code with minimum distance $d$. Then:
+    \begin{enumerate}
+    	\item[(i)] $C$ can always detect up to $d-1$ errors, but not necessarily $d$ errors.
+    	\item[(ii)] $C$ can always correct $\floor{\frac{d-1}{2}}$ errors, but not necessarily more.
+	\end{enumerate}
+\end{proposition}
+\begin{prf}
+    Suppose $x \in \binset^n$ and $c \in C$ with $1 \leq d(x, c) \leq d-1$. Then $x \notin C$, as otherwise the minimum distance would not be $d$. Therefore $C$ can detect up to $d-1$ errors. But if $c_1, c_2 \in C$ with $d(c_1, c_2) = d$, then $c_1$ can be corrupted to $c_2$ with just $d$ errors, which the code would not be able to detect. So $d$ errors cannot always be detected.
+    
+    Now, let $e = \floor{\frac{d-1}{2}}$, so $e \leq \frac{d-1}{2} \leq e+1$, or equivalently $2e < d \leq e+1$.
+    
+    Then take $x \in \binset^n$. If there is some $c_1 \in C$ with $d(x, c_1) \leq e$, we want to show $d(x, c_2) > e$ for all $c_2 \neq c_1$ in $C$. This is given directly by the triangle inequality:
+    \[
+	d(x, c_2) \geq d(c_1, c_2) - d(x, c_1) \geq d-e > e.
+	\]
+	Thus $C$ is $e$-error correcting. However, take $c_1, c_2 \in C$ with $d(c_1, c_2) = d$. Let $x$ differ from $c_1$ in precisely $e+1$ places where $c_1$ and $c_2$ also differ. Then $d(x, c_1) = e+1$, and we have
+	\[
+	d(x, c_2) = d - (e+1) \leq e+1
+	\]
+	so both $c_1$ and $c_2$ can be corrupted to $x$ with $e+1$ errors. Therefore $C$ cannot correct $e+1$ errors, and so our bounds are tight.
+\end{prf}
+
+\begin{corollary}
+    The \textit{repetition code} is an [$n$, 2, $n$] code, so detects $n-1$ errors and corrects $\floor{\frac{n-1}{2}}$.
+\end{corollary}
+
+\begin{corollary}
+    The \textit{paper tape code} is an [$n$, $2^{n-1}$, $2$] code, so detects one error but corrects none.
+\end{corollary}
+
+\begin{corollary}
+    The \textit{original Hamming code} is a [7, 16, 3] code, as mentioned earlier.
+\end{corollary}
+
+% ================================================================== %
+
+\subsection{New Codes from Old}
+
+Given an [$n$, $m$, $d$] code, we might want to transform it: making the code ``safer" by enabling it to detect or correct more errors, but at the cost of increasing the length of the codewords. Conversely, we may want to go the other way, sacrificing robustness for efficiency.
+
+\begin{definition}[Parity Extension, Punctured Code, Shortened Code]
+    Let $C$ be an [$n$, $m$, $d$] code. Then The \textit{parity extension} of $C$ is
+    \[
+	\bar C = \set{(c_1, c_2, \dots c_n, \sum_{i=1}^n c_i) : (c_1 \dots c_n) \in C},
+	\]
+	where the addition is taken modulo 2. That is, the new code is the old code, where each of the codewords has an extra bit added as a parity check. This makes $\bar C$ an [$n+1$, $m$, $d'$] code, where $d \leq d' \leq d+1$, depending on the parity of $d$.
+	
+	This code is longer but potentially more error-detecting. Conversely, the \textit{punctured code} goes the other direction, and deletes the $i\th$ letter from each codeword. This forms a code which is one bit shorter, but possibly combines two codewords, unless no two codewords differ only in this letter. A sufficient condition to ensure that this does not happen is to enforce $d \geq 2$.
+	
+	Similarly, we define the \textit{shortened code} for a fixed $a \in \binset$ and $1 \leq i \leq n$. We take all the codewords in $C$, and remove the $i\th$ letter, given that it is an $a$. For some choice of $a$, this will retain at least $\ceil{m/2}$ codewords from the original $C$.
+\end{definition}
 
 \end{document}
