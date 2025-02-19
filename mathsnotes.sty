@@ -34,7 +34,7 @@
   urlcolor=cyan,
 }
 
-% =================================================================== $
+% =================================================================== %
 % Custom graph styling - from the tikzit style files
 \RequirePackage{tikz}
 \usetikzlibrary{backgrounds}
@@ -72,7 +72,7 @@
 % Fix strange self-loops, which are PGF/TikZ default
 \tikzstyle{every loop}=[]
 
-% =================================================================== $
+% =================================================================== %
 
 % Colour palette for custon environments
 \definecolor{blue_dark}{RGB}{0,20,110}
@@ -138,13 +138,14 @@
 \newenvironment{corollary}[1][Corollary]{\textbf{#1:} }{}
 \newenvironment{note}[1][Note]{\textbf{#1:} }{}
 
-% =================================================================== $
+% =================================================================== %
 
 % Commonly used \mathbb symbol shortcuts
 \let\P\undefined
 \newcommand{\B}{\mathbb{B}}
 \newcommand{\C}{\mathbb{C}}
 \newcommand{\E}{\mathbb{E}}
+\newcommand{\F}{\mathbb{F}}
 \newcommand{\K}{\mathbb{K}}
 \newcommand{\M}{\mathbb{M}}
 \newcommand{\N}{\mathbb{N}}
@@ -204,6 +205,7 @@
 \newcommand{\set}[1]{\lb #1 \rb}
 \newcommand{\divides}{\mid}
 \newcommand{\notdivides}{\nmid}
+\newcommand{\indicator}[1]{\textbf{1}_{\set{#1}}}
 
 % Words or text used frequently
 \newcommand{\suchthat}{\mathrel{\, \text{s.t.}}}
@@ -228,6 +230,10 @@
 \newcommand{\Rnnegfinite}{[0, \infty)}
 \newcommand{\Rpos}{(0, \infty]}
 \newcommand{\Rposfinite}{(0, \infty)}
+\newcommand{\intervalCC}[2]{[#1, \, #2]}
+\newcommand{\intervalCO}[2]{[#1, \, #2)}
+\newcommand{\intervalOC}[2]{(#1, \, #2]}
+\newcommand{\intervalOO}[2]{(#1, \, #2)}
 
 % Inequalities
 \renewcommand{\leq}{\leqslant}
@@ -264,6 +270,7 @@
 \DeclareMathOperator{\dom}{dom}
 \DeclareMathOperator{\range}{range}
 \DeclareMathOperator{\code}{code}
+\DeclareMathOperator{\Markov}{Markov}
 
 % Binary set
 \newcommand{\binset}{\set{\texttt{0}, \texttt{1}}}
@@ -272,7 +279,36 @@
 \let\th\undefined
 \newcommand{\th}{^{\text{th}}}
 
-% =================================================================== $
+% =================================================================== %
+
+% Simple theorem numbering utilities
+\newcounter{old@section}
+\newcounter{old@theoreminner}
+
+\newcommand{\setnumber}[1]{
+    \setcounter{old@section}{\value{section}}
+    \setcounter{old@theoreminner}{\value{theoreminner}}
+    
+    % Split at the period and extract numbers
+    \def\@tmpa{}% section number
+    \def\@tmpb{}% theorem number
+    \expandafter\extract@numbers#1\@nil
+    \setcounter{section}{\@tmpa}
+    \setcounter{theoreminner}{\numexpr\@tmpb-1\relax}
+}
+
+% Helper to split "2.32" into section and theorem numbers
+\def\extract@numbers#1.#2\@nil{
+    \def\@tmpa{#1}
+    \def\@tmpb{#2}
+}
+
+\newcommand{\resetnumber}{
+    \setcounter{section}{\value{old@section}}
+    \setcounter{theoreminner}{\value{old@theoreminner}}
+}
+
+% =================================================================== %
 
 % Marks the end of a lecture in the notes
 \newcommand{\lectureend}[1]{
