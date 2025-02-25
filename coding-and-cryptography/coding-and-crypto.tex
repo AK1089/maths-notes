@@ -11,7 +11,7 @@
 \name{Avish Kumar}
 \email{ak2461@cam.ac.uk}
 \website{https://ak1089.github.io/maths/notes}
-\version{1.12}
+\version{1.14}
 \disclaimer{These notes are unofficial and may contain errors. While they are written and published with permission, they are not endorsed by the lecturer or University.}
 
 % Auxiliary files
@@ -948,15 +948,15 @@ of the asymptotic equipartition property
 \section{Error Control Codes}
 \subsection{Binary Codes}
 
-Recall our initial schematic of a code from
-\ref{source-encoder-channel-receiver-decoder}.
+Recall our initial schematic of a code
+(Definition \ref{source-encoder-channel-receiver-decoder}).
 In the previous chapter, we considered the problem of sending coded messages
 when the channel was \textit{noiseless},
 that is when we had a perfect guarantee that
 the message we sent would be accurately received.
 Now, we consider the case when this does not hold,
 because our channel is \textit{noisy}.
-Examples of such channels can be found in \ref{binary-symmetric-erasure-channel}.
+Some such channels can be found in Example \ref{binary-symmetric-erasure-channel}.
 
 \begin{definition}[Binary Code]
 	\label{binary-code-n-m}
@@ -1205,8 +1205,8 @@ This experience influenced him to create the original
     	z_2 &= x_2 + x_3 + x_6 + x_7 \\
     	z_4 &= x_4 + x_5 + x_6 + x_7
 	\end{align*}
-	with addition taken modulo 7.
-	For any $x \in C$, by construction we have $z_x = (0, 0, 0)$.
+	with addition taken modulo 2.
+	For any $c \in C$, by construction we have $z_c = (0, 0, 0)$.
 	
 	If $d(x, c) = 1$ for some $c \in C$,
 	then the place where they differ is given by $z_1 + 2z_2 + 4z_3$.
@@ -2396,7 +2396,7 @@ We use this to define a linear code.
 	is a linear code.
 \end{proposition}
 \begin{prf}
-    $\textbf{0} \in C$, since $p \cdot 0 = 0$ for all $p \in P$.
+    $\textbf{0} \in C$, since $p \cdot \mathbf{0} = 0$ for all $p \in P$.
     Also, if $x$ and $y$ are in $C$, then
     $p \cdot (x + y) = p \cdot x + p \cdot y$
     by linearity, and this is 0, so $x + y \in C$.
@@ -2440,5 +2440,278 @@ $\dim C + \dim \phi(C^\bot) = \dim C + \dim C^\bot = n$.
 \begin{corollary}
     Any linear code is a parity check code.
 \end{corollary}
+
+\begin{definition}[Generator and Parity Check Matrix]
+    Let $C$ be an $(n, k)$ linear code.
+    Then a \textit{generator matrix} for $C$ is the $k \times n$ matrix whose rows are a basis for $C$. A \textit{parity check} matrix is an $(n-k) \times n$ generator matrix for $C^\bot$.
+\end{definition}
+
+\begin{proposition}[Equivalence]
+    Every $(n, k)$ linear code is equivalent to some linear code with generator matrix of the form
+    $(I_k \ \ B)$, where $I_k$ is the $k \times k$ identity matrix.
+\end{proposition}
+
+\begin{prf}
+    We can perform operations including swapping two rows and adding one row to another.
+    (We can also multiply by scalars, but this is unhelpful in $\F_2$.)
+    
+    By Gaussian elimination, we can get $G$ the generator matrix in row echelon form:
+    \[
+	\begin{pmatrix}
+		1 & * & * & * & \cdots & * \\
+		0 & 1 & * & * & \cdots & * \\
+		0 & 0 & 0 & 1 & \cdots & * \\
+		\vdots & \vdots & \vdots & \vdots & \ddots & \vdots \\
+		0 & 0 & 0 & 0 & \cdots & * \\
+	\end{pmatrix}
+	\quad
+	\text{ a $k \times n$ matrix}
+	\]
+	where row echelon form means that the leading non-zero term in each row is to the right of the leading non-zero term of the row above.
+	
+	That is, there is some $\ell(1) < \ell(2) < \dots < \ell(k)$, where $G_{ij} = 0$ if $j < \ell(i)$ and 1 if $j = \ell(i)$.
+	
+	Now, using equivalence, we can permute the columns to pull the 1s into the right place, so that the left block of the matrix is $I_k$.
+	That is, without loss of generality, we may take $\ell(i) = i$ for all $1 \leq i \leq k$, and then use more row operations to put $G$ in the form $(I_k \ \ B )$ as required, where $B$ is a $k \times (n-k)$ matrix.
+\end{prf}
+
+\begin{note}
+	A message $y \in \F_2^k$ (a row vector) is sent as $yG$.
+	If $G$ is of this form, then $yG = (y \ \ yB)$.
+\end{note}
+
+\begin{proposition}[Parity Check Matrix]
+    An $(n, k)$ linear code with generator matrix $G = (I_k \ \ B)$ has parity check matrix $H$, where $H = (-B^T \ \ I_{n-k})$
+\end{proposition}
+
+\begin{prf}
+    Since $GH^T = (I_K \ \ B) (-B \ \ I_{n-k})^T = -B + B = 0$, the rows of $H$ generate a subcode of $C^\bot$. But in fact the dimensions match: $\dim(C^\bot) = n - k = \rank(H)$. So the rows of $H$ must be a basis of $C^\bot$ as required.
+\end{prf}
+
+\begin{definition}[Hamming Weight]
+	\label{hamming-weight}
+    Building off the Hamming distance (Definition \ref{hamming-distance}), we define the \textit{Hamming weight} of $x \in \F_2^n$ as $w(x) = d(x, \mathbf{0})$, or the number of 1s in $x$.
+\end{definition}
+
+\begin{corollary}
+    The minimum distance of a linear code $C$ is then the minimum weight of a non-zero codeword, since $d(x, y) = d(x-y, \mathbf{0}) = d(x + y, \mathbf{0}) = w(x+y)$, and so $x$ and $y$ are distinct if and only if $x + y \neq \mathbf{0}$. This gives the minimum distance as the minimum weight of $x + y$.
+\end{corollary}
+
+\begin{note}
+	For a linear code $C$, this minimum distance is called the \textit{weight} of $C$.
+	It is thus far easier to find the weight of a linear code in particular compared to any arbitrary binary code.
+\end{note}
+
+We now return to syndrome decoding, which we briefly considered earlier when studying Hamming's original code in Example \ref{hammings-original-code}.
+
+% ================================================================== %
+
+\subsection{Syndrome Decoding}
+
+Suppose $C$ is an $(n, r)$ linear code with parity check matrix $H$.
+In particular, we must have that $C = \set{c \in \F_2^n : Hc = \mathbf{0}}$, when considering the $c$ as column vectors.
+
+Suppose we have sent $c$ through a noisy channel, and received $x$ through the other side.
+Since $\F_2^n$ is a field with addition modulo 2, we can write $x = c + e$ for some unique \textit{error pattern} $e \in \F_2^n$.
+
+\begin{note}
+	This $e$ has entry $e_i = 1$ if and only if the $i\th$ bit of $c$ was corrupted by the channel.
+\end{note}
+
+Now, we consider $Hx = Hc + He$.
+But then $Hc = \mathbf{0}$ by definition, and so we are picking up $He$!
+This $Hx$ is called the \textit{syndrome} of the received codeword.
+
+Suppose that we know $C$ is $k$-error correcting.
+Then we can tabulate the syndromes $He$ for each $e \in \F_2^n$ with distance $k$ or less from $\mathbf{0}$ (equivalently, for each $e$ with $w(e) \leq k$).
+This means that when we receive $x \in \F_2^n$, we can search for $Hx$ in our table, and if successful, we can find $Hx = He$ for some known error pattern $e$ in our table!
+
+We then decode $x$ as $c = x - e$, which will always be correct if there were $k$ or fewer errors, as the distance $d(c, x) = w(e) \leq k$, and $Hc = Hx - He = 0$ as required.
+
+\begin{note}
+	This method of decoding relies on the linearity of $H$: we required $H(c + e) = Hc + He$.
+\end{note}
+
+Now, we are ready to restate Example \ref{hammings-original-code} in the language of linear codes and syndromes!
+
+\begin{example}[Hamming's Original 1950 Code Redux]
+    We defined $C \in \F_2^7$ by the 7-tuples
+    which satisfy the congruences:
+    \begin{align*}
+    	c_1 + c_3 + c_5 + c_7 &\equiv 0 \pmod 2 \\
+    	c_2 + c_3 + c_6 + c_7 &\equiv 0 \pmod 2 \\
+    	c_4 + c_5 + c_6 + c_7 &\equiv 0 \pmod 2
+	\end{align*}
+	The dual code is therefore $C^\bot = \set{(1010101), \, (0110011), \, (0001111)}$.
+	This is everything which is orthogonal to every codeword in $C$, by design.
+	
+	In particular, we can write down our parity check matrix $H$ with rows $C^\bot$:
+	\[
+	H = \begin{pmatrix}
+		1 & 0 & 1 & 0 & 1 & 0 & 1 \\
+		0 & 1 & 1 & 0 & 0 & 1 & 1 \\
+		0 & 0 & 0 & 1 & 1 & 1 & 1 \\
+	\end{pmatrix}
+	\]
+	When we receive $x \in \F_2^n$, we formed the syndrome $z_x = (z_1, z_2, z_4)$, where:
+	\begin{align*}
+    	z_1 &= x_1 + x_3 + x_5 + x_7 \\
+    	z_2 &= x_2 + x_3 + x_6 + x_7 \qquad (\text{so } z_x = H x) \\
+    	z_4 &= x_4 + x_5 + x_6 + x_7
+	\end{align*}
+	with addition taken modulo 2.
+	For any $c \in C$, by construction we have $z_c = (0, 0, 0)$.
+	
+	If $d(x, c) = 1$ for some $c \in C$,
+	then the place where they differ is given by $z_1 + 2z_2 + 4z_3$.
+	This is because if $x = c + e_i$,
+	where $e_i$ is a vector with all 0s
+	except for a 1 in the $i\th$ place,
+	then the syndrome of $x$ is the syndrome of $e_i$,
+	which is the binary expansion of $i$ for all $1 \leq i \leq 7$.
+	
+	We can see this by writing $x = c + e_i$, and so $Hx = Hc + He_i = He_i$.
+	But if $e_i$ really is this error vector with a single 1 in the $i\th$ place, then $He_i$ is the $i\th$ column of $H$, read bottom to top.
+	These are simply (0 0 1), (0 1 0), (0 1 1), (1 0 0), and so on: indeed, they are the binary representations of the numbers $i = 1$ to 7. Thus we have a 1-error correcting syndrome code!
+\end{example}
+
+In fact, this allows us to generalise the idea of Hamming codes!
+
+\begin{definition}[Generalised Hamming Code]
+    Let $d \geq 2$ and take $n = 2^d - 1$. Let $H$ be a $d \times n$ matrix whose $n$ columns are the $2^d-1$ non-zero elements of $\F_2^d$.
+    
+    The \textit{Hamming} $(n, n-d)$ \textit{linear code} is then the  linear code with parity check matrix $H$. It is easy to see the parity checks used: they are precisely the rows of the matrix!
+\end{definition}
+
+\begin{note}
+	With $d = 3$, we find Hamming's original [7, 16, 3] code, which is a (7, 4) linear code.
+\end{note}
+
+\begin{proposition}[Weights in Matrices]
+    Let $C$ be a linear code with parity check matrix $H$. Then the weight of $C$ is $d$ if and only if any set of $d-1$ columns of $H$ are linearly independent, but there is some set of $d$ columns which are linearly dependent.
+\end{proposition}
+
+\begin{prf}
+    Suppose $C$ has length $n$. Then $C = \set{x \in \F_2^n : Hx = \mathbf{0}}$. If $H$ has columns $v_1, \dots, v_n$, then the codeword $(x_1, \dots, \, x_n)$ is in $C$ if and only if the sum of $x_iv_i$ is $\mathbf{0}$.
+    
+    That is, codewords are dependence relations between columns of $H$.
+\end{prf}
+
+\begin{corollary}
+    The Hamming $(n, n-d)$ linear code $C_d$ has minimum distance $d(C_d) = 3$, and is a perfect 1-error correcting code.
+\end{corollary}
+
+\begin{prf}
+    Any two columns of the parity check matrix $H$ are linearly independent by construction, but there is a set of three linearly dependent columns (the first, second, and third), so $d(C_d) = 3$.
+    
+    Thus $C_d$ is 1-error correcting,
+    so to be perfect we want $V(n, 1) \times \abs{C_d} = 2^n$.
+    Here, $n = 2^d-1$, and so $V(n, 1) = 1+n = 2^d$.
+    Then as $\abs{C_d} = 2^{n-d}$, the relation holds.
+\end{prf}
+
+% ================================================================== %
+
+\subsection{Reed-Muller Codes}
+
+We now motivate the famous Reed-Muller code, using  a construction specific to linear codes.
+
+\begin{definition}[Bar Product]
+    Let $C_2 \subs C_1$ be a pair of nested linear codes of length $n$. Then the \textit{bar product} is defined by:
+    \[
+	C_1|C_2 = \set{(x|x+y) : x \in C_1, \, y \in C_2}.
+	\]
+	Here, $(x|x+y)$ denotes the concatenation of two $n$-long codewords. This is therefore a code of length $2n$, and linearity is preserved.
+\end{definition}
+
+This definition has some nice properties one might desire.
+
+\begin{proposition}[Bar Product Properties]
+    For $C_1$ and $C_2$ as above, the bar product satisfies:
+    \begin{enumerate}
+	    \item $\rank(C_1|C_2) = \rank(C_1) + \rank(C_2)$.
+	    \item $w(C_1|C_2) = \min \set{2w(C_1), \, w(C_2)}$.
+	\end{enumerate}
+\end{proposition}
+
+\begin{prf}
+    Let $x_1, \dots, x_k$ be a basis for $C_1$, and 
+    let $y_1, \dots, y_\ell$ be a basis for $C_2$.
+    Then the size $k+\ell$ set
+    $\set{(x_i|x_i) : 1 \leq i \leq k} \cup \set{(0|y_j) : 1 \leq j \leq \ell}$
+	is a basis for $C_1|C_2$.
+	
+	Now, let $x \in C_1$ and $y \in C_2$, not both zero, and consider two cases.
+	\begin{enumerate}
+    	\item If $y \neq 0$, then $w(x|y) = w(x) + w(x+y) \geq w(y) \geq w(C_2)$.
+    	\item If $y = 0$, then $x \neq 0$, and so $w(x|x) = 2w(x) \geq 2w(C_1)$.
+	\end{enumerate}
+	So $w(C_1|C_2) = \min \set{2w(C_1), \, w(C_2)}$. Additionally, there is some $x \in C_1$ with $w(x) = w(C_1)$, so $w(x|x) = 2w(x) = 2w(C_1)$, and a $y \in C_2$ with $w(y) = w(C_2)$, so these bounds are tight.
+\end{prf}
+
+Now, we are almost ready to define the Reed-Muller code. We set up some notation first.
+
+\begin{remark}[Reed-Muller Code Setup]
+    Let $X = \F_2^d = \set{p_1, \dots, p_{2^d}}$, where we choose some ordering, and set $n = 2^d$. For each $A \subs X$, we get an indicator vector $\mathbf{1}_A \in \F_2^n$ using the rule $(\mathbf{1}_A)_i = 1$ if and only if $p_i \in A$.
+    
+    For $x, y \in \F_2^n$, we have the addition and ``wedge product" relations:
+    \begin{align*}
+	    x + y &= (x_1 + y_1, \dots, x_n + y_n) \\
+	    x \land y &= (x_1 y_1, \dots, x_n y_n)
+	\end{align*}
+	Then $(\F_2^n, +, \land)$ is a ring: in fact, it is the product ring of $n$ copies of the ring $(\F_2^n, +, \times)$, with operations defined componentwise.
+	
+	For $A, B \subs X$, recall the \textit{symmetric difference} $A \triangle B = (A \setminus B) \cup (B \setminus A) = (A \cup B) \setminus (A \cap B)$. This gives us the indicator function relations:
+	\begin{align*}
+	    \mathbf{1}_A + \mathbf{1}_B &= \mathbf{1}_{A \triangle B} \\
+	    \mathbf{1}_A \land \mathbf{1}_B &= \mathbf{1}_{A \cap B} \\
+	    w(\mathbf{1}_A) &= \abs A.
+	\end{align*}
+	Now, we let $v_0 = \mathbf{1}_X = (1, 1, \dots, 1)$ be the multiplicative identity under $\land$. For $1 \leq i \leq d$, we let $(v_i)_j = 1$ if $j \in \set{p \in X: p_i = 0}$. That is, since the $p$ are identified with $d$-vectors, we take the entry in position $i$ and check if it is equal to $0$, so that $v_i$ is an $n$-vector with entries 1 in the places corresponding to $d$-vectors with a 0 in position $i$.
+\end{remark}
+
+\begin{definition}[Reed-Muller Codes]
+    The \textit{Reed-Muller code} of order $r$ and length $n = 2^d$, written $\mathrm{RM}(d, r)$, is the vector subspace of $\F_2^n$ spanned by $v_0$ and wedge products of at most $r$ of the $v_i$. Since the identity under $\land$ is $v_0$, we take this to be the value of the empty wedge product.
+\end{definition}
+
+This definition may feel strange and difficult to visualise. It is easy to construct Reed-Muller codes for a fixed $d$ by constructing an $n \times n$ table. When $d = 3$, we can write:
+
+\renewcommand{\arraystretch}{1.3}
+\begin{table}[h!]
+\small{
+\begin{center}
+\begin{tabular}{|r|c|c|c|c|c|c|c|c|}
+\hline
+& \texttt{000} & \texttt{001} & \texttt{010} & \texttt{011} & \texttt{100} & \texttt{101} & \texttt{110} & \texttt{111}  \\ \hline
+$v_0$ & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 \\ \hline
+$v_1$ & 1 & 1 & 1 & 1 & 0 & 0 & 0 & 0 \\ \hline
+$v_2$ & 1 & 1 & 0 & 0 & 1 & 1 & 0 & 0 \\ \hline
+$v_3$ & 1 & 0 & 1 & 0 & 1 & 0 & 1 & 0 \\ \hline
+$v_1 \land v_2$ & 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\ \hline
+$v_2 \land v_3$ & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\ \hline
+$v_1 \land v_3$ & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\ \hline
+$v_1 \land v_2 \land v_3$ & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ \hline
+\end{tabular}
+\end{center}
+}
+\end{table}
+
+\begin{note}
+	Here, we have ordered $\F_2^3$ naturally, by treating elements as binary digits, and counting from 0 to $n-1 = 7$. Indeed, reading the rows of $v_1$, $v_2$, and $v_3$ as a list of 8 column vectors from right to left gives the binary expansions of the numbers from 0 to 7.
+\end{note}
+
+Now, we can take specific values of $r$:
+\begin{enumerate}
+	\setcounter{enumi}{-1}
+    \item When $r = 0$, we take only the span of $v_0$, yielding the repetition code of length 8.
+    \item When $r = 1$, we take only the span of $\set{v_0, v_1, v_2, v_3}$. This gives us the first four rows of the table. Deleting the first column, we see the Hamming [7, 16, 3] code! In fact, the first four rows and last seven columns are the generator matrix for this code.
+    
+    Also, all the $v_i$ have even weight. This means that $\mathrm{RM}(3, 1)$ is equivalent to the parity check extension of the Hamming code, with one extra bit.
+    \item When $r = 2$, $\mathrm{RM}(3, 2)$ is the span of all the rows except the last one. These are linearly independent, as we shall see soon. Moreover, each codeword has even weight: this is because the seven ``generator codewords" do, and $w(x + y) \equiv w(x) + w(y) \pmod{2}$.
+    
+    This means that $\mathrm{RM}(3, 2)$ is an (8, 7) linear code with every codeword having even weight. It is therefore equivalent to the parity check code of length 8.
+    \item When $r = 3$, $\mathrm{RM}(3, 3)$ is the span of 8 linearly independent vectors, which is clearly all of $\F_2^8$. This means that $\mathrm{RM}(3, 3)$ is the trivial code of length 8.
+\end{enumerate}
+Indeed, $\mathrm{RM}(d, 0)$ and $\mathrm{RM}(d, d)$ are always the repetition and trivial codes respectively.
 
 \end{document}

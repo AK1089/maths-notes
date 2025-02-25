@@ -1,0 +1,1897 @@
+% ================================================================== %
+\documentclass{article}
+\usepackage{mathsnotes}
+
+% Course Details
+\course{Logic and Set Theory}
+\term{Lent 2024--25}
+\lecturer{Andr\'as Zs\'ak}
+\tripospart{Part II of the Mathematical Tripos}
+\university{University of Cambridge}
+\name{Avish Kumar}
+\email{ak2461@cam.ac.uk}
+\website{https://ak1089.github.io/maths/notes}
+\version{1.14}
+\disclaimer{These notes are unofficial and may contain errors. While they are written and published with permission, they are not endorsed by the lecturer or University.}
+
+% Auxiliary files
+\input{../graphs.tikzstyles}
+
+% Format the document
+\begin{document}
+\makecover
+% ================================================================== %
+
+\section{Propositional Logic}
+\subsection{Propositions}
+\label{section-propositional-logic}
+
+The language of propositional logic consists of a set $P$ of \textit{primitive propositions}, and the set $L(P)$ of propositions. These statements in the language are meaningful, and can be \texttt{true} or \texttt{false}.
+
+\begin{definition}[Set of Propositions $L$]
+	\label{set-of-propositions}
+    Given a set $P$ of primitive propositions, the set $L$ is defined to be the smallest set containing $P$ with $\bot \in L$ (the symbol for \texttt{false}) such that if $p$ and $q$ are in $L$, then $(p \Ra q)$ is in $L$.
+\end{definition}
+
+Often, $P = \set{p_1, p_2, p_3, \dots}$ is a countably infinite set of primitive propositions. In this case, we have propositions in $L$ like $(p_1 \Ra p_2)$ or  $(p_1 \Ra p_2)$,  $(\bot \Ra (p_1 \Ra p_2))$, and $((p_1 \Ra p_2) \Ra (p_1 \Ra p_3))$. Also, we have $((p \Ra \bot) \Ra \bot)$ for each $p \in L$.
+
+The set $L$ is built from $P \cup \set \bot$ inductively, which means that we can define it inductively. Define $L_1 = P \cup \set \bot$ and $L_{n+1} = L_n \cup \set{(p \Ra q) : p, q \in L_n}$. Each of these are countable, by induction, and $L = L(P)$ is the countable union of these sets, and thus countable.
+
+In fact, every proposition is built \textit{uniquely} using this construction. For each $p \in L$, either $p \in P$ is primitive, or $p = \bot$, or $p = (q \Ra r)$ for unique $q, r \in L$.
+
+\begin{note}
+	Each proposition is a finite string of symbols in the alphabet $P \cup \set{\bot, \Ra, (, )}$. However, not every such string is a proposition: ``$( \Ra ( \Ra \bot \bot ) \bot )$" is nonsense.
+\end{note}
+
+\begin{definition}[Valuation]
+	\label{valuation}
+    A \textit{valuation} on $L$ is a function $v: L \to \set{\texttt{0}, \texttt{1}}$ with $v(\bot) = \texttt{0}$ satisfying:
+	\[
+	v(p \Ra q) = \begin{cases}
+		\texttt{0} & \text{if } v(p) = \texttt{1} \text{ and } v(q) = \texttt{0} \\
+		\texttt{1} & \!\otherwise
+	\end{cases}
+	\]
+	This ensures the value of $\bot = $ \texttt{false} is \texttt{0}, and a true statement doesn't imply a false one.
+\end{definition}
+
+For example, if $v(p_1) = \texttt{1}$ and $v(p_2) = \texttt{0}$, then $v((\bot \Ra p_1) \Ra (p_2 \Ra p_1)) = \texttt{1}$.
+
+\begin{proposition}[Valuations on Primitives]
+    If $v$ and $v'$ are valuations which agree on $P$, then in fact they agree on $L(P)$. Also, for any function $w: P \to \set{\texttt{0}, \texttt{1}}$, there is a valuation $v$ on $L$ such that $v$ and $w$ agree on $P$.
+\end{proposition}
+
+\begin{prf}
+    We have $v(\bot) = v'(\bot) = \texttt{0}$ by definition, and by assumption they agree on $P$. Then they agree on $L_1$. Continue inductively, assuming that $v$ and $v'$ agree on $L_n$.
+    
+    Let $p\in L_{n+1} \setminus L_n$. Then $p = (q \Ra r)$ for unique $q, r \in L_n$. By induction, $v$ and $v'$ agree on $q$ and $r$. But then they must agree on $p$, and since $p$ was arbitrary they agree on $L_{n+1}$. Thus they agree on all $L_n$, and so they must agree on $L$.
+    
+    For the second part, we define $v(p) = w(p)$ for all $p \in P$, and $v(\bot) = \texttt{0}$. This defines a unique valuation $v$ on $L_1$. Having defined $v$ on $L_n$ for some $n$, write $p\in L_{n+1} \setminus L_n$ as $p = (q \Ra r)$ for unique $q, r \in L_n$, and define $v(p)$ using the rule based on $v(q)$ and $v(r)$. This gives a unique extension of $v$ to $L_{n+1}$: by induction, this gives a unique valuation $v$ on all of $L$.
+\end{prf}
+
+\
+
+\begin{definition}[Tautology]
+    Let $t \in L$. We say that $t$ is a \textit{tautology} if $v(t) = \texttt{1}$ for all valuations $v$ on $L$. For example, $(\bot \Ra \bot)$ is a tautology, as any valuation $v$ gives it value \texttt{1}.
+\end{definition}
+
+We now enrich our language by introducing a few more symbols.
+
+\renewcommand{\arraystretch}{1.3}
+
+\begin{table}[h!]
+\small{
+\begin{center}
+
+\begin{tabular}{|c|c|c|}
+\hline
+{\textbf{notation}} & {\textbf{expansion}} & {\textbf{interpretation}} \\ \hline
+$\top$ & $(\bot \Ra \bot)$ & ``true": a tautology, true in all cases \\ \hline
+$\lnot p$ & $(p \Ra \bot)$ & ``not-$p$": false if $p$ is true and true if $p$ is false \\ \hline
+$p \lor q$ & $(\lnot p \Ra q)$ & ``$p$ or $q$": true if either $p$ or $q$ is true \\ \hline
+$p \land q$ & $\lnot(p \Ra \lnot q)$ & ``$p$ and $q$": true only if both $p$ and $q$ are true \\ \hline
+\end{tabular}
+\end{center}
+}
+\end{table}
+
+\begin{note}
+	There are tautologies not involving the symbol $\bot$, for example $(p \Ra (q \Ra p))$. One can check that this statement is a tautology by checking every possible valuation for $p$ and $q$ in a truth table. Such a table enumerates these values to check the possible valuations of the statement.
+\end{note}
+
+\renewcommand{\arraystretch}{1.3}
+
+\begin{table}[h!]
+\small{
+\begin{center}
+
+\begin{tabular}{|c|c|c|c|}
+\hline
+$v(p)$ & $v(q)$ & $v(q \Ra p)$ & $v(p \Ra (q \Ra p))$ \\ \hline
+0 & 0 & 1 & 1 \\ \hline
+0 & 1 & 0 & 1 \\ \hline
+1 & 0 & 1 & 1 \\ \hline
+1 & 1 & 1 & 1 \\ \hline
+\end{tabular}
+\end{center}
+}
+\end{table}
+As desired, the valuation of $(p \Ra (q \Ra p))$ is always \texttt{1}.
+
+\begin{example}[Important Tautologies]
+    The above statement has a heuristic interpretation: ``a true statement is implied by anything". There are other such basic tautologies which are important:
+    \begin{enumerate}
+    	\item ``The law of excluded middle" is the tautology $(\lnot \lnot p \Ra p)$, or alternatively $(p \lor \lnot p)$. This is the statement that $p$ is either \texttt{true} or \texttt{false}, in which case $\lnot p$ holds.
+    	\item For any $p, q, r \in L$, the tautology $(p \Ra (q \Ra r) \Ra ((p \Ra q) \Ra (p \Ra r)))$ holds. Note that the truth table demonstrating this has $2^3 = 8$ rows to check.
+	\end{enumerate}
+\end{example}
+
+% ================================================================== %
+
+\subsection{Semantic Entailment}
+
+\begin{definition}[Semantic Entailment]
+    For $S \subseteq L$ and $t \in L$, we say $S$ \textit{semantically entails} $t$ if for any valuation $v$ which satisfies $v(s) = \texttt{1}$ for all $s \in S$, we also have $v(t) = \texttt{1}$. We write $S \vDash t$.
+    
+    This is an extension of the idea of implication to sets of propositions.
+\end{definition}
+
+\begin{corollary}
+    $t$ is a tautology if and only if $\varnothing \vDash t$. We write $\vDash t$ for short.
+\end{corollary}
+
+\begin{example}[Modus Ponens]
+    We have $\set{p, (p \Ra q)} \vDash q$. The process of deducing $q$ from $p$ and $(p \Ra q)$ is known as \textit{modus ponens}, which is Latin for ``affirming mode".
+    
+    (This is because if $v(p) = \texttt{1}$ and $v(q) = \texttt{0}$, then $v(p \Ra q) = \texttt{0}$ by the implication rule.)
+\end{example}
+
+\begin{definition}[Model]
+	\label{model}
+    For $t \in L$ and a valuation $v$, we say that $t$ is ``true in $v$" (or ``$v$ is a \textit{model} of $t$") if $v(t) = \texttt{1}$. Similarly, for $S \subs L$, we say $v$ is a model of $S$ if $v(s) = \texttt{1}$ for all $s \in S$.
+\end{definition}
+
+\begin{corollary}
+    $S \vDash t$ if and only if $t$ is true in every model of $S$.
+\end{corollary}
+
+% ================================================================== %
+
+\subsection{Syntactic Entailment}
+\label{section-syntactic-entailment}
+
+A notion of \textit{proof} consists of \textit{axioms} and \textit{rules of deduction}. These are statements taken as true no matter what, and rules by which we can deduce more statements as true. In the model of propositional logic, we have the following three axioms:
+\begin{enumerate}
+    \item For $p, q \in L$, $p \Ra (q \Ra p)$.
+    \item For $p, q, r \in L$, $p \Ra (q \Ra r) \Ra ((p \Ra q) \Ra (p \Ra r))$.
+    \item For $p \in L$, $\lnot \lnot p \Ra p$.
+\end{enumerate}
+
+\begin{note}
+	These axioms are all tautologies.
+\end{note}
+
+In propositional logic, we also have only one rule of deduction.
+
+\begin{definition}[Modus Ponens]
+	\label{modus-ponens}
+    From $p$ and $(p \Ra q)$, we may deduce $q$.
+\end{definition}
+
+How do we use this rule of deduction?
+
+\begin{definition}[Proof]
+	\label{proof-propositional-logic}
+    Given $S \subset L$ and $t \in L \setminus S$, a proof of $t$ from $S$ is a finite sequence of propositions $t_1 \dots t_n \in L$ such that $t_n = t$, and for each $t_i$ we have either:
+    \begin{enumerate}
+    	\item $t_i$ is an axiom of propositional logic.
+    	\item $t_i \in S$, so that $t_i$ is a \textit{premise} or \textit{hypothesis}
+    	\item $t_i$ is obtained by \textit{modus ponens} from earlier lines: there are $j, k < i$ with $t_k = (t_j \Ra t_i)$.
+	\end{enumerate}
+	If there is such a proof of $t$ from $S$, we say that $S$ \textit{syntactically entails} $t$, and write $S \vdash t$. If $t$ is such that $\varnothing \vdash t$, we say that $t$ is a \textit{theorem} and write $\vdash t$. 
+\end{definition}
+
+\begin{example}[Proof given 2 Hypotheses]
+    We would like to show that $\set{(p \Ra q), (q \Ra r)} \vdash (p \Ra r)$. We prove this as follows:
+    \begin{enumerate}
+    \item $(p \Ra (q \Ra r)) \Ra ((p \Ra q) \Ra (p \Ra r))$ \hfill (A2)
+    \item $(q \Ra r) \Ra (p \Ra (q \Ra r))$ \hfill (A1)
+    \item $q \Ra r$ \hfill (premise)
+    \item $p \Ra (q \Ra r)$ \hfill (MP)
+    \item $(p \Ra q) \Ra (p \Ra r)$ \hfill (MP)
+    \item $p \Ra q$ \hfill (premise)
+    \item $p \Ra r$ \hfill (MP)
+	\end{enumerate}
+\end{example}
+
+\begin{example}[Proof of a Theorem]
+    We would like to show that $\vdash (p \Ra p)$. We prove this as follows:
+	\begin{enumerate}
+	    \item $p \Ra ((p \Ra p) \Ra p)$ \hfill (A1)
+	    \item $(p \Ra ((p \Ra p) \Ra p)) \Ra ((p \Ra (p \Ra p)) \Ra (p \Ra p))$ \hfill (A2)
+	    \item $(p \Ra (p \Ra p)) \Ra (p \Ra p)$ \hfill (MP)
+	    \item $p \Ra (p \Ra p)$ \hfill (A1)
+	    \item $p \Ra p$ \hfill (MP)
+	\end{enumerate}
+\end{example}
+
+\begin{theorem}[Deduction Theorem]
+	\label{deduction-theorem}
+    Let $S \subs L$ with $p, q \in L$. Then $S \vdash (p \Ra q)$ if and only if $(S \cup \set p) \vdash q$.
+\end{theorem}
+
+\begin{prf}
+    Assume $S \vdash (p \Ra q)$. Then we can write down a proof of $(p \Ra q)$ from $S$. Now, we can simply add $p$ (premise) and $q$ (MP) to obtain a proof of $q$ from $S \cup \set p$ as desired.
+    
+    Now suppose that $(S \cup \set p) \vdash q$, and let $t_1 \dots t_n$ be a proof of $q$ witnessing this. Then $S \vdash (p \Ra t_i)$ for all $i$, which we demonstrate by induction. In the case of $i = n$, this will show $S \vdash (p \Ra q)$.
+    
+    If $t_i$ is an axiom or $t_i \in S$, we can prove this using:
+    \begin{enumerate}
+    	\item $t_i$ \hfill (premise or axiom)
+    	\item $t_i \Ra (p \Ra t_i)$ \hfill (A1)
+	\end{enumerate}
+	which gives a proof of $p \Ra t_i$ (by MP). Otherwise, $t_i = p$ in which case we wish to show only that $S \vdash (p \Ra p)$. But we have seen this is a theorem, so clearly it is provable. Finally, we must deal with the case where $t_i$ is an instance of modus ponens, and $t_k = (t_j \Ra t_i)$ for $j, k < i$. Here:
+	\begin{enumerate}
+    	\item $(p \Ra (t_j \Ra t_i)) \Ra ((p \Ra t_j) \Ra (p \Ra t_i))$ \hfill (A2)
+    	\item $(p \Ra t_j) \Ra (p \Ra t_i)$ \hfill (MP)
+	\end{enumerate}
+	which gives a proof of $p \Ra t_i$ (again by MP).
+	
+	Thus $S \vdash (p \Ra t_i)$ for all $1 \leq i \leq n$, in particular, as $t_n = q$, we have $S \vdash (p \Ra q)$.
+\end{prf}
+
+\begin{corollary}
+	The symbol ``$\Ra$" really does behave like implication in familiar formal proofs!
+\end{corollary}
+
+We now have two notions of entailment: semantic entailment $\vDash$ and syntactic entailment $\vdash$. We want to prove the \textit{completeness theorem}, which states that these two notions are equal.
+
+This splits into two parts: the Soundness Theorem claims that $(S \vdash t)$ implies $(S \vDash t)$, while the Adequacy Theorem means the converse. This means that our syntactic system is \textit{sound} (it doesn't prove false statements) and that it is \textit{adequate} (it is able to prove all true statements).
+
+\begin{theorem}[Soundness Theorem]
+	\label{soundness-theorem}
+    If $S \subs L$ and $t \in L$ where $S \vdash t$, then $S \vDash t$.
+\end{theorem}
+
+\begin{prf}
+    Let $t_1 \dots t_n$ be a proof of $t$ from $S$. Let $v$ be a model of $S$. We require $v(t) = \texttt{1}$. We prove this via induction on the steps $t_i$.
+    
+	Suppose $t_i$ is an axiom. Then it is a tautology, and so $v(t_i) = \texttt{1}$. Similarly, if $t_i$ is a premise, then $t_i \in S$, and so $v(t_i) = \texttt{1}$ since $v$ is a model of $S$.
+	
+	Now suppose $t_i$ is an application of modus ponens. All previous lines have value $v(t_j) = v(t_k) = \texttt{1}$, so given that $t_k = (t_j \Ra t_i)$, we must have $v(t_i) = \texttt{1}$ as well. Thus $v(t) = v(t_n) = \texttt{1}$, ie. $S \vDash t$.
+\end{prf}
+
+Now, we aim for the Adequacy Theorem, which is the converse of this statement. To do so, we introduce a few concepts.
+
+\begin{definition}[Consistency]
+    Let $S \subs L$. We say $S$ is \textit{inconsistent} if $S \vdash \bot$, and \textit{consistent} otherwise.
+\end{definition}
+
+\begin{corollary}
+    For the special case of consistency, the Adequacy Theorem holds. If $S \vDash \bot$, then any model $v$ of $S$ has $v(\bot) = \texttt{1}$, but this is not allowed, so in fact there cannot be a model of $S$.
+\end{corollary}
+
+\begin{definition}[Deductive Closure]
+    A set $S \subs L$ is \textit{deductively closed} if every $t \in L$ with $S \vdash t$ is itself contained in $S$.
+\end{definition}
+
+\begin{note}
+	Every deductively closed set must be infinite, as for any $t \in S$ there is a proof of $t \Ra (t \Ra t)$ from $S$ using the first axiom. (Equivalently, as $\top$ is a theorem, there are infinitely many theorems).
+\end{note}
+
+This definition allows us to prove an important theorem.
+
+\begin{theorem}[Model Existence Lemma]
+	\label{model-existence-lemma}
+    Let $S \subs L$. If $S$ is consistent, then $S$ has a model.
+\end{theorem}
+
+\begin{prf}
+    Let us build up such a model by construction. Define $v$ by $v(t) = \texttt{1}$ for all $t \in S$, with $v(\bot) = \texttt{0}$. More generally, if $S \vdash t$, then by the Soundness Theorem $v(t) = \texttt{1}$ for any such $t$. Thus we might first try
+    \[
+	v(t) = \begin{cases}
+		\texttt{1} & \text{if } S \vdash t \\
+		\texttt{0} & \!\otherwise
+	\end{cases}
+	\]
+	Unfortunately, this is nonsense. It is quite possible that $S \not\vdash t$ and $S \not\vdash \lnot t$. We will enlarge $S$ to avoid this issue. (Note that we only consider the case where set $P$ of primitive propositions is countable: we prove the general case later on in \ref{general-model-existence-lemma}.)
+	
+	Consider the recursive definition of the set of propositions (following \ref{set-of-propositions}). We note that $L$ must be countable as a consequence of this definition, as the countable union of countable sets $L_n$.
+	
+	We enumerate $L$ as $t_1, t_2 \dots$ and consider consistent sets $T \subs L$. If $t \in L$, then one of $T \cup \set t$ or $T \cup \set {\lnot t}$ is consistent. If not, then we would have $(T \cup \set t) \vdash \bot$ and $(T \cup \set {\lnot t}) \vdash \bot$, so by the Deduction Theorem (\ref{deduction-theorem}) we have both $T \vdash t$ and $T \vdash (t \Ra \bot)$, and hence Modus Ponens (\ref{modus-ponens}) yields $T \vdash \bot$, contradicting the consistency of $T$.
+	
+	Now start with the consistent set $S_0 = S$. Define the sets $S_n$ by induction, assuming that $S_{n-1}$ is defined and consisrent. Then let $S_n$ be either $S_{n-1} \cup \set{t_n}$ or $S_{n-1} \cup \set{\lnot t_n}$ so that it is consistent. Finally, we define $\bar S$ to be the union of these $S_n$.
+	
+	Observe that $S \subs \bar S$., and for all $t \in L$ either $t \in \bar S$ or $\lnot t \in \bar S$. Also, $\bar S$ is consistent: if there was a proof witnessing $S \vdash \bot$, then since this proof is finite it uses a finite number of propositions, and so there is some $S_n$ which contains all those propositions, which would then be inconsistent.
+	
+	$\bar S$ is deductively closed. Indeed, if $t \notin S$ then $\lnot t = (t \Ra \bot) \in S$. So we can write down a proof of $t$ from $S$, and add the lines $t \Ra \bot$ (premise) and $\bot$ (MP), so $\bar S$ would not be consistent.
+	
+	We now define the valuation $v: L \to \set{\texttt{0}, \texttt{1}}$ by 
+	\[
+	v(t) = \begin{cases}
+		\texttt{1} & \text{if $\bar S \vdash t$ (that is, $t \in \bar S$)} \\
+		\texttt{0} & \!\otherwise
+	\end{cases}
+	\]
+	which is a model of $\bar S$ and thus a model of $S$, once we prove it is a valuation. Note that this $cc$ indeed satisfies $v(\bot) = \texttt{0}$ since $\bot \notin \bar S$ by deductive closure and consistency.
+	
+	We consider three cases.
+	\begin{enumerate}
+    	\item If $v(p) = \texttt{1}$ and $v(q) = \texttt{0}$, we need $v(p \Ra q) = \texttt{0}$. If not, then we have $\bar S \vdash (p \Ra q)$. This allows us to write down a proof of $p \Ra q$ from $\bar S$ and follow it by $p$ (premise) and $q$ (MP) to attain a proof of $q$ from $\bar S$. By deductive closure, $q \in \bar S$, so $v(q) = \texttt{1}$ (a contradiction).
+    	\item If $v(q) = \texttt{1}$, we need $v(p \Ra q) = \texttt{1}$. Given $q$, we can write down the proof $q \Ra (p \Ra q)$ (A1), $q$ (premise), and then $p \Ra q$ (MP). So $\bar S \vdash (p \Ra q)$, so $v(p \Ra q) = \texttt{1}$ as required.
+    	\item Finally, consider $v(p) = \texttt{0}$, so we need $v(p \Ra q) = \texttt{1}$, that is $\bar S \vdash (p \Ra q)$. By the Deduction Theorem (\ref{deduction-theorem}) this is equivalent to $\bar S \cup \set p \vdash q$. We can do this using $p$ (premise), $p \Ra \bot$ (premise, since $p \notin \bar S$), $\bot$ (MP), $\bot \Ra ((q \Ra \bot) \Ra \bot)$ (A1), and then using MP to prove $\lnot q$ followed by $q$. Therefore we have $v(p \Ra q) = \texttt{1}$ as required.
+	\end{enumerate}
+	Therefore this $v$ is a valuation, and thus a model of $\bar S$ and thereby $S$.
+\end{prf}
+
+\begin{theorem}[Adequacy Theorem]
+	\label{adequacy-theorem}
+	If $S \subs L$ and $t \in L$ where $S \vDash t$, then $S \vdash t$.
+\end{theorem}
+
+\begin{prf}
+    Since $S \vDash t$, we have $S \cup \set{\lnot t} \vDash \bot$. Then $S \cup \set{\lnot t} \vdash \bot$, and so by the Deduction Theorem we have $S \vdash \lnot \lnot t$. We then add the lines $\lnot \lnot t \Ra t$ (A3) and $t$ (MP) to show $S \vdash t$.
+\end{prf}
+
+\begin{theorem}[Completeness Theorem]
+	\label{completeness-theorem}
+    The notions of semantic and syntactic entailment ``$\vDash$" and ``$\vdash$" are in fact equivalent: if $S \subs L$ and $t \in L$, then $S \vDash t \iff S \vdash t$.
+\end{theorem}
+
+\begin{prf}
+    Obvious by the Soundness Theorem (\ref{soundness-theorem}) and the Adequacy Theorem (\ref{adequacy-theorem}).
+\end{prf}
+
+\begin{theorem}[Compactness Theorem]
+    Let $S \subs L$ and $t \in L$. If $S \vDash t$, then there is a finite subset $S' \subs S$ with $S \vDash t$.
+\end{theorem}
+
+\begin{prf}
+    By the Completeness Theorem, we may replace ``$\vDash$" by ``$\vdash$", which makes the proof trivial: take a proof witnessing $S \vdash t$, and define $S'$ to be the finite set of premises used.
+\end{prf}
+
+\begin{note}
+	This is highly nontrivial without the Completeness Theorem!
+\end{note}
+
+\begin{corollary}
+    Let $S \subs L$. If every finite subset of $S$ has a model, then $S$ has a model.
+\end{corollary}
+
+\begin{prf}
+    Suppose that $S$ does not have a model. Then $S \vDash \bot$. By the Compactness Theorem, there is a finite subset $S' \subs S$ with $S' \vDash \bot$, which contradicts $S'$ having a model.
+\end{prf}
+
+\begin{note}
+	This corollary is actually equivalent to the Completeness Theorem. If $S \vDash t$, then we have $S \cup \set{\lnot t} \vDash \bot$. Then there is a finite subset $S' \subs S$ with $S' \cup \set{\lnot t} \vDash t$, and so $S' \vDash t$.
+\end{note}
+
+\begin{theorem}[Decidability Theorem]
+    Let $S \subs L$ be a finite set with $t \in L \setminus S$. Then there is an algorithm which can determine in finite time whether $S \vdash t$.
+\end{theorem}
+
+\begin{prf}
+    By the Completeness Theorem, we may replace ``$\vdash$" by ``$\vDash$", which makes the proof trivial: if there are $n$ primitive propositions which occur in $S \cup \set t$, simply enumerate a truth table with $2^n$ possible values, and evaluate $v(t)$ to see whether $v(t)$ is always \texttt{1}.
+\end{prf}
+
+\begin{note}
+	This is again highly nontrivial without the Completeness Theorem! If $S \vdash t$, we can write proofs from $S$ and eventually arrive at $t$, but if $S \not\vdash t$ then this algorithm never terminates.
+\end{note}
+
+% ================================================================== %
+
+\pagebreak
+\section{Well-Orderings and Ordinals}
+\subsection{Orderings and Order-Isomorphism}
+
+We now consider 	\textit{orderings}, which are ways of equipping sets with a notion of ``bigger" elements.
+
+\begin{definition}[Total Order]
+	\label{total-linear-order}
+    A \textit{linear} (or \textit{total}) order on a set $X$ is a binary relation $<$ on $X$ which is:
+    \begin{enumerate}
+    	\item irreflexive: for all $x \in X$, we have $\lnot (x < x)$.
+    	\item transitive: for all $x, y, z \in X$, we have $((x < y) \land (y < z)) \Ra (x < z)$.
+    	\item trichotomous: for all $x, y \in X$, we have $(x < y) \lor (x = y) \lor (y < x)$.
+	\end{enumerate}
+	Note that \textit{precisely} one of the three options in trichotomy occurs. For example, if $x = y$, then neither $x < y$ nor $y < x$, and if $x < y$, then $y < x$ implies $x < x$ by transitivity, violating the irreflexivity condition.
+\end{definition}
+
+We say that ``$X$ is linearly ordered by $<$" if the relation $<$ satisfies this definition. In general, we may say that ``$X$ is a linearly ordered set".
+
+\begin{note}
+	When we use the symbols $\land$, $\lnot$, and so on, we are back to simply using these by the usual definitions we know and love, rather than the overly formal meanings from the previous section!
+\end{note}
+
+\begin{example}[Linearly Ordered Sets]
+    The sets $\N$, $\Z$, $\Q$, and $\R$ are linearly ordered under the usual order $<$.
+    
+    An important non-example is the relation on the powerset $\powerset{X}$ given by $a < b$ if and only if $a \subset b$. This is not trichotomous for $\abs X > 2$: if $x, y \in X$ then neither $\set x$ nor $\set y$ are less than the other.
+\end{example}
+
+\begin{note}
+	For a linear order $<$ on a set $X$, we write $x > y$ for $y < x$ as notational shorthand.
+\end{note}
+
+\begin{definition}[$\leq$]
+    For a linear order $<$ on a set $X$ define the relation $\leq$ by $x \leq y$ if and only if $(x<y) \lor (x = y)$. Note that this relation satisfies:
+    \begin{enumerate}
+    	\item reflexivity: $x \leq x$ for all $x \in X$.
+    	\item antisymmetry: if $x \leq y$ and $y \leq x$, then $x = y$.
+    	\item transititivty: if $x \leq y$ and $y \leq z$, then $x \leq z$.
+    	\item trichotomous: either $x \leq y$ or $y \leq x$ (or both, if $x = y$).
+	\end{enumerate}
+\end{definition}
+
+\begin{note}
+	If a set $X$ is linearly ordered by $<$, then every subset $Y \subs X$ is also linearly ordered by the restriction of $<$ to $Y$.
+\end{note}
+
+\begin{definition}[Well-Ordering]
+    A \textit{well-ordering} of a set $X$ is a linear order $<$ on $X$ such that every nonempty subset of $X$ has a \textit{least element} satisfying $(\forall \, S \subs X) : (S \neq \varnothing \implies (\exists \, m \in S) : (\forall \, x \in S, \, m \leq x))$.
+    
+	This least element $m$ must be unique by the antisymmetry of $\leq$.
+\end{definition}
+
+\begin{example}[Well-Ordering]
+    $\N$ with the usual order is well-ordered. $\Z$ is not (for example, the set of negative integers has no least element). However, $\Z$ can be well-ordered using another relation:
+    \[
+	x < y \iff (\abs x < \abs y) \lor ((x = -y) \land (x<0))
+	\]
+	which orders the integers as $0, -1, 1, -2, 2, -3, 3, \dots$, which is a well-ordering.
+	
+	$\R$ cannot be well-ordered. The usual ordering works for some sets like $[1, 2]$, but not sets like $(1, 4) \cup (5, 6)$ or $\R \setminus \Q$.
+\end{example}
+
+\begin{note}
+	If $<$ is a well-ordering of $X$,  say ``$X$ is well-ordered by $<$" or ``$X$ is a well-ordered set".
+\end{note}
+
+\begin{definition}[Order-Isomorphism]
+	\label{order-isomorphism}
+    Let $X$ and $Y$ be linearly ordered sets. Then we say $X$ and $Y$ are \textit{order-isomorphic} if there is an \textit{order-preserving bijection}: a function $f : X \to Y$ which respects the order in that
+    \[
+	(x < y) \implies (f(x) < f(y)) \quad \text{for all $x, y \in X$}.
+	\]
+	Note that $f^{-1}$ is then also an order-isomorphism, so $x < y \iff f(x) < f(y)$.
+\end{definition}
+
+\begin{corollary}
+    If $X$ and $Y$ are order-isomorphic linearly ordered sets, then if $X$ is well-ordered then $Y$ must also be well-ordered by the isomorphism.
+\end{corollary}
+
+\begin{example}[Order-Isomorphism]
+	\label{order-isomorphism-example}
+    $\N$ is isomorphic to $\Q$, but it the sets are not order-isomorphic. However, $\Q$ is order-isomorphic to $\Q \setminus \set 0$. Similarly, define
+    \[
+	A = \set{\frac{1}{2}, \, \frac{2}{3}, \, \frac{3}{4}, \, \dots } = \set{\frac{n}{n+1} : \ninn}.
+	\]
+	Then $A$ is well-ordered and order-isomorphic to $\N$ by the obvious isomorphism. However:
+	\begin{enumerate}
+    	\item $B = A \cup \set 1$ is well-ordered but \textit{not} order-isomorphic to $A$, since it has a maximum.
+    	\item $C = A \cup \set{a + 1: a \in A}$ is also well-ordered but not order-isomorphic to $A$ or $B$, since it has infinite sets with a maximum.
+	\end{enumerate}
+\end{example}
+
+\begin{definition}[Initial Segment]
+	\label{initial-segment}
+    A subset $I \subs X$ of a linearly ordered set $X$ is an initial segment of $X$ if for every element $x \in I$, $I$ contains all the predecessors of $x$. That is, $(x \in I) \land (y < x) \implies (y \in I)$.
+    
+    For example, $\set{1, 2, 3, 4}$ is an initial segment of $\N$, but $\set{1, 2, 3, 5}$ is not.
+    
+    A \textit{proper} initial segment is an initial segment $I \neq X$. The sets $I_x = \set{y \in X: y < x}$ is an example of this for any $x \in X$, since $x \notin I_x$.
+\end{definition}
+
+\begin{corollary}
+    In general, the $I_x$ are not the only types of initial segment: the set $\R_{\leq 0}$ is not of this form. However, the $I_x$ are the only types of initial segments in the case of $X$ being well-ordered.
+\end{corollary}
+
+\begin{prf}
+    If $I$ is a proper initial segment of a well-ordered set $X$, then $I = I_x$ for the least element $x \in X \setminus I$. If $y < x$, then $y \notin X \setminus I$, so $y \in I$. Conversely, f $y \in I$ and $x < y$, then $x \in I$ by the fact that $I$ is an initial segment. Therefore $I = I_x$.
+\end{prf}
+
+\begin{proposition}[Order-Isomorphism Restriction]
+	\label{order-isomorphism-restriction}
+    Suppose $X$ and $Y$ are well-ordered sets, and $I \subs Y$ is an initial segment of $Y$. If $f: X \to I$ is an order-isomorphism, then for every $x \in X$ we have
+    \[
+	f(x) = \min (Y \setminus \set{f(y) : y < x}).
+	\]
+\end{proposition}
+
+\begin{prf}
+    Fix $x \in X$ and let $A = Y \setminus \set{f(y) : y < x}$. Note that $A \neq \varnothing$, as $f(x) \in A$. Let $a = \min A$. Then $a \leq f(x)$, so $a \in I$. Therefore $a = f(z)$ for some $z \in X$. We want to show that $z = x$.
+    
+    Since $f(z) = a \leq f(x)$, then certainly $z \leq x$, since $f$ is order-preserving. If $z < x$, then $f(z) \notin A$, that is $a \notin A$. But this is a contradiction, so $z \not< x$, and therefore $z = x$ as required.
+\end{prf}
+
+\begin{proposition}[Proof by Induction]
+    Let $X$ be a well-ordered set and $S \subs X$ be a set such that for every $x \in X$, if $y \in S$ for all $y < x$, then $x \in S$. Then $S = X$.
+\end{proposition}
+
+\begin{prf}
+    If not, take a minimal ``counterexample": that is, $x = \min(X \setminus S)$. Then for $y < x$, we have $y \in S$ by minimality. But by definition, this means $x \in S$, a contradiction.
+\end{prf}
+
+\begin{note}
+	We really do require well-ordering here. In $\R$ under the usual order, the set $\R_{\leq 0}$ has this property, but is clearly not the entire set.
+\end{note}
+
+\begin{note}
+	The usual formulation of ``induction" for the natural numbers takes the set $S$ to be defined by some property $p$ with $S = \set{n \in \N  : p(n)}$. The ``base case" corresponds to $n = 1$, since there are no such $m < n$, and thus we require $n \in S$. This is already contained in our assumption.
+\end{note}
+
+\begin{proposition}[Unique Order-Isomorphism]
+	\label{unique-order-isomorphism}
+    Let $X$ and $Y$ be order-isomorphic well-ordered sets. Then there is a unique order-isomorphism $f$ between them.
+\end{proposition}
+
+\begin{prf}
+    Assume $f$ and $g$ are order-isomorphisms $X \to Y$. We prove the statement $f(x) = g(x)$ for all $x \in X$ by induction. Fix $x \in X$ and assume that for all $y < x$, $f(y) = g(y)$. This is called the \textit{induction hypothesis}. We want to show that then in fact $f(x) = g(x)$ as well.
+    
+    By Proposition \ref{order-isomorphism-restriction}, we know that $f(x) = \min F$ and $g(x) = \min G$, where  
+    \[
+	A = Y \setminus \set{f(y) : y < x} \qquad B = Y \setminus \set{g(y) : y < x}.
+	\]
+	But by assumption, these are the same set, and so have the same minimum. Thus $f(x) = f(y)$. By induction, we therefore have $\set{x \in X: f(x) = g(x)} = X$, and thus $f = g$ as required.
+\end{prf}
+
+\begin{note}
+	Again, this does not work for arbitrary linearly ordered sets. For example, from $\Z \to \Z$ there is an infinite family of order-isomorphisms given by $f_k : n \mapsto n + k$ for $k \in \Z$.
+\end{note}
+
+Induction has allowed us to prove things. Now, we need a tool to \textit{construct} things: recursion.
+
+\begin{remark}[Formal Functions]
+    Recall that a \textit{function} from a set $X$ to a set $Y$ is a subset $f \subs X \times Y$ such that for each $x \in X$, we have some $y \in Y$ with $(x, y) \in f$, and moreover this value is unique: if $(x, y) \in f$ and $(x, z) \in f$, then actually $y = z$. Of course, we write $f(x) = y$ for $(x, y) \in f$, or $f: x \mapsto y$.
+
+	Notice that $f \in \powerset{X \times Y}$. For a subset $Z \subs Y$, the \textit{restriction} of $f$ to $Z$ is given by the set $f|_Z = \set{(x, y) \in f: x \in Z}$. This is a function $Z \to Y$, so $f|_Z \in \powerset{Z \times Y} \subs \powerset{X \times Y}$.
+\end{remark}
+
+\begin{theorem}[Definition by Recursion]
+	\label{recursion}
+    Let $X$ be a well-ordered set and $Y$ an arbitrary set. Then for any function $G: \powerset{X \times Y} \to Y$ there is a unique $f: X \to Y$ such that for all $x \in X$, we have $f(x) = G(f|_{I_x})$.
+    
+    For example, we take $x = \min X$. Then $f(x) = G(\varnothing)$. Then, let $y = \min X \setminus \set x$. Then $f(y) = G(\set{x, G(\varnothing)})$ and $I_y = \set x$, and so on.
+    
+    Say $h$ is an \textit{attempt} if $h$ is a function $I \to Y$ where the domain of $h$ (denoted $\dom h$) is an initial segment (\ref{initial-segment}) $I \subs X$ and for all $x \in \dom h$, $h(x) = G(h|_{I_x})$.
+    
+    Then, there is a unique attempt whose domain is $X$.
+\end{theorem}
+
+\begin{prf}
+    We first show that if $h$ and $h'$ are attempts, then $h(x) = h'(x)$ for all $x$ in the intersection $\dom h \cap \dom h'$, by induction. This will show uniqueness.
+    
+    We fix $x$ in this intersection, and assume $h(y) = h'(y)$ for all $y < x$ (the induction hypothesis). Note that $\dom h \cap \dom h'$ is an initial segment of $X$. We have $h(x) = G(h|_{I_x})$ (because $h$ is an attempt) and $G(h|_{I_x}) = G(h'|_{I_x}) = h'(x)$, by the induction hypothesis, as required.
+    
+    Now, we show existence. Let $f$ be the union of all attempts. Then for any $x$, there is an attempt $h$ defined at $x$, so $h(x)$ is independent of $h$ by the above. Therefore $f$ is indeed a function. What is its domain? Well it is the union of the domains of all attempts, which is an initial segment of $X$. So given any $x \in \dom f$, there is an attempt $h$ defined at $x$, and $f(x) = h(x)$.
+    
+    It follows that $f(y) = h(y)$ for all $y < x$. But then $f(x) = h(x) = G(h|_{I_x}) = G(f|{I_x})$. This means that $f$ is an attempt! It remains to check that its domain is the entire set $X$, but this is easy to do. If not, $\dom f = I_x$ for some $x \in X$. This cannot be true, since there would be no attempt defined at $x$, but $f \cup \set{(x, G(f))}$ is such an attempt.
+\end{prf}
+
+\begin{proposition}[Subset Collapse]
+	\label{subset-collapse}
+    Let $Y$ be a well-ordered set and $X \subs Y$. Then there is a unique initial segment of $Y$ which is order-isomorphic (\ref{order-isomorphism}) to $X$.
+\end{proposition}
+
+\begin{prf}
+    First, we show uniqueness. Assume that $f$ is an order-isomorphism from $X$ to some initial segment of $Y$. By Proposition \ref{order-isomorphism-restriction}, $f(x) = \min(Y \setminus \set{f(y) : y < x})$ for all $x$. By induction, $f$ must be uniquely determined, as in the proof of order-isomorphisms being unique (\ref{unique-order-isomorphism}).
+    
+    Now, we show existence. As the case $Y = \varnothing$ is trivial, we take $Y \neq \varnothing$ and fix $y_0 \in Y$. Define the function $f: X \to Y$ by recursion (\ref{recursion}), using:
+    \[
+	f(x) = \begin{cases}
+		 \min(Y \setminus \set{f(y) : y < x}) & \text{if this is non-empty} \\
+		 y_0 & \!\otherwise
+	\end{cases}
+	\]
+	We first prove that the otherwise clause does not actually arise, by proving that $f(x) \leq x$ for all $x \in X$ by induction. Fix $x \in X$ and assume that $f(y) \leq y$ for all $y < x$. But then we must have $x \in Y \setminus \set{f(y) : y < x}$, so the minimum of this set is at most $x$. Since we set $f(x)$ to this value, we have $f(x) \leq x$, and so by induction this holds everywhere.
+	
+	Now fix $y < x$, and notice that $f(x) \in Y \setminus \set{f(z): z < x} \subs Y \setminus \set{f(z): z < y}$. Then $f(y) \leq f(x)$, but we cannot have equality, since $f(y) \in Y \setminus \set{f(z): z < y}$. Thus $f$ is order-preserving, and in particular must be injective.
+	
+	Let $a \in Y \setminus \mathrm{im}(f)$. We show that $f(x) < a$ for all $x \in X$. By induction, fix $x \in X$ and assume that $f(y) < a$ for all $y < a$. But then $a \in Y \setminus \set{f(y) : y < x}$, and so $f(x) \leq a$, since we choose $f(x)$ to be the minimum of this set. But $f(x) \neq a$, since $a \notin \mathrm{im}(f)$, so $f(x) < a$ too. By induction, $\mathrm{im}(f)$ is therefore an initial segment of $Y$, and so we are done.
+\end{prf}
+
+\begin{corollary}
+    No well-ordered set is order-isomorphic to a proper initial segment of itself.
+\end{corollary}
+
+% ================================================================== %
+
+\subsection{Ordering Well-Ordered Sets}
+
+For well-ordered sets $X$ and $Y$, we write $X \leq Y$ for ``$X$ is order-isomorphic to some initial segment of $Y$". Is this notation sensible? In fact, it is: we have trichotomy for this relation.
+
+\begin{theorem}[Order-Isomorphism Trichotomy]
+    Let $X$ and $Y$ be well-ordered. Then $X \leq Y$ or $Y \leq X$.
+\end{theorem}
+
+\begin{prf}
+    Assume $Y \not\leq X$. In particular, $Y \neq \varnothing$, so fix $y_0 \in Y$. Define $f: X \to Y$ by recursion:
+    \[
+	f(x) = \begin{cases}
+		\min(Y \setminus\set{f(y) : y < x}) & \text{if this is nonempty} \\
+		y_0 & \!\otherwise
+	\end{cases}
+	\]
+	Assume the ``otherwise" case arises. Then there is a least $x \in X$ where this happens. Then consider the initial segment $I_x$. Since $Y \setminus\set{f(y) : y < x} = \varnothing$, we must have $f(I_x) = Y$, and so for all $y < x$ we have $f(y) = \min (Y \setminus \set{f(z) : z < y})$. Previously (in Proposition \ref{subset-collapse}), we showed that $f|_{I_x}$ is order-preserving. So $Y$ is order-isomorphic to an initial segment of $X$: a contradiction.
+	
+	If the ``otherwise" case doesn't arise, then $f$ is an order-preserving function with $\mathrm{im}(f)$ an initial segment of $Y$, and so $X \leq Y$, which proves trichotomy.
+\end{prf}
+
+Can we have both directions of this relation hold? Obviously we can, for example if $X = Y$. But in fact this \textit{only} happens when $X$ and $Y$ are order-isomorphic.
+
+\begin{proposition}[Order-Isomorphism Equivalence]
+    If $X$ and $Y$ are well-ordered sets with $X \leq Y$ and $Y \leq X$, then they are order-isomorphic.
+\end{proposition}
+
+\begin{prf}
+    Let $f: X \to Y$ and $g: Y \to X$ be order-isomorphisms to initial segments of $Y$ and $X$ respectively. Then $g \circ f: X \to X$ is an order-isomorphism to an initial segment of $X$. The range of the  only such order-isomorphism is $X$ itself, so $g \circ f$ is the identity function on $X$. Similarly, $f \circ g$ is the identity function on $Y$, and so $f$ and $g$ are inverses as required.
+\end{prf}
+
+We write $X < Y$ for well-ordered sets with $X \leq Y$ and $X$ not order-isomorphic to $Y$.
+
+\begin{corollary}
+    $<$ is a linear order (\ref{total-linear-order}) on the collection of well-ordered sets, if we identify sets which are order-isomorphic to each other as being equivalent. Reflexivity is obvious, transitivity is easy to show, and we have just shown trichotomy.
+\end{corollary}
+
+\begin{note}
+	The natural question to ask now is whether the collection of all well-ordered sets, given that it is linearly ordered, is in fact itself well-ordered. We return to this later.
+\end{note}
+
+\begin{note}
+	We can construct a new well-ordered set from any old one. For any well-ordered set $X$, pick any $z \notin X$ and let $X^+ = X \cup \set z$ such that the well-ordering on $X$ holds with $x < z$ for all $x \in X$. Then $X^+$ is clearly also well-ordered, and unique up to order-isomorphism, with $X < X^+$.
+\end{note}
+
+\begin{note}
+	Let $\set{X_i : i \in I}$ be a set of well-ordered sets $X_i$, indexed by some index set $I$. Then we want to show that this set has an upper bound: there exists a well-ordered set $X$ with $X_i \leq X$ for all $i \in I$. We cannot yet prove this in general, but we consider a special case for now.
+\end{note}
+
+\begin{definition}[Extension, Nesting]
+    Given well-ordered sets $(X, <_X)$ and $(Y, <_Y)$, we say $Y$ \textit{extends} $X$ if $X$ is an initial segment of $Y$ and $<_X$ is the restriction of $<_Y$ to $X$.
+    
+    We say that a collection $\set{X_i : i \in I}$ of well-ordered sets is \textit{nested} if for all $i, j \in I$ either $X_i$ extends $X_j$ or $X_j$ extends $X_i$.
+\end{definition}
+
+\begin{proposition}[Nested Collection Upper Bound]
+	\label{nested-collection-upper-bound}
+    Let $\calX = \set{X_i : i \in I}$ be a nested set of well-ordered sets. Then there is a well-ordered set $X$ which is an upper bound for $\calX$, such that $X_i \leq X$ for all $i \in I$.
+\end{proposition}
+
+\begin{prf}
+    Take $X$ to be the union $\bigcup_{i \in I} X_i$. For $x, y \in X$, we let $x < y$ if there is some $i \in I$ such that $x, y \in X_i$ and $x <_i y$ within this set $X_i$. We claim that this is our upper bound.
+    
+    Since the $X_i$ are nested, it follows that $<$ on $X$ is a well-defined linear order such that each $X_i$ is an initial segment of $X$. Let $S \subs X$ be a non-empty subset. Then there is some $i \in I$ with $X_i \cap S \neq \varnothing$. Since $X_i$ is well-ordered, $X_i \cap S$ has a least element, say $x$. But now $x$ must be the least element of $S$, since $X_i$ is an initial segment of $S$.
+\end{prf}
+
+\begin{note}
+	In fact, this construction yields the \textit{least} upper bound for $\calX$: for any other upper bound $Y$, we have $X \leq Y$.
+\end{note}
+
+\begin{note}
+	This proposition holds even without the assumption that the $X_i$ are nested. % TODO: backlink here when proved in Ch. 5
+\end{note}
+
+% ================================================================== %
+
+\subsection{Ordinals}
+
+Now, we consider \textit{ordinals}. These are the same as the well-ordered sets on which we have focused so far in this section, but we treat them differently.
+
+\begin{definition}[Ordinal]
+    An \textit{ordinal} is an class of well-ordered sets under the order-isomorphism equivalence relation. The \textit{order type} of a well-ordered set $X$ is the unique ordinal to which it is order-isomorphic.
+\end{definition}
+
+\begin{note}
+	This definition is still quite informal: we give a more formal definition later on. % TODO: backlink here when formal definition given in Ch. 5
+\end{note}
+
+\begin{definition}[Relation on Ordinals]
+    Let $\alpha$ and $\beta$ be ordinals, and $X$ and $Y$ be well-ordered sets of order type $\alpha$ and $\beta$ respectively. Then we say $\alpha \leq \beta$ to mean that $X \leq Y$, and $\alpha < \beta$ to mean $X < Y$.
+    
+    We also define $\alpha^+$ to be the order type of $X^+$.
+\end{definition}
+
+\begin{note}
+	This is indeed well-defined: they don't depend on the specific sets $X$ and $Y$.
+\end{note}
+
+\begin{corollary}
+    For ordinals, we therefore have $\alpha \leq \beta$ or $\beta \leq \alpha$, with both of these relations holding if and only if $\alpha = \beta$.
+\end{corollary}
+
+\begin{example}[Basic Ordinals]
+    For $k \in \N_0$, we write $k$ for the order type of a well-ordered finite set of size $k$.
+    
+    We write $\omega$ for the order type of $\N$ (or equivalently $\N_0$).
+    
+    Notice that $\Q$ contains subsets of order type 0, 1, 2, and so on, as well as of order type $\omega$. For example, the set $A$ from Example \ref{order-isomorphism-example} has order type $\omega$.
+    
+    However, the set $A \cup \set 1$ doesn't have any of these order types: it must be something more. In fact, it must be $\alpha^+$.
+\end{example}
+
+Now, we consider the ordinals as being themselves well-ordered.
+
+\begin{proposition}[Ordinals Ordered]
+    Let $\alpha$ be some ordinal. Then the set of all ordinals which are strictly less than $\alpha$ form a well-ordered set, and this set has order type $\alpha$.
+\end{proposition}
+
+\begin{prf}
+    Let $X$ be a well-ordered set whose order type is $\alpha$, and let $X'$ be the set of proper initial segments of $X$. $X'$ is linearly ordered (genuinely, not just up to order-isomorphism) by $<$. Then the map $X \to X'$, $x \mapsto I_x$ is an order-isomorphism, and hence $X'$ is well-ordered by $<$.
+    
+    But then so is the set of order types of proper initial segments of $X$, and this is exactly the set of ordinals less than $\alpha$. In fact, since the map $Y \mapsto \text{order type of } Y$ is an order-isomorphism, the set of such ordinals must have order type $\alpha$.
+\end{prf}
+
+\begin{note}
+	We write the set of ordinals less than $\alpha$ as $I_\alpha: \set{\beta \text{ an ordinal} : \beta < \alpha}$.
+\end{note}
+
+\begin{corollary}
+    $I_\alpha$ always has order type $\alpha$.
+\end{corollary}
+
+\begin{theorem}[Least Ordinal]
+    Let $S \neq \varnothing$ be a set of ordinals. Then $S$ has a least element.
+\end{theorem}
+
+\begin{prf}
+    Let $\alpha \in S$. If $\alpha$ is not a least element, then $S \cap I_\alpha \neq \varnothing$. We have seen that $S \cap I_\alpha$ has a least element $\beta$. Since $I_\alpha$ is an initial segment of ordinals ($\gamma < \beta$ and $\beta \in I_\alpha \implies \gamma \in I_\alpha$), it follows that $\beta$ must in fact be the least element of $S$.
+\end{prf}
+
+So we have seen that any nonempty set of ordinals has a least element. Does this mean that the set of ordinals is thus well-ordered? Well, it would, if such a set existed. But actually the so-called ``set of ordinals" cannot exist!
+
+\begin{theorem}[Burali-Forti Paradox]
+	\label{burali-forti-paradox}
+    The ordinals do not form a set.
+\end{theorem}
+
+\begin{prf}
+    Assume that $X$ is a set consisting of all ordinals. Then $X$ is well-ordered by $<$. Let $\alpha$ be the order type of $X$. But then $\alpha \in X$, and so $I_\alpha$ is a proper initial segment of $X$ of order type $\alpha$: in particular, $I_\alpha$ is order-isomorphic to $X$. But this is a contradiction.
+\end{prf}
+
+\begin{note}
+	We let ON be the \textit{class} of all ordinals. Remember that is not a set! The difference is that a class cannot be a member of anything: it is not an entity in itself, just a convenient structure for us to talk about a collection of objects with a given property.
+\end{note}
+
+\begin{corollary}
+	Let $S = \set{\alpha_i : i \in I}$ be a set of ordinals. Using the set $\set{I_{\alpha_i} : i \in I}$, there exists an ordinal $\alpha$ which is an upper bound for $S$. Then $S$ has a least upper bound, denoted by $\sup S$. Note that this is the least element of $\set{\beta \in I_\alpha \cup \set \alpha : \beta \text{ is an upper bound of } S}$.
+\end{corollary}
+
+So far, we have seen the ordinals 0, 1, 2, and so on for $\ninn$. We have also seen the supremum of the collection of these ordinals, which is $\omega$. Next, we have $\omega^+$, which we will denote $\omega + 1$. For now, this is just a notational quirk, but in section \ref{ordinal-arithmetic} we will define ordinal addition, and this definition will be consistent with it.
+
+We then define $\omega + 2$, $\omega + 3$, and so on, and the supremum of $\set{\omega + n: \ninn_0}$ is denoted $\omega + \omega$, or equivalently $\omega \times 2$. We then continue this pattern, eventually defining $\omega \times 3$, $\omega \times 4$, and so on. After this, we define $\sup \set{\omega \times n: \ninn}$ to be $\omega^2$.
+
+We can then continue this all the way to $\omega^2 + \omega$, then $\omega^2 + \omega \times 2$, and so on, which is eventually bounded by $\omega^2 \times 2$, and then we continue this to $\omega^2 \times 3$ and eventually $\omega^2 \times \omega = \omega^3$. After this, we exhaust the $\omega^n$, and must define $\omega^\omega$.
+
+From here, we get $\omega^\omega + 1$, all the way up to $\omega^\omega + \omega$, then $\omega^\omega + \omega^\omega = \omega^\omega \times 2$, then $\omega^\omega \times \omega = \omega^{\omega+1}$. This eventually yields $\omega^{\omega + n}$ for each $n$, then $\omega^{\omega + \omega} = \omega^{\omega \times 2}$, then $\omega^{\omega \times n}$ for each $n$, then $\omega^{\omega \times \omega} = \omega^{\omega^2}$.
+
+But then this can be continued to yield $\omega^{\omega^{n}}$ for each $n$, and the set of these is bounded by $\omega^{\omega^\omega}$. Eventually, this can be extended to a tower of $\omega$ which is $n$ high for each $n$, and after this a tower which is $\omega$ high. This tower is called $\eps_0$.
+
+Eventually, we get $\eps_1$, and then $\eps_2$, and then $\eps_n$ for each $n$, then $\eps_\omega$. After this, we soon get $\eps_{\eps_0}$. Finally, we turn these into an infinite tower of descending $\eps$.
+
+But of course this can also be continued, and so on ad infinitum (and beyond!)
+
+All of the ordinals we have constructed so far have been countable. Are there uncountable ordinals?
+
+\begin{theorem}[Uncountable Ordinals]
+    There exist uncountable ordinals.
+\end{theorem}
+
+\begin{prf}
+    If there is an uncountable ordinal, then there is a \textit{least} uncountable ordinal $\alpha$. Then $I_\alpha$ is the set of all countable ordinals, and so is the set of order-types of well-orderings of subsets of $\N$.
+    
+    Let $A = \set{(M, R) \in \powerset{\N} \times \powerset{\N \times \N} : R \text{ is a well-ordering of } M}$. Then the set $B$ of order types of elements of $A$ consists of all countable ordinals.
+    
+    Let $\omega_1 = \sup B$. If $\omega_1$ is countable, then so is $\omega_1^+$, and so $\omega_1^+ \in \B$. But then $\omega_1^+ \leq \omega_1$, which is a contradiction. Therefore $\omega_1$ must be uncountable.
+\end{prf}
+
+\begin{corollary}
+	The ordinal $\omega_1$ constructed in the proof is the least uncountable ordinal. Suppose we have $\alpha < \omega_1 = \sup B$. Then there exists some $\beta \in B$ with $\alpha < \beta$. Since $\beta$ is countable, so is $\alpha$.
+\end{corollary}
+
+\begin{corollary}
+    Every proper initial segment of $\omega_1$ is countable.
+\end{corollary}
+
+\begin{corollary}
+    If $\alpha_1$, $\alpha_2$, \dots is a sequence of countable ordinals, then so is $\alpha = \sup \set{a_n : \ninn}$. This is because the set $I_\alpha$ is a countable union of countable sets.
+\end{corollary}
+
+\begin{theorem}[Hartog's Lemma]
+	\label{hartogs-lemma}
+    For any set $X$, there is some ordinal $\gamma$ which does not inject into $X$.
+\end{theorem}
+
+\begin{prf}
+    This is a generalisation of the previous theorem, choosing $X$ in place of $\N$. Form the set $B$ consisting of order-types of well-orderings of subsets of $X$, and let $\gamma = (\sup B)^+$.
+    
+    If $\gamma$ injects into $X$, it induces a well-ordering on a subset of $X$ of order type $\gamma$. Then $\gamma \in B$, and so we have $\gamma = (\sup B)^+ \leq \sup B = \gamma$, which is a contradiction.
+\end{prf}
+
+\begin{note}
+	This theorem states something slightly stronger than ``there is no biggest ordinal". In fact, any set has a bigger ordinal!
+\end{note}
+
+\begin{definition}[Successor, Limit Ordinal]
+    Let $\alpha$ be an ordinal. We consider two cases, depending whether $I_\alpha$ has a greatest element.
+	\begin{enumerate}
+	    \item Suppose $I_\alpha$ has a greatest element $\beta$. Then $I_\alpha = I_\beta \cup \set \beta$. Then $\alpha = \beta^+$, and so we say $\alpha$ is the \textit{successor} of $\beta$. Here, $\beta = \sup I_\alpha < \alpha$.
+	    \item Now suppose $I_\alpha$ has no greatest element. Then if $\beta \in I_\alpha$ (equivalently, $\beta < \alpha$) then there is some $\beta < \gamma < \alpha$. It then follows that $\alpha = \sup I_\alpha$: no other element can be an upper bound, as there is always some bigger element. We say $\alpha$ is a \textit{limit ordinal}.
+	\end{enumerate}
+	For example, 0 is a limit ordinal. The set $I_0 = \varnothing$ has no greatest element (indeed, no \textit{element}). However, $0^+ = 1$ is a successor. Indeed, \textit{any} $\ninn$ is a successor of $n-1$.
+	
+	Also, $\omega$ is a limit ordinal. The set $\N$ has no upper bound, since any $n$ has $n < n+1 < \omega$. However, $\omega^+ = \omega + 1$ is a successor.
+\end{definition}
+
+% ================================================================== %
+
+\subsection{Ordinal Arithmetic}
+\label{ordinal-arithmetic}
+
+Now, we formalise our notion of adding ordinals. We had loosely constructed $\omega + 1$ and even $\omega + \omega$, but introduced this as notation only, without ever formally defining ordinal addition.
+
+\begin{definition}[Ordinal Addition]
+	\label{ordinal-addition-inductive}
+    For ordinals $\alpha$ and $\beta$, we define the ordinal sum $\alpha + \beta$ by recursion on $\beta$ with $\alpha$ fixed:
+    \begin{enumerate}
+    	\item $\alpha + 0 = \alpha$ for the unique zero ordinal.
+    	\item $\alpha + \beta^+ = (\alpha + \beta)^+$ for a successor ordinal $\beta$.
+    	\item $\alpha + \lambda = \sup\set{\alpha + \beta : \beta < \lambda}$ for a nonzero limit ordinal $\lambda$.
+	\end{enumerate}
+	This matches the heuristic definition we have used, and respects integer addition.
+\end{definition}
+
+\begin{note}
+	Technically, recursion as defined in \ref{recursion} relies on a set, but we saw in \ref{burali-forti-paradox} that the ordinals do not form a set. We should therefore fix an ordinal $\gamma$ and define $\alpha + \beta$ by recursion on $\beta$ in the well-ordered set $I_\gamma$. By uniqueness in recursion, this does indeed give a well-defined $\alpha + \beta$ for any pair of ordinals. In general, this justifies recursive definitions on all ordinals.
+\end{note}
+
+\begin{proposition}[Ordinal Induction]
+    Proof by induction works on ordinals. Let $p(\alpha)$ be some property of ordinals. Then we have
+    \[
+	(\forall \alpha) ((\forall \beta)((\beta < \alpha) \Ra p(\beta)) \Ra p(\alpha)) \Ra (\forall \alpha) p(\alpha).
+	\]
+\end{proposition}
+
+\begin{prf}
+    For contradiction, assume $(\forall \alpha) ((\forall \beta)((\beta < \alpha) \Ra p(\beta)) \Ra p(\alpha))$ but not $(\forall \alpha) p(\alpha)$. Then there is some $\gamma$ with $\lnot p(\gamma)$. The non-empty set $\set{\delta \leq \gamma : \lnot p(\delta)}$ of ordinals therefore has a least element, say $\alpha$. If $\beta < \alpha$, then $\beta \leq \gamma$, and so $p(\beta)$ holds. But then by assumption, $p(\alpha)$ holds.
+\end{prf}
+
+\begin{note}
+	For $m, n < \omega$, we have $m + 0 = m$, and $m + (n+1) = m + n^+ = (m+n)^+ = (m+n)+1$. This is exactly the recursive definition of integer addition, which is why we say ordinal addition respects integer addition.
+\end{note}
+
+\begin{proposition}[Noncommutativity]
+    Ordinal addition is not commutative.
+\end{proposition}
+
+\begin{prf}
+    Since 1 is a successor ordinal, $\omega + 1 = \omega^+$. However, since $\omega$ is a limit ordinal, we have:
+    \[
+	1 + \omega = \sup\set{1 + n : n < \omega} = \sup \N = \omega \neq \omega^+.
+	\]
+	This means $\omega + 1 \neq 1 + \omega$, so ordinal addition is not commutative.
+\end{prf}
+
+\begin{proposition}[Addition Respects $\leq$]
+	\label{ordinal-addition-respects-inequality}
+    For any ordinal $\alpha$, if $\beta \leq \gamma$, then $\alpha + \beta \leq \alpha + \gamma$.
+\end{proposition}
+
+\begin{prf}
+    We fix $\alpha$ and proceed by induction on $\gamma$. If $\gamma = 0$, then $\beta = \gamma = 0$, so both sides are just $\alpha$, and thus the inequality holds. Now, without loss of generality we take $\beta < \gamma$.
+    
+    If $\gamma = \delta^+$ is a successor ordinal, then we have $\alpha + \beta \leq (\alpha + \delta)^+$. We have $\beta \leq \delta$, so by induction this holds. Similarly, if $\gamma$ is a limit ordinal, we define $\alpha + \gamma$ to be the supremum of the set $\set{\alpha + \delta : \delta < \gamma}$. Since $\beta < \gamma$, this set contains $\alpha + \beta$, and so $\alpha + \beta \leq \alpha + \gamma$ as required.
+\end{prf}
+
+\begin{corollary}
+	The strict version also holds: if $\beta < \gamma$, then $\alpha + \beta < \alpha + \gamma$. However, we do \textit{not} always have $\beta + \alpha < \gamma + \alpha$, for example if $\beta = 0$, $\gamma = 1$, and $\alpha = \omega$ this would give $\omega < \omega$. However, we do have $\beta + \alpha \leq \gamma + \alpha$, simply by induction on $\alpha$.
+\end{corollary}
+
+\begin{proposition}[Supremum Addition]
+    Let $S \neq \varnothing$ be a set of ordinals. Then for any ordinal $\alpha$, we have
+    \[
+	\alpha + \sup S = \sup \set{\alpha + \beta : \beta \in S}.
+	\]
+\end{proposition}
+
+\begin{prf}
+	Let $T = \set{\alpha + \beta : \beta \in S}$. We then want $\alpha + \sup S = \sup T$. For any $\beta \in S$, we know $\alpha + \beta \leq \alpha + \sup S$. Then $\sup T \leq \alpha + \sup S$. To prove the converse, we consider two cases, based on whether $S$ has a greatest element.
+	\begin{enumerate}
+    	\item If $S$ has greatest element $\gamma$, then $\alpha + \gamma$ is a greatest element of $T$. So $\alpha + \gamma = \sup T$, but as $\gamma = \sup S$, indeed we have $\alpha + \sup S = \sup T$.
+    	\item If $S$ has no greatest element, let $\lambda = \sup S$. Then $\lambda \neq 0$, since $S \neq \varnothing$. Note that $\lambda \notin S$, so $S \subs I_\lambda$. Then $\lambda = \sup S \leq \sup I_\lambda = \lambda$, so $\lambda = \sup I_\lambda$, and so $\lambda$ is a limit ordinal. Therefore we have by definition $\alpha + \sup S = \alpha + \lambda = \sup \set{\alpha + \gamma : \gamma < \lambda}$.
+    	\item[] Now, for any $\gamma < \lambda = \sup S$, there exists $\beta \in S$ with $\gamma < \beta$. Then $\alpha + \gamma \leq \alpha + \beta \leq \sup T$. But then we have $\alpha + \sup S \leq \sup T$.
+	\end{enumerate}
+	Thus in either case, we have $\alpha + \sup S \leq \sup T$ and $\sup T \leq \alpha + \sup S$, so $\alpha + \sup S = \sup T$.
+\end{prf}
+
+\begin{proposition}[Associativity of Ordinal Addition]
+	\label{ordinal-addition-associative}
+    For all ordinals $\alpha, \beta, \gamma$ we have $\alpha + (\beta + \gamma) = (\alpha + \beta) + \gamma$.
+\end{proposition}
+
+\begin{prf}
+    We prove this by induction on $\gamma$, with $\alpha$ and $\beta$ fixed. We consider three cases.
+    \begin{enumerate}
+    	\item If $\gamma = 0$, then we have $\alpha + (\beta + 0) = \alpha + \beta = (\alpha + \beta) + 0$.
+    	\item If $\gamma = \delta^+$ is a successor ordinal, then $\alpha + (\beta + \gamma) = \alpha + (\beta + \delta)^+$ by definition. The induction hypothesis shows that this is equal to $(\alpha + (\beta + \delta))^+ = (\alpha + \beta) + \gamma$.
+    	\item If $\gamma \neq 0$ is a limit ordinal, $\alpha + (\beta + \gamma) = \alpha + \sup \set{\beta + \delta : \delta < \gamma} = \sup \set{\alpha + (\beta + \delta) : \delta < \gamma}$ by the previous proposition. But then this is $\sup \set{(\alpha + \beta) + \delta : \delta < \gamma}$ by the induction hypothesis, and this is simply $(\alpha + \beta) + \gamma$ as required.
+	\end{enumerate}
+	Therefore $\alpha + (\beta + \gamma) = (\alpha + \beta) + \gamma$, and so ordinal addition is associative.
+\end{prf}
+
+\begin{note}
+	The definition of ordinal addition given in \ref{ordinal-addition-inductive} is called the \textit{inductive definition}. We now give an alternative \textit{synthetic} definition, which yields the same result.
+\end{note}
+
+\begin{definition}[Ordinal Addition]
+	\label{ordinal-addition-synthetic}
+    Let $X$ and $Y$ be well-ordered sets. Then $X \sqcup Y = (X \times \set 0) \cup (Y \times \set 1)$ is well-ordered too, by the ordering:
+    \[
+	(x, i) < (y, j) \iff \text{one of } \begin{cases}
+		i = j = 0 \text{ and } x < y \text{ in } X \\
+		i = j = 1 \text{ and } x < y \text{ in } Y \\
+		i = 0 \text{ and } j = 1
+	\end{cases}
+	\]
+	That is, we say that every element in $X$ is ``less" than every element in $Y$, and compare pairs of elements from the same set as they are compared within that set. $X \sqcup Y$ is then the disjoint union of $X$ and $Y$, or the set ``$X$ then $Y$".
+	
+	Now, if $X$ and $Y$ have order type $\alpha$ and $\beta$, we let $\alpha + \beta$ be the order type of $X \sqcup Y$.
+\end{definition}
+
+\begin{note}
+	In the synthetic definition of ordinal addition, we let $\alpha + 1$ be the order type of $\alpha \sqcup \set 0$, which is clearly $\alpha^+$.
+\end{note}
+
+\begin{note}
+	This definition makes it easier to see various properties, like associativity (\ref{ordinal-addition-associative}), as the well-ordered sets $(X \sqcup Y) \sqcup Z$ and $X \sqcup (Y \sqcup Z)$ are order-isomorphic. Also, we have $\alpha + \beta \leq \alpha + \gamma$ whenever $\beta \leq \gamma$ (\ref{ordinal-addition-respects-inequality}), since if $Y$ is an initial segment of $Z$, $X \sqcup Y$ is an initial segment of $X \sqcup Z$.
+\end{note}
+
+\begin{note}
+	We usually write the more concise $\alpha \sqcup \beta$ for ``$X \sqcup Y$, where $X$ is of order type $\alpha$ and $Y$ is of order type $\beta$". More generally, we identify $\alpha$ and $I_\alpha$.
+\end{note}
+
+\begin{proposition}[Addition Well-Defined]
+    The definitions of ordinal addition given in \ref{ordinal-addition-inductive} (inductive) and \ref{ordinal-addition-synthetic} (synthetic) coincide.
+\end{proposition}
+
+\begin{prf}
+    We write $\alpha \oplus \beta$ for the synthetic definition, and $\alpha + \beta$ for the inductive definition. Now, we perform induction, considering three cases based on $\beta$.
+    \begin{enumerate}
+    	\item If $\beta = 0$, then $\alpha + 0 = \alpha$ is indeed the order type of $X \sqcup \varnothing$, where $X$ has order type $\alpha$.
+    	\item If $\beta = \delta^+$, then $\alpha + \beta = (\alpha + \delta)^+$, which is the order type of $(\alpha \sqcup \delta) \sqcup 1$ by induction. This is order-isomorphic to $\alpha \sqcup (\delta \sqcup 1)$, which has order type $\alpha \oplus \beta$ as required.
+    	\item If $\beta \neq 0$ is a limit ordinal, then $\alpha + \beta = \sup \set{\alpha + \gamma : \gamma < \beta}$. By induction, this is equal to $\sup \set{\alpha \oplus \gamma : \gamma < \beta}$. But $\alpha \oplus \gamma$ is the order type of $\alpha \sqcup \gamma$, and the supremum of the nested set $\set{\alpha \sqcup \gamma : \gamma < \beta}$ is the union $\bigcup_{\gamma < \beta} \alpha \sqcup \gamma$, which is $\alpha \sqcup \beta$. This has order type $\alpha \oplus \beta$ as required, so the definitions coincide in this case too.
+	\end{enumerate}
+	Thus the definitions coincide for every ordinal, and so are equal.
+\end{prf}
+
+Now, we define ordinal multiplication. Again, we start with the \textit{inductive} definition.
+
+\begin{definition}[Inductive Ordinal Multiplication]
+    We define $\alpha \cdot \beta$ by recursion on $\beta$, with $\alpha$ fixed. $\alpha \cdot 0 = 0$ for all ordinals $\alpha$. Then:
+    \begin{enumerate}
+    	\item $\alpha \cdot \beta^+ = \alpha \cdot \beta + \alpha$ for successor ordinals $\beta^+$.
+    	\item $\alpha \cdot \lambda = \sup \set{\alpha \cdot \gamma : \gamma < \lambda}$ for limit ordinals $\lambda$.
+	\end{enumerate}
+	This clearly respects traditional multiplication on the natural numbers $\N_0$.
+\end{definition}
+
+\begin{definition}[Synthetic Ordinal Multiplication]
+    For well-ordered sets $X$ and $Y$, we well-order the Cartesian product $X \times Y$ by:
+    \[
+	(x, y) < (x', y') \iff \text{one of } \begin{cases}
+		y < y' \text{ in } Y \\
+		y = y' \text{ and } x < x' \text{ in } X
+	\end{cases}
+	\]
+	This is the lexicographic ordering on $X \times Y$, where the second element takes precedence, with ties broken by the first element.
+	
+	We then define $\alpha \cdot \beta$ to be the order type of $\alpha \times \beta$, or more precisely $I_\alpha \times I_\beta$.
+\end{definition}
+
+\begin{corollary}
+	It is straightforward to check that the two definitions of $\alpha \cdot \beta$ once again coincide.
+\end{corollary}
+
+\begin{corollary}
+	Ordinal multiplication respects $\leq$ in the same way that ordinal addition does (\ref{ordinal-addition-respects-inequality}): we have $\alpha \cdot \beta \leq \alpha \cdot \gamma$ for all $\beta \leq \gamma$. The strict version holds too, provided that $\alpha \neq 0$. The reversed version also holds: for all $\beta \leq \gamma$ we have $\beta \cdot \alpha \leq \gamma \cdot \alpha$.
+\end{corollary}
+
+\begin{corollary}
+	Ordinal multiplication is also associative: $\alpha \cdot (\beta \cdot \gamma) = (\alpha \cdot \beta) \cdot \gamma$. However, ordinal multiplication is \textit{not} commutative: $\omega \cdot 2 = \omega + \omega$, but $2 \cdot \omega = \sup 2\N = \omega$.
+\end{corollary}
+
+We define ordinal exponentiation likewise, with $\alpha^0 = 1$, and $\alpha^{\beta^+} = \alpha^\beta \cdot \alpha$.
+
+\begin{definition}[Ordinal Exponentiation]
+    We define $\alpha^\beta$ by recursion on $\beta$, with $\alpha$ fixed. $\alpha^0 = 1$ for all ordinals $\alpha$. Then:
+    \begin{enumerate}
+    	\item $\alpha^{\beta^+} = \alpha^\beta \cdot \alpha$ for successor ordinals $\beta^+$.
+    	\item $\alpha^\lambda = \sup \set{\alpha^\gamma : \gamma < \lambda}$ for limit ordinals $\lambda$.
+	\end{enumerate}
+	This clearly respects traditional exponentiation on the natural numbers $\N_0$.
+\end{definition}
+
+\begin{note}
+	This definition sets $0^0 = 1$. In fact, this is a natural definition, even in general! The empty product is clearly 1, since this is the identity for multiplication. Additionally, the limit in the real numbers of $x^x$ approaches 1 as $x \to 0$ from above.
+\end{note}
+
+With this, we can construct a table of inequalities, which is useful for reference. Suppose we have ordinals $\alpha < \beta$, and another ordinal $\gamma$. Then, which arithmetic inequalities hold?
+
+\renewcommand{\arraystretch}{1.6}
+
+\begin{table}[h!]
+\small{
+\begin{center}
+
+\begin{tabular}{|r|c|c|c|c|c|}
+\hline
+& \!\!\!\!\!\! & strict, left side & non-strict, left-side & strict, right side & non-strict, right side \\
+\textbf{operation} $\circ$ & \!\!\!\!\!\!
+& $\gamma \circ \alpha < \gamma \circ \beta$
+& $\gamma \circ \alpha \leq \gamma \circ \beta$
+& $\alpha \circ \gamma < \beta \circ \gamma$
+& $\alpha \circ \gamma \leq \beta \circ \gamma$ \\
+\hline
+addition $+$ & \!\!\!\!\!\! &
+{\color{green_dark} $\checkmark$} (everywhere) &
+{\color{green_dark} $\checkmark$} (everywhere) &
+{\color{red_dark} $2 + \omega = 3 + \omega$} &
+{\color{green_dark} $\checkmark$} (everywhere) \\ \hline
+multiplication $\cdot$ & \!\!\!\!\!\! &
+{\color{green_dark} $\checkmark$} (if $\gamma \neq 0$) &
+{\color{green_dark} $\checkmark$} (everywhere) &
+{\color{red_dark} $2 \cdot \omega = 3 \cdot \omega$} &
+{\color{green_dark} $\checkmark$} (everywhere) \\ \hline
+exponentiation $^\land$ & \!\!\!\!\!\! &
+{\color{green_dark} $\checkmark$} (if $\gamma \neq 0, 1$) &
+{\color{green_dark} $\checkmark$} (if $\gamma \neq 0$) &
+{\color{red_dark} $2^\omega = 3^\omega$} &
+{\color{green_dark} $\checkmark$} (everywhere) \\ \hline
+\end{tabular}
+\end{center}
+}
+\end{table}
+
+In general, these inequalities tend to hold when we operate by $\gamma$ on the left. This is because, for a fixed $\gamma$, these operations are defined inductively, and so:
+\begin{enumerate}
+    \item If $\beta^+$ is a successor, then $\gamma \circ \beta^+ = \gamma \circ \beta * \gamma$, which is at least $\gamma \circ \beta$. This means for sucessor ordinals, the ordering is preserved.
+    \item If $\lambda$ is a non-zero limit ordinal, then $\gamma \circ \lambda = \sup \set{\gamma \circ \beta : \beta < \lambda}$, and so by definition $\gamma \circ \lambda$ is at least $\gamma \circ \beta$ for all smaller $\beta$.
+\end{enumerate}
+A similar induction shows the non-strict version on the right side.
+
+\begin{note}
+	The only non-strict example which does \textit{not} always hold is the one of exponentiation, in which we see $0^0 = 1 > 0^2 = 0$, even though $0 < 2$. In fact, this counterexample holds even within the natural numbers $\N_0$, without requiring ordinal arithmetic!
+\end{note}
+
+\begin{corollary}
+    Using the top left entry in the table, we may perform ``ordinal subtraction" on the left. If $\beta \leq \alpha$, then there is a unique ordinal $\gamma$ with $\beta + \gamma = \alpha$. This does not work on the right: there is no $\gamma$ with $\gamma + 1 = \omega$, even though $1 \leq \omega$.
+\end{corollary}
+
+% ================================================================== %
+\pagebreak
+\section{Posets and Zorn's Lemma}
+\subsection{Partially Ordered Sets}
+
+This section will require a lot of basic definitions and examples before we see any results.
+
+\begin{definition}[Partial Order]
+    A \textit{partial order} on a set $X$ is a relation $\leq$ on $X$ which is:
+    \begin{enumerate}
+	    \item \textit{reflexive}: $x \leq x$ for all $x \in X$.
+	    \item \textit{antisymmetric}: if $x \leq y$ and $y \leq x$, then $x = y$.
+	    \item \textit{transitive}: if $x \leq y$ and $y \leq z$, then $x \leq z$.
+	\end{enumerate}
+	We then write $x < y$ if $x \leq y$ and $x \neq y$. Note that this is irreflexive and transitive.
+	
+	If $\leq$ is a partial order on $X$, we say that $X$ is a \textit{partially ordered set}, or \textit{poset}.
+\end{definition}
+
+\begin{note}
+	Compare this to the definition of a \textit{total} order given in \ref{total-linear-order}. In fact, any linearly ordered set is also a poset.
+\end{note}
+
+\begin{example}[Posets]
+    Any linearly ordered set is a poset, but are there posets which are not linearly ordered?
+    \begin{enumerate}
+	    \item In $\N$, the relation $a \leq b$ if $a \mid b$ is a partial but not linear order. For example, 4 and 7 are incomparable: neither divide the other.
+	    \item For any set $S$, the powerset $\powerset{S}$ is a poset under the order $\subs$.
+	    \item Any subset of a poset is a poset, simply by restricting the partial order.
+	\end{enumerate}
+\end{example}
+
+\begin{definition}[Hasse Diagrams]
+	\label{hasse-diagram}
+    We can describe posets using \textit{Hasse diagrams}, like this:
+    
+    \ctikzfig{hasse-diagram}
+    
+	This is an order of a set $X = \set{\mathrm{a, b, c, d, e, f}}$ where the relation is given by:
+	\[
+	\mathrm{a \leq b, \; a \leq c, \; b \leq d, \; c \leq d, \; c \leq e, \; d \leq f, \; e \leq f}
+	\]
+	and all consequences of reflexivity and transitivity from here. More generally, we join $x$ to $y$ with an upward edge if $y$ \textit{covers} $x$, that is if $x < y$ and there is no $z$ with $x < z < y$. We then interpret the diagram to mean $x \leq y$ if $x = y$ or there is an upward path from $x$ to $y$.
+\end{definition}
+
+\begin{note}
+    Not all posets can be described using Hasse diagrams. For example, in $\Q$, the set is dense, and so between any $x < y$ there is some element $z$ with $x < z < y$. But then we cannot draw a line between any $x$ and an element which covers it. However, all \textit{finite} posets have Hasse diagrams.
+\end{note}
+
+\begin{example}[Hasse Diagrams]
+    We can draw the subsets of $\set{0, 1}$ and $\set{0, 1, 2}$ using Hasse diagrams.
+    
+    \ctikzfig{hasse-diagram-01}
+    
+    In a poset, there need not be a coherent notion of ``height". For example, consider the original example of a Hasse diagram, and remove the element ``e", but retain the relation d $\leq$ f. Then we are left with the following diagram:
+    
+    \ctikzfig{hasse-diagram-heightless}
+    
+	Here, there is no way to assign each element a ``layer" such that each element covers one from the layer directly below it.
+    
+    There also need not be any connection between paths.
+    
+    \ctikzfig{hasse-diagram-split}
+    
+    Here, the set is split into two, where no pair of elements from opposite parts are comparable.
+\end{example}
+
+\begin{definition}[Chain, Antichain]
+	\label{chain-antichain}
+    A subset $S$ of a poset $X$ is a \textit{chain} if $S$ is linearly ordered by the partial order on $X$.
+    
+    Meanwhile, a subset $S$ is called an \textit{antichain} if no two distinct elements of $S$ are related. That is, for all $x, y$ in $S$, if $x \leq y$ then $x = y$.
+    
+    Of course, this is the opposite of a chain, where every pair of elements is comparable.
+\end{definition}
+
+\begin{corollary}
+    If $X$ is linearly ordered, then every subset of $X$ is a chain.
+\end{corollary}
+
+\begin{corollary}
+    Any subset of size 1 is both a chain and an antichain.
+\end{corollary}
+
+\begin{example}[Chains and Antichains]
+	We can write down some chains and antichains.
+    \begin{enumerate}
+    	\item Any subset of size 1 is both a chain and an antichain. In a linearly ordered set $X$, these are the \textit{only} antichains, as any two elements are related.
+    	\item Any subset of a chain or antichain is still a chain or antichain respectively.
+    	\item In $\N$, with $a \leq b$ if $a \mid b$, the set $\set{1, 2, 4, 8, 16 \dots}$ is a chain, while the set of primes is an antichain (as no two elements divide each other).
+    	\item In the powerset of $\set{1, 2, 3}$, the set $\set{\varnothing, \set{1}, \set{1, 2}, \set{1, 2, 3}}$ is a chain. Meanwhile, the set $\set{\set 1, \set 2, \set 3}$ is an antichain.
+    	\item In $\powerset{\Q}$, the set $\set{\intervalOO{\infty}{x} \cap \Q§ : x \in \R}$ is an uncountable chain.
+    	\item In our original Hasse diagram from \ref{hasse-diagram}, the sets $\set{\mathrm{b, c}}$ and $\set{\mathrm{d, e}}$ are antichains, while the set $\set{\mathrm{a, c, d, f}}$ is a chain.
+	\end{enumerate}
+\end{example}
+
+\begin{definition}[Supremum]
+	\label{supremum-upper-bound-complete}
+    Let $X$ be a poset, with $S \subs X$ and $x \in X$. Then:
+    \begin{enumerate}
+    	\item $x$ is an \textit{upper bound} for $S$ if $y \leq x$ for all $y \in S$.
+    	\item $x$ is a \textit{least upper bound} for $S$ if $x$ is an upper bound for $S$ and $x \leq y$ for all other upper bounds of $S$. If this exists, then it is called the \textit{supremum} and is denoted by $\sup S$.
+	\end{enumerate}
+	If every subset $S$ of a poset $X$ has a supremum, then we say $X$ is \textit{complete}.
+\end{definition}
+
+\begin{note}
+	If a set $S$ has supremum $x$ and supremum $y$, then $x$ and $y$ are both upper bounds, and we must have $x \leq y$ and $y \leq x$ by the supremum property. Then $x = y$ by antisymmetry. Therefore the supremum of a set, if it exists, must be unique.
+\end{note}
+
+\begin{corollary}
+    A complete poset $X$ has greatest element $\sup X$ and least element $\sup \varnothing$. In particular, this means the empty set $\varnothing$ is not complete, as it has no element.
+\end{corollary}
+
+\begin{example}[Supremum]
+    If $S \subs \powerset{X}$, then $\sup S = \bigcup \set{A : A \in S}$.
+    
+    In $\R$, we have $\sup \intervalOO{0}{1} = \sup \intervalCC{0}{1} = 1$.
+    
+    In $\Q$, the set $\set{x : x^2 < 2}$ has upper bounds (like 2), but no supremum, and so is not complete.
+    
+    $\R$ is also not complete: for example $\R$ has no upper bound.
+\end{example}
+
+\begin{definition}[Order-Preserving]
+    A map $f : X \to Y$ between posets $X$ and $Y$ is \textit{order-preserving} if $x \leq y \implies f(x) \leq f(y)$.
+\end{definition}
+
+\begin{note}
+	In Definition \ref{order-isomorphism}, we defined an order-preserving map using strict equalities. In particular, this guaranteed that any such map was injective. This is not the case for posets: indeed, any map of the form $f(x) = y_0$ for some constant $y_0 \in Y$ independent of $X$ is order-preserving.
+\end{note}
+
+\begin{corollary}
+	If $f$ is order-preserving and injective, then $x < y \implies f(x) < f(y)$. If $X$ is linearly ordered, then the reverse direction is also true.
+\end{corollary}
+
+\begin{theorem}[Knaster-Tarski Fixed Point Theorem]
+	\label{knaster-tarski-fixed-point}
+    Let $X$ be a complete poset and $f : X \to X$ be an order-preserving map. Then $f$ must have a fixed point $x \in X$, such that $f(x) = x$.
+\end{theorem}
+
+\begin{prf}
+    Let $S = \set{x \in X : x \leq f(x)}$ and define $z = \sup S$ (which exists by completeness). We show that $f(z) = z$. Note that for $x \in S$, we have $x \leq z$, so $x \leq f(x) \leq f(z)$. That means $f(z)$ is an upper bound for $S$. Since $z$ is the \textit{least} upper bound, we have $z \leq f(z)$.
+    
+    It then follows that $f(z) \leq f(f(z))$. But this means that $f(z) \in S$ by definition of $S$! This means that $f(z) \leq z$, since $z$ is an upper bound for $S$. Thus by antisymmetry, we have $f(z) = z$, and so $z$ is a fixed point of an arbitrary order-preserving map.
+\end{prf}
+
+\begin{note}
+	We really did require the set $X$ to be complete! For example, the order-preserving map $f: \N \to \N$ given by $f(n) = n+1$ clearly has no fixed points.
+\end{note}
+
+\begin{theorem}[Schr\"oder-Bernstein Theorem]
+    Let $A$ and $B$ be sets. If there are injections $f: A \to B$ and $g: B \to A$, then in fact there is some bijection $h: A \to B$.
+\end{theorem}
+
+\begin{prf}
+    We seek partitions $A = P \cup Q$ and $B = R \cup S$ such that $f(P) = R$ and $g(S) = Q$. Then
+    \[
+	h(x) = \begin{cases}
+		f(x) & x \in P \\
+		g^{-1}(x) & x \in Q
+	\end{cases}
+	\]
+	defines a bijection $A \to B$. For such partitions, $A \setminus g(B \setminus f(P)) = P$. This is because $f(P) = R$, and $B \setminus R = S$, then $A \setminus g(S) = A \setminus Q = P$.
+	
+	Define $H : \powerset{A} \to \powerset{A}$ by $H(P) = A \setminus g(B \setminus f(P))$. Recall that $\powerset{A}$ is a complete poset under the inclusion relation, and $H$ is order-preserving.
+	
+	By Knaster-Tarski (Theorem \ref{knaster-tarski-fixed-point}), there is a fixed point $P \subs A$ such that $H(P) = P$. Then setting $Q = A \setminus P$, $R = f(P)$, and $S = B \setminus R$ gives the required partitions.
+\end{prf}
+
+% ================================================================== %
+
+\subsection{Zorn's Lemma}
+
+We now prove one of the most important and famous results in set theory: Zorn's Lemma. First, we need an introductory definition.
+
+\begin{definition}[Maximal Element]
+    An element $x$ in a poset $X$ is called \textit{maximal} if $x \leq y$ implies $x = y$. Equivalently, there is no $y \in X$ with $x < y$.
+\end{definition}
+
+\begin{note}
+	Maximal elements need not necessarily be unique! In the set $\set{a, b, c}$ with the ordering given by $a \leq b$ and $a \leq c$, both $b$ and $c$ are maximal.
+\end{note}
+
+\begin{example}[Maximal Elements]
+	Sets may or may not have a maximal element.
+    \begin{enumerate}
+    	\item In the powerset $\powerset S$ ordered by inclusion, the element $S$ is maximal.
+    	\item In $\N$ under the usual order, there is no maximal element, as $n \leq n+1$.
+	\end{enumerate}
+\end{example}
+
+Now, we are ready to prove Zorn's Lemma.
+
+\begin{theorem}[Zorn's Lemma]
+	\label{zorns-lemma}
+    Let $X$ be a non-empty poset in which every chain (\ref{chain-antichain}) has an upper bound. Then $X$ must have a maximal element.
+\end{theorem}
+
+\begin{prf}
+    Assume that $X$ has no maximal element. For each $x$, fix $x' \in X$ such that $x < x'$. Also, for each chain $C \subs X$, let $u(C)$ be an upper bound for $C$.
+    
+    Let $\gamma = \gamma(X)$ be some ordinal which does not inject into $X$, which is possible by Hartog's Lemma (Theorem \ref{hartogs-lemma}). Define $f : \gamma \to X$ by the recursion:
+    \begin{align*}
+    	f(0) &= u(\varnothing) \text{ the base case} \\
+    	f(\alpha + 1) &= f(\alpha)' \text{ for successor ordinals}\\
+    	f(\lambda) &= u(\set{f(\alpha) : \alpha < \lambda}) \text{ for limit ordinals}
+	\end{align*}
+	Now, an induction on $\beta$ with $\alpha$ fixed shows that $\alpha < \beta \implies f(\alpha) < f(\beta)$. But then $f$ is injective, which is a contradiction! Therefore there is a maximal element.
+	
+	In this definition, we used $\set{f(\alpha) : \alpha < \lambda}$, and found its upper bound. In fact, this relies on the fact that this set is always a chain for every limit ordinal $\lambda$.
+\end{prf}
+
+\begin{note}
+	Recall that $\varnothing$ is a chain in $X$, and thus has an upper bound $x \in X$. Therefore $X$ is anyway guaranteed to be non-empty. When applying Zorn's Lemma, we often first check that $X \neq \varnothing$ and then verify that non-empty chain has an bound.
+\end{note}
+
+\begin{theorem}[Vector Space Basis]
+    Every vector space $V$ has a basis.
+\end{theorem}
+
+\begin{prf}
+    Partially order the linearly independent subsets of $V$ by inclusion. Assuming each chain has an upper bound, we apply Zorn's lemma and take the maximal element $B \subs V$.
+    
+    Then $B$ is a basis, that is span$(v) = V$. Otherwise, we could take some $x$ in $V$ but not the span of $B$, which would make $B \cup \set x$ a larger linearly independent set, contradicting maximality.
+    
+    We now check that each chain has an upper bound. Let $X = \set{A \subs V : A \text{ is linearly independent}}$, partially ordered by inclusion. Let $C = \set{A_i : i \in I}$ be some chain in $X$. Then the union of all the sets is $A = \bigcup_{i \in I} A_i$ is an upper bound for $C$ in $\powerset V$: we prove that it is linearly independent, and thus that it is also an upper bound for $C$ in $X$.
+    
+    Assume otherwise, so that:
+    \[
+	\sum_{j=1}^n \lambda_j x_j = 0
+	\]
+	for some $x_i$ all in $A$ with $\lambda_i$ scalars. Since $C$ is a chain, each $x_i$ is in some $A_k$. Then we can choose some $1 \leq \ell \leq n$ with
+	\[
+	\bigcup_{j=1}^n A_{i_j} = A_{i_k}.
+	\]
+	But $A_{i_k}$ is linearly independent, so the $\lambda_i$ are all zero. Therefore $A$ is linearly independent too. By Zorn's Lemma, there is a maximal element $B \subs X$, which is therefore a basis.
+\end{prf}
+
+\begin{corollary}
+	Every linearly independent set $B_0 \subs V$ is contained in some basis of $V$.
+\end{corollary}
+
+\begin{note}
+	$\R$ is a vector space over $\Q$. A basis of $\R$ over $\Q$ is called a \textit{Hamel basis}. The real vector space $\R^\N$, the set of real-valued sequences, has a basis, but has no countable basis.
+\end{note}
+
+\begin{note}
+	Zorn's lemma is very widely applicable. For example, the existence of maximal ideals in rings with 1, the existence of continuous linear functionals in a normed space, the proof that every connected graph has a spanning tree, and more all use this result.
+\end{note}
+
+We now complete the proof of the \textit{model existence lemma} (Theorem \ref{model-existence-lemma}) from the first section on propositional logic, in the case of an arbitrary (possibly uncountable) set of primitive propositions.
+
+\begin{theorem}[General Model Existence Lemma]
+	\label{general-model-existence-lemma}
+    Let $S \subs L$. If $S$ is consistent, then $S$ has a model.
+    
+    That is, if $P$ is any set of primitive propositions, with $S \subs L(P)$ a consistent set, then there is some consistent set $\bar S$ with $S \subs \bar S$ and for all $t \in L$, either $t \in \bar S$ or $\lnot t \in \bar S$.
+\end{theorem}
+
+\begin{prf}
+    We seek a maximal (with regard to inclusion) consistent set $\bar S$ containing $S$. Then we complete the proof by taking an arbitrary $t \in L$ and noticing that either $\bar S \cup \set t$ or $\bar S \cup \set{\lnot t}$ is consistent: if not then $\bar S \vdash \lnot t$ and $\bar S \vdash \lnot \lnot t$ by the Deduction Theorem (\ref{deduction-theorem}). Then $\bar S \vdash \bot$ by modus ponens, which contradicts $\bar S$ being consistent.
+    
+    Now, let $X = \set{T \subs L : T \text{ is consistent and } S \subs T}$, partially ordered by inclusion. Since $S \in X$, $X \neq \varnothing$. We now prove that every chain has an upper bound.
+    
+    Let $C = \set{T_i : i \in I}$ be a non-empty chain in $X$. Clearly, the union of these sets $T$ is an upper bound, and $S \subs T_i$, so we have $S \subs T$. It remains to show that $T$ is consistent.
+    
+    Otherwise, if $T \vdash \bot$, then there is some finite proof of this. Then there is some finite union of $T_i$ which proves $\bot$: the ones with propositions used in the proof of $\bot$. But since $C$ is a chain, there is some $k$ with $T_{i_k} \vdash \bot$, but this is a contradiction. Therefore $T$ is an upper bound in $X$.
+    
+	But then $X$ has a maximal element, by Zorn's Lemma. By maximality, we have either $t \in \bar S$ or $\lnot t \in \bar S$, so $\bar S$ is a model of $S$, as required.
+\end{prf}
+
+\begin{theorem}[Well-Ordering Principle]
+	\label{well-ordering-principle}
+    Every set $A$ can be well-ordered.
+\end{theorem}
+
+\begin{prf}
+    Let $X = \set{(B, R) \in \powerset{A} \times \powerset{A \times A} : R \text{ is a well-ordering of } B}$ be partially ordered by inclusion: $(B_1, R_1) \leq (B_2, R_2)$ if and only if $B_1 \subs B_2$ and $R_1 = R_2 \cap (B_1 \times B_1)$: $B_1$ is an initial segment of $B_2$.
+    
+    Notice that $(\varnothing, \varnothing) \in X$, so $X \neq \varnothing$. Now let $C = \set{(B_i, R_i) : i \in I}$ be a non-empty chain in $X$: a nested collection of well-ordered sets. Then the element-wise union is an upper bound, by Proposition \ref{nested-collection-upper-bound}.
+    
+    By Zorn's Lemma, we thus have a maximal element $(B, R) \in X$. If $B \neq A$, then for $x \in A \setminus B$, we can construct a new well-ordering by $(B \cup \set x, R \cup \set{(b, x) : b \in B} \cup \set{(x, x)})$. That is, we take $(B, R)$ and add a new element $x$ to $B$ greater than all previous elements.
+    
+    But then this is a bigger element of $X$, so $(B, R)$ was not maximal. Therefore the maximal element is such that $B = A$. Therefore there is some $(A, R)$ with $R$ a well-ordering of $A$. Equivalently, the set $A$ can be well-ordered!
+\end{prf}
+
+\begin{corollary}
+    The set of real numbers $\R$ can be well-ordered! Despite this, no well-ordering of $\R$ has ever been explicitly constructed.
+\end{corollary}
+
+In the proof of Zorn's Lemma (Theorem \ref{zorns-lemma}), we used a function from $X \to X$ which mapped $x \mapsto x' \in \set{y \in X \mid x < y}$. We also used a function $u: \set{C \subs X : C \text{ a chain}} \to X$, where $u(C)$ selects an element which is an upper bound for $C$. These functions are called \textit{choice functions}. Another example of such a function is used in the proof that a countable union of countable sets is itself countable: we fix injections $f_n : A_n \to \N$ for each $n$.
+
+The ability to do this is one of the most controversial disputes in mathematics, and is commonly termed the \textit{Axiom of Choice}. We now turn to study it.
+
+% ================================================================== %
+
+\subsection{The Axiom of Choice}
+
+The \textit{Axiom of Choice} is the assertion that for any set $X = \set{A_i : i \in I}$ of nonempty sets, there is a function $f : I \to \cup_{i \in I} A_i$ such that $f(i) \in A_i$ for all $i \in I$. This is called a \textit{choice function}. This is trivial when $I$ is finite: we can prove it by induction on the size of $I$. However, when $I$ is infinite, the existence of such a function is granted only by this axiom.
+
+\begin{note}
+	This assertion is very different from the other rules for constructing sets which we have met so far, such as the union, intersection, or powerset constructions. These are all unique constructions which entirely specify a set, but this axiom just asserts that an object exists, without any regard to uniqueness.
+\end{note}
+
+\begin{note}
+	As mentioned in the motivation for this section, the existence of this axiom (AC for short) is controversial. Many people do not like the idea of asserting this, because the axiom has many strange consequences, and even those that do often want to verify whether proofs which use AC are in fact still valid without AC.
+\end{note}
+
+In fact, the seminal result of this section will be that two results we have seen before are in fact equivalent to the Axiom of Choice, and thus equivalent to each other: Zorn's Lemma and the Well-Orering Principle (Theorems \ref{zorns-lemma} and \ref{well-ordering-principle}).
+
+\begin{theorem}[Axiom of Choice Equivalence]
+    The Axiom of Choice is equivalent to Zorn's Lemma (\ref{zorns-lemma}), which is itself equivalent to the Well-Ordering Principle (\ref{well-ordering-principle}). That is, each of these imply the others.
+\end{theorem}
+
+\begin{prf}
+    We used the Axiom of Choice in the proof of Zorn's Lemma, so $\mathrm{AC} \implies \mathrm{ZL}$.
+    
+    We used Zorn's Lemma in the proof of the Well-Ordering Principle, so $\mathrm{ZL} \implies \mathrm{WP}$.
+    
+    We now show that the Well-Ordering Principle implies the Axiom of Choice. Let $X = \set{A_i : i \in I}$ be a set of non-empty sets $A_i$ indexed by elements in some set $I$. Define $A$ to be the union of these sets, so $A = \bigcup_{i \in I} A_i$. Fix a well-ordering of $A$.
+    
+    Now we may define $f : I \to A$ by $f(i) \mapsto$ the least element of $A_i$. This is a choice function, so we have $\mathrm{WP} \implies \mathrm{AC}$ as required.
+    
+    Therefore the three statements are equivalent, as required.
+\end{prf}
+
+\begin{note}
+	The rest of this chapter is \textbf{not examinable}.
+\end{note}
+
+We now consider two definitions, which seek to formalise ideas we have seen before. We use this to prove another fixed-point theorem (like Theorem \ref{knaster-tarski-fixed-point}) with and without the Axiom of Choice.
+
+\begin{definition}[Chain-Complete]
+    A poset $X$ is \textit{chain-complete} if $X \neq \varnothing$ and every non-empty chain has a supremum.
+\end{definition}
+
+\begin{corollary}
+    Every complete poset (Definition \ref{supremum-upper-bound-complete}) and every finite poset is chain-complete.
+\end{corollary}
+
+\begin{corollary}
+    If $X$ is a poset, then $\set{C \subs X: C \text{ a chain}}$ ordered by inclusion is chain-complete.
+\end{corollary}
+
+\begin{definition}[Inflationary]
+    A function $f: X \to X$ on a poset $X$ is \textit{inflationary} if $x \leq f(x)$ for all $x \in X$.
+\end{definition}
+
+We may now use these two definitions to state and prove a fixed-point theorem.
+
+\begin{theorem}[Bourbaki-Witt Fixed Point Theorem]
+    If $X$ is a chain-complete poset and $f : X \to X$ is inflationary, then $f$ has a fixed point.
+\end{theorem}
+
+\begin{prf}
+    (With AC) We may use Zorn's Lemma to claim that $X$ has a maximal element $x$. Then $x \leq f(x)$ by $f$ being inflationary, but $x \geq f(x)$ by maximality, so $x = f(x)$.
+\end{prf}
+
+\begin{prf}
+    (Without AC) Assume $f$ has no fixed point. Fix $x_0 \in X$. Let $\gamma = \gamma(X)$ be an ordinal which does not inject into $X$, by Hartog's Lemma (Theorem \ref{hartogs-lemma}). Define $g : \gamma \to X$ by recursion:
+	\begin{align*}
+    	g(0) &= x_0 \\
+    	g(\alpha + 1) &= f(g(\alpha)) \\
+    	g(\lambda) &= \sup \set{g(\alpha) : \alpha < \lambda}
+	\end{align*}
+	for successor and nonzero limit ordinals $\alpha+1$ and $\lambda$.
+	
+	By induction, for $\alpha < \beta$ we have that $g(\lambda)$ is well-defined and $g(\alpha) < g(\beta)$. But then $g$ is injective, which is a contradiction.
+\end{prf}
+
+\begin{note}
+	The AC-free proof is very similar to the proof of the Knaster-Tarski Fixed Point Theorem (Theorem \ref{knaster-tarski-fixed-point}). In fact, this theorem is often called the \textit{choice-free} part of Zorn's Lemma.
+\end{note}
+
+\begin{theorem}[AC + BW $\Ra$ ZL]
+    The Axiom of Choice, along with Bourbaki-Witt, together imply Zorn's Lemma.
+\end{theorem}
+
+\begin{prf}
+    Let $X$ be a poset in which every chain has an upper bound.
+    
+    If $X$ is chain complete, fix a choice function $g : \powerset{X} \setminus \set \varnothing \to X$ where $g(Y) \in Y$ for all non-empty $Y \subs X$. That is, $g$ maps non-empty subsets of $X$ to elements of $X$ contained within them.
+    
+    Suppose that $X$ has no maximal element. Then define $f : X \to X$ by $f(x) = g(\set{y \in X : x < y})$. Then for all $x$, we have $x < f(x)$ for all $X$, so this contradicts Bourbaki-Witt.
+    
+    What if $X$ is not chain-complete? Then let $Y = \set{C \subs X : C \text{ a chain}}$. This \textit{is} chain-complete, so it has a maximal element, say $C$. Let $x$ be an upper bound for $C$.
+    
+    If $x$ is not maximal, pick $y \in X$ with $x < y$. Then $C \cup \set y$ is a chain with $y \notin C$. But this means $C$ was not maximal in $Y$, so in fact $x$ is maximal in $X$.
+\end{prf}
+
+\begin{note}
+	In fact, we proved the \textit{Hausdorff Maximality Principle}, which states that every poset has a maximal chain. This is also equivalent to the Axiom of Choice!
+\end{note}
+
+% ================================================================== %
+
+\pagebreak
+\section{First-Order Predicate Logic}
+
+Now, we return from set theory to logic once more. Our original model of basic propositional logic was easy to work with, but it was difficult to model actual mathematical theories, let alone the rich variety of statements present in modern mathematics. We aim now to take another step towards being able to formalise as much as we can.
+
+To this end, we replace the primitive propositions of propositional logic with actual mathematical statements. For example, we have statements like:
+\[
+``m(x, \, m(y, z)) = m(m(x, y), \, z)" \text{ (associativity of group multiplication)}
+\]
+or in the language of posets, statements like $x \leq y$.
+
+But these are meaningless right now! We need variables like $x$, $y$, and $z$, and we also need operator symbols, like the binary symbol $m$ which denotes multiplication, or the unary symbol $i$ which denotes the identity, or even ``nullary symbols" which operate on zero variables and are thus just constants. Will our statements then have meaning?
+
+No!  We need to have predicate statements, like the binary predicate $\leq$ or $=$. This is something with a truth value: yes, $m(x, y)$ operates on two arguments, but it has no truth value.
+
+We will then combine statements built in this way into \textit{formulae}, which finally mean something: they are actual declarations of things which can be true! We can formalise associativity as:
+\[
+``(\forall x)(\forall y)(\forall z)(m(x, \, m(y, z)) = m(m(x, y), \, z))".
+\]
+In fact, we can formalise all manner of other things, like transitivity:
+\[
+``(\forall x)(\forall y)(\forall z)(((x \leq y) \land (y \leq z)) \Ra (x \leq z))".
+\]
+The valuations we have described so far (Definition \ref{valuation}) will become \textit{structures}. These are sets $A$ together with functions $p_A: A^n \to \binset$ for any formula $p$, with $n$ the number of variables in $p$.
+
+Similarly, if $S$ is a set of formulae, we regard the notion of a \textit{model} (Definition \ref{model}) for $S$, as well as the notions of semantic and syntactic entailment from the chapter on Propositional Logic, all in the language of First-Order Predicate Logic.
+
+% ================================================================== %
+
+\subsection{Language}
+
+Now, having introduced a heuristic idea of logic, we begin to consider it formally.
+
+\begin{definition}[Language]
+    A \textit{language} $L$ in first-order predicate logic is specified by a disjoint pair of sets:
+    \begin{enumerate}
+    	\item[$\Omega$] the set of \textit{operation} symbols, and
+    	\item[$\Pi$] the set of \textit{predicate} symbols,
+	\end{enumerate}
+	as well as an \textit{arity function} $\alpha : \Omega \cup \Pi \to \N_0$. This function represents how many arguments each operation or predicate takes: for example, $\alpha(\leq) = 2$. Then $L = L(\Omega, \Pi)$ consists of:	\begin{enumerate}
+    	\item The set of \textit{variables} is a countably infinite set disjoint from $\Omega$ and $\Pi$. Each formula only uses finitely many variables: we use $x_1, x_2, \dots$ to denote them, or often $x$, $y$, and $z$.
+    	\item The set of $\Omega$-terms (or simply \textit{terms}) is defined inductively: every variable is a term, and if $\omega \in \Omega$ has arity $n = \alpha(\omega)$, then $\omega t_1 \dots t_n$ is a term for all terms $t_1, \dots, t_n$.
+	\end{enumerate}
+\end{definition}
+
+We now have terms, but can't do much with them. This is where \textit{formulae} come in.
+
+\begin{definition}[Atomic Formula]
+    If $s$ and $t$ are terms, then $(s = t)$ is an atomic formula.
+    
+    If $\varphi \in \Pi$ has arity $n = \alpha(\varphi)$, and $t_1, \dots, t_n$ are all terms, then $\varphi t_1 t_2 \dots t_n$ is an atomic formula.
+    
+    Nothing else is an atomic formula.
+\end{definition}
+
+\begin{example}[Language of Groups and Posets]
+    For example, we take the language of groups, with $\Omega = \set{m, i, e}$ and $\Pi = \varnothing$. These are the symbols for multiplication, inverses, and the identity: binary, unary, and nullary symbols respectively. That is, they have arities 2, 1, and 0.
+    
+    Then we can write down some terms:
+    \begin{enumerate}
+    	\item $mxmyz$ is a term, representing the multiplication $x(yz) = m(x, m(y, z))$.
+    	\item $mmxyz$ is a term representing $(xy)z$.
+    	\item $imxix$ is a term representing $(xx^{-1})^{-1}$.
+    	\item $mee$ is a term representing $e^2$.
+	\end{enumerate}
+	However, $mxyz$, $xmyy$, and $ex$, among others, are not terms!
+	
+	Then $(mxmyz = mmxyz)$ is an atomic formula, representing associativity of  multiplication in groups. Similarly, $(mxix = e)$ is the statement of left-inverses.
+	
+	Now consider the language of posets. Now, we have $\Omega = \varnothing$ and $\Pi = \set \leq$, with $\alpha(\leq) = 2$. Then the only terms are the variables, since $\Omega$ is empty, and some atomic formulae include $(x_1 = x_2)$ and $(x_1 \leq x_2)$
+	
+	In fact, this last atomic formula should be $\leq x_1x_2$, but we follow conventional notation when we know what they represent.
+\end{example}
+
+\begin{note}
+	We don't need brackets for terms: everything is uniquely defined by the order of symbols and the arities of everything in $\Omega$ and $\Pi$.
+\end{note}
+
+These are not the only type of formulae: we now introduce the rest.
+
+\begin{definition}[Formula]
+	The set of formulae is defined as follows:
+	\begin{enumerate}
+    	\item Atomic formulae are formulae.
+    	\item $\bot$ is a formulae.
+    	\item If $p$ and $q$ are formulae, then so is $(p \Ra q)$.
+    	\item If $p$ is a formula and $x$ is a free variable (to be defined) in $p$, then $(\forall x) p$ is a formula. This is to be read as ``for all $x$, we have $p$".
+	\end{enumerate}
+	Nothing else is a formula. We also introduce several abbreviations. $\lnot x$ is short for $(x \Ra \bot)$, $\top = \lnot \bot$, and so on for $\land$, $\lor$ as in propositional logic. We also use $\Leftrightarrow$ for $(p \Ra q) \land (q \Ra p)$.
+	
+	We also abbreviate the formula $\lnot (\forall x) \lnot p$ as $(\exists x) p$.
+\end{definition}
+
+Really, a formula is a finite string from $\Omega \cup \Pi$, variables, and the symbols $\set{\bot, \Ra, (, )}$, plus other symbols introduced as abbreviations. An occurrence of a variable can be either \textit{free} or \textit{bound}, defined by induction on the language.
+
+\begin{definition}[Free and Bound Variables, Sentence]
+    Any occurrence of any variable in an atomic formula is \textit{free}.
+    
+    If $p$ and $q$ are formulae, then any occurrence of a variable in $p$ or $q$ remains of the same type in the formula $(p \Ra q)$.
+    
+    If $p$ is a formula, and a variable $x$ has at least one free ocrrence in $p$, then every free occurrence of $x$ in $p$ becomes bound in the formula $(\forall x)p$. Everything else is unchanged.
+    
+    We let $\mathrm{FV}(p)$ be the set of free variables in a formula $p$. These are variables with at least one free occurrence in $p$.
+    
+    A formula with no free variables is called a \textit{sentence}.
+\end{definition}
+
+\begin{example}[Free and Bound Variables]
+    Take the language of groups again, from the previous example.
+    
+    Consider the formula $(mxix=e) \Ra (mixx = e)$. Clearly, $x$ is free in either atomic formula on the left or right, so remains free here.
+    
+    Now, consider $(\forall x)(mxx = e) \Ra (\forall x)(\forall y)(mxy = myx)$, which is the statement that groups where all elements have order at most 2 are abelian. The occurrences of $x$ and $y$ in $mxx = e$ and $mxy = myx$ are free originally, but then by the rule they become bound. The occurrences in $(\forall x)$ and $(\forall y)$  are thought of as being neither bound nor free, so there are no free variables in this formula.
+\end{example}
+
+\begin{definition}[Structure]
+	\label{first-order-structure}
+    A \textit{structure} in a first-order language $L = L(\Omega, \Pi)$, sometimes known as an $L$-structure, is a non-empty set $A$ together with functions $\omega_A : A^n \to A$, where $\omega \in \Omega$ and $n = \alpha(\omega)$, and a subset $\varphi_A \subs A^n$ for each $\varphi \in \Pi$. We identify this subset with its indicator function $\varphi_A : A^n \to \set{0, \, 1}$, where again $n = \alpha(\varphi)$.
+\end{definition}
+
+\begin{note}
+	If $\alpha(\omega) = 0$, then $\omega$ is called a \textit{constant}, since it is a function $\omega_A : \set{\eps} \to A$, which can be interpreted as an element $\omega_A \in A$.
+\end{note}
+
+\begin{note}
+	In fact, we do not allow $\varnothing$ as a structure, excluding it here as a simplifying assumption. See Remark \ref{no-empty-set-simplifying-first-order} for more details as to why allowing $\varnothing$ as a structure causes problems.
+\end{note}
+
+In the language of groups, an $L$-structure is therefore a set $A$ with 3 functions $m_A : A \times A \to A$, $i_A : A \to A$, and $e_A \in A$. This is not a group yet! Similarly, in the language of posets, a structure is therefore a non-empty set with a subset $\leq_A \subs A \times A$. Again, this is not yet a poset!
+
+Now, let $A$ be a structure on the language of groups, and let $p$ be the atomic formula $(mxix = e)$. We want to interpret $p$ in the structure, and ask ``is $p$ satisfied in $A$?"
+
+Intuitively, we should have $p_A = \set{a \in A : m_A(a, i_A(a)) = e_A}$. That is, $p_A$ is the set of elements of $A$ for which the atomic formula is ``true". Then, we say $p$ is satisfied in $A$ if $p_A = A$.
+
+If $q$ is the formula $(\forall x)p$, what should $q_A$ be? This should be a function from $A^0 = \set \eps$ to $\set{0, \, 1}$, and we say $q_A$ is ``true" (1) if $p_A = A$ and ``false" (0) otherwise.
+
+This holds for all sentences: one simply substitutes the basic symbols in the language $L$ for their interpretations in the structure as functions.
+
+We now formalise this definition of interpretation for first-order languages: assigning sentences the values of ``true" and ``false".
+
+\begin{definition}[Interpretation]
+    Let $L = L(\Omega, \Pi)$ be a first-order language, and $A$ an $L$-structure.
+    
+    Given a term $t \in L$ and a formula $p$ in $L$, both with free variables contained in $\set{x_1, \dots, x_n}$, we define \textit{interpretations} $t_A : A^n \to A$ of $t$ and $p_A : A^n \to \set{0, \, 1}$ (or equivalently, $p_A \subs A^n$).
+    
+    These interpretations are fixed by induction on $L$.
+    \begin{enumerate}
+    	\item If $t = x_i$ for some $1 \leq i \leq n$, then $t_A(a_1, \dots, a_n) = a_i$.
+    	\item If $t = \omega t_1 \dots t_m$ for some $\omega \in \Omega$ and $m = \alpha(\Omega)$, and $t_1, \dots, t_m$ are terms, then we define $t_A(a_1, \dots, a_n) = \omega_A((t_1)_A(a_1, \dots, a_n), \dots, (t_m)_A(a_1, \dots, a_n))$
+	\end{enumerate}
+	If $\alpha(\omega) = n$ and $t = \omega x_1 \dots x_n$, then $t_A = \omega_A$.
+	\begin{enumerate}
+	    \item If $p$ is the formula $(u = v)$, where $u$ and $v$ are terms, then we define $p_A$ to be the subset $p_A = \set{(a_1, \dots, a_n) \in A^n : u_A(a_1, \dots, a_n) = v_A(a_1, \dots, a_n)}$, or its indicator function.
+	    \item If $p$ is $\varphi t_1 \dots t_m$ where $\varphi \in \Pi$ with $\alpha(\varphi) = m$, and $t_1, \dots, t_m$ are terms, then we define $p_A(a_1, \dots, a_n) = \varphi_A((t_1)_A(a_1, \dots, a_n), \dots, (t_m)_A(a_1, \dots, a_n))$, or the subset where this function takes the value 1.
+	\end{enumerate}
+	That defines interpretations of terms and atomic formulae. What about other formulae?
+	\begin{enumerate}
+	    \item $\bot_A : A^n \to \set{0, \, 1}$ is the constant function always equal to 0, or equivalently $\varnothing$.
+	    \item If $p$ is the formula $(q \Ra r)$, then $p_A = (A^n \setminus q_A) \cup r_A$. Equivalently, viewed as a function, it takes value 0 when $q_A = 1$ and $r_A = 0$ on the same input, or value 1 otherwise.
+	    \item If $p$ is the formula $(\forall x_{n+1}) q$, where $\mathrm{FV}(q) \subs \set{x_1, \dots, x_n}$, then we can define the set $p_A = \set{(a_1, \dots, a_n) \in A^n : q_A(a_1, \dots, a_n) = 1 \text{ for all } a_{n+1} \in A}$.
+	\end{enumerate}
+	All of these definitions are intuitively obvious, but difficult to formalise!
+\end{definition}
+
+% ================================================================== %
+
+\subsection{Theories and Models}
+
+Now, having formalised interpretation, we consider the truth values of formulae with respect to a given $L$-structure $A$. When is some formula $p$ true in $A$?
+
+\begin{definition}[Model]
+	\label{first-order-predicate-model}
+    If $L = L(\Omega, \Pi)$ is a first order language, and $A$ is an $L$-structure, then we say that a formula $p \in L$ ``\textit{holds} in $A$", or ``$p$ is \textit{satisfied} in $A$", or ``$p$ is \textit{true} in $A$", or ``$A$ is a \textit{model} of $p$", if $p_A = A^n$. Equivalently, if $p_A : A^n \to \set{0, \, 1}$ is the constant function 1, where $n = \# \mathrm{FV}(p)$.
+\end{definition}
+
+\begin{corollary}
+	If $p$ is a sentence, then $p_A : A^0 \to \set{0, \, 1}$, or equivalently $p_A \in \set{0, \, 1}$. So a sentence $p_A$ holds in $A$ if and only if $p_A = 1$.
+\end{corollary}
+
+\begin{definition}[Theory]
+    A \textit{theory} in $L$ is a set of sentences in $L$.
+    
+    A \textit{model of a theory} $T$ is an $L$-structure $A$ in which every sentence $t \in T$ is satisfied.
+\end{definition}
+
+Now, it's time to formalise some existing structures we know and love into first-order theories. To do this, we must write down sets $\Omega$ and $\Pi$, define the arities of all of their elements, and then write down sentences in the language $L = L(\Omega, \Pi)$.
+
+We now consider two specific examples.
+
+\begin{example}[Group Theory]
+    The language of group theory is $\Omega = \set{m, i, e}$ with arities $\alpha(m) = 2$, $\alpha(i) = 1$, $\alpha(e) = 0$, and $\Pi = \varnothing$. We now define  a \textit{theory} of groups.
+    \begin{align*}
+    	T = \{ &(\forall x)(\forall y)(\forall z)(mmxyz = mxmyz), \\
+    	&(\forall x)((mex = x) \land (mxe = x)), \\
+    	&(\forall x)((mixx = e) \land (mxix = e)) \}
+	\end{align*}
+	These are the sentences representing associativity, identity, and inverses respectively. Every model of $T$ is a group, and every group is a model of $T$. So we have successfully axiomatised groups as a first-order theory!
+\end{example}
+
+\begin{example}[Posets]
+    The language of posets is $\Omega = \varnothing$ and $\Pi = \set{\leq}$ with arity $\alpha(\leq) = 2$. A theory of posets is:
+    \begin{align*}
+    	T = \{ &(\forall x)(x \leq x), \\
+    	&(\forall x)(\forall y)(((x \leq y) \land (y \leq x)) \Ra (x = y)), \\
+    	&(\forall x)(\forall y)(\forall z)(((x \leq y) \land (y \leq z)) \Ra (x \leq z)) \}
+	\end{align*}
+	These are the sentences representing reflexivity, antisymmetry, and transitivity respectively. Every model of $T$ is a poset, and every poset is a model of $T$.
+\end{example}
+
+An important difference with these examples of group theory and posets is that the latter theory \textit{required} the use of the implication symbol $\Ra$. Of course, we did use $\Ra$ implicitly in the example of group theory, since $\land$ is shorthand for an implication, but this can be avoided by splitting the second and third sentences into two sentences each.
+
+\begin{note}
+	Theories which can be formalised in first-order logic without using the $\Ra$ symbol are called \textit{algebraic} theories. The theory of groups is thus algebraic.
+\end{note}
+
+\begin{example}[Rings and Fields]
+	\label{rings-and-fields-example}
+    We have $\Omega = \set{+, \times, -, 0, 1}$ with arities 2, 2, 1, 0, and 0 respectively, and $\Pi = \varnothing$. Then
+    \begin{align*}
+    	T = \{ &(\forall x)(\forall y)(\forall z)(((x+y)+z) = (x+(y+z))), \\
+    	&(\forall x)(\forall y)(x+y = y+x), \\
+    	&(\forall x)(x + 0 = x), \\
+    	&(\forall x)(x + (-x) = 0), \\
+    	&(\forall x)(\forall y)(\forall z)(((x \times y) \times z) = (x \times (y \times z))), \\
+    	&(\forall x)(\forall y)(\forall z)(x \times (y + z) = x \times y + x \times z), \\
+    	&(\forall x)(\forall y)(\forall z)((x + y) \times z = x \times z + y \times z), \\
+    	&(\forall x)(1 \times x = x), \\
+    	&(\forall x)(x \times 1 = x) \}
+	\end{align*}
+	is a theory of rings. To extend this to fields, we can take the same $\Omega$ and $\Pi$ and define:
+	\[
+	T' = T \cup \set{(x \times y = y \times x), \, \lnot (0 = 1), \,
+	(\forall x)(\lnot (x = 0) \Ra (\exists y)(x \times y = 1))}
+	\]
+	to add commutativity of multiplication, zero and one distinct, and multiplicative inverses.
+\end{example}
+
+\begin{note}
+	This is \textit{not} an algebraic theory! We really do require implication here.
+\end{note}
+
+\begin{example}[Graphs]
+    We have $\Omega = \varnothing$ and $\Pi = \set{\sim}$ with arity 2 (the connectedness relation). The theory of graphs is then axiomatised by $T = \set{(\forall x)(\sim xx), \, (\forall x)(\forall y)(\sim xy \Ra \;\sim yx)}$. That is, connectedness is a reflexive and symmetric relation.
+\end{example}
+
+Finally, we show that propositional logic, from \S\ref{section-propositional-logic}, is a first-order theory. In fact, we show that it is a special case of first-order predicate logic!
+
+\begin{proposition}[Propositional is Predicate]
+    Propositional logic is a special case of first-order predicate logic.
+\end{proposition}
+
+\begin{prf}
+	We take a system of propositional logic and attempt to axiomatise it in the formal system of first-order predicate logic.
+	
+    Let $P$ be a set of primitive propositions. Define $\Omega = \varnothing$, and $\Pi = P$, with $\alpha(p) = 0$ for all $p \in P$. That is, every proposition is a predicate with arity 0, and thus each $p \in P$ is an atomic formula in the language $L = L(\Omega, \Pi)$.
+    
+    Now, each formula $t \in L(P)$ (Definition \ref{set-of-propositions}) is a formula in $L$! An $L$-structure is a set $A$ with associated functions $p_A : A^0 \to \set{0, \, 1}$ with $p \in P$. That is, $p_A \in \set{0, \, 1}$ for all $p \in P$.
+    
+    But this yields a function $v : P \to \set{0, \, 1}$, with $v(p) = p_A$. This is just a valuation!
+    
+    For every $t \in L(P)$, we have $t_A \in \set{0, \, 1}$ as defined earlier. So we have a natural extension of $v$ to $L(P)$, with $v(t)$ matching the definition of a valuation given in Definition \ref{valuation}.
+    
+    So for $S \subs L(P)$, a model of $S$ in the sense of Definition \ref{first-order-predicate-model} is an $L$-structure $A$ together with a function $v : p \to \set{0, \, 1}$ such that for all $p \in S$, $p_A = 1$, that is $v(p) = 1$.
+    
+    But this is the same as the notion of a model from Definition \ref{model}, so propositional logic really can be axiomatised in first-order predicate logic!
+\end{prf}
+
+\begin{definition}[Basic Semantic Entailment]
+    Let $L = L(\Omega, \Pi)$ be a first-order language, and let $S$ be a theory in $L$ with $t$ a sentence in $L$.
+    
+    We say that $S$ \textit{semantically entails} $t$ if $t$ is satisfied in every model of $S$, and write $S \vDash t$.
+\end{definition}
+
+\begin{example}[Semantic Entailment]
+    Let $T$ be the theory of fields, from Example \ref{rings-and-fields-example}.
+    Let $p$ be the formula $\lnot (x = 0)$, and let $t$ be the formula $(\exists y)(xy=1)$.
+    Then define $S = T \cup \set{p}$.
+    
+    Intuitively, it should be the case that $S \vDash t$.
+    That is, ``if $x$ is not 0, then it has a multiplicative inverse" really is true in the actual study of fields.
+    
+    But in fact, we cannot do this, since there is no model of $S$: there is no structure that assigns a value to $p$.
+    
+    If $F$ is a field, then $p_F = F \setminus \set{0} \neq F$.
+    But if $a \in F$ and $p_F(a) = 1$ (that is, $a \in F$ is not 0), then $t_F(a) = 1$.
+    So there should be some notion of entailment which uses this.
+\end{example}
+
+In a sense, our original definition of semantic entailment seems lacking. We can't have a model which represents implication in the traditional sense. In fact, any formula which has one or more free variables (that is, any formula which is not a sentence) has no ``truth value", and therefore any set including it cannot even be modelled.
+
+\begin{definition}[Semantic Entailment]
+	\label{first-order-semantic-entailment}
+    Let $S$ be a set of formulae in a first-order language $L$, and let $t \in L$ be a formula. Introduce a new ``constant" (that is, a nullary operation symbol) for each free variable which occurs in $S \cup \set{t}$. This creates a new language $L'$.
+    
+    For $u \in S \cup \set{t}$, let $u'$ be a formula in the new language $L'$, obtained from $u$ by replacing each free occurrence of a variable in $u$ with the corresponding constant.
+    
+    Then in $L'$, we let $S' = \set{s' : s \in S}$. Then, we say $S$ \textit{semantically entails} $t$, and write $S \vDash t$, if $S' \vDash t'$.
+    This really does use the definition of semantic entailment we used above, since there are (by construction) no free variables in $S'$, and so we can have a model of $S'$.
+\end{definition}
+
+This motivates many of the familiar definitions from \S\ref{section-propositional-logic}, and some unfamiliar ones which basic propositional logic is insufficient to represent.
+
+\begin{definition}[Tautology]
+    A formula $t$ in a first-order language $L$ is a \textit{tautology} if $\varnothing \vDash t$.
+    Equivalently, tautologies are formulae $t$ which are true in every $L$-structure.
+    We write $\vDash t$.
+\end{definition}
+
+\begin{definition}[Replacement]
+    Let $p$ be a formula in a language $L$, with $x \in \mathrm{FV}(p)$. If $t$ is a term in $L$, no variable of which occurs bound in $p$, then the \textit{replacement} $p[t/x]$ is the formula obtained from $p$ by replacing each free occurrence of $x$ in $p$ by $t$.
+\end{definition}
+
+\begin{example}[Replacement in Group Theory]
+	Let $p$ be the formula $(\forall y)(mmxyx=mmyxy)$ in the language of groups. In fact, this is the claim that $xyx = yxy$ for all $y$, and is a property of $x$, since $x$ is the unique free variable in $p$.
+	
+	Now, we compute some replacements.
+	\begin{enumerate}
+	    \item If $t = mzz$, then $p[t/x]$ is $(\forall y)(mmmzzymzz=mmymzzy)$.
+	    \item If $t = mxx$, then $p[t/x]$ is $(\forall y)(mmmxxymxx=mmymxxy)$.
+	    \item If $t = myy$, then $p[t/x]$ is not defined: $y$ is a variable of $t$ which occurs bound in $p$.
+	\end{enumerate}
+\end{example}
+
+% ================================================================== %
+
+\subsection{Syntactic Entailment}
+
+Much like in the world of propositional logic, we may model formal syntactic proofs in first-order predicate logic. Previously in \S\ref{section-syntactic-entailment}, we axiomatised propositional logic with three main axioms. Now, we do the same for first-order predicate logic. The seven axioms are:
+\begin{enumerate}
+    \item For formulae $p, q \in L$, $p \Ra (q \Ra p)$.
+    \item For formulae $p, q, r \in L$, $p \Ra (q \Ra r) \Ra ((p \Ra q) \Ra (p \Ra r))$.
+    \item For formulae $p \in L$, $\lnot \lnot p \Ra p$.
+    \item $(\forall x)(x = x)$.
+    \item $(\forall x)(\forall y)((x = y) \Ra (p \Ra p[y/x]))$.
+    \item $(\forall x)(p) \Ra p[t/x]$.
+    \item $(\forall x)(p \Ra q) \Ra (p \Ra (\forall x) q)$.
+\end{enumerate}
+The first three of these are copied wholesale from propositional logic. The next four are new rules about how relations, quantifiers, and substitution work.
+\begin{enumerate}
+	\setcounter{enumi}{3}
+    \item $(\forall x)(x = x)$ represents the reflexivity of equality.
+    \item $(\forall x)(\forall y)((x = y) \Ra (p \Ra p[y/x]))$ states that if $p$ holds for $x$, and $x = y$, then $p$ holds for $y$.
+    \item $(\forall x)(p) \Ra p[t/x]$ states that if $p$ holds for all $x$, then in particular it holds for $t$.
+    \item $(\forall x)(p \Ra q) \Ra (p \Ra (\forall x) q)$ states that if $p \Ra q$ for all $x$, then if $p$ is generally true, it must be true for all $x$.
+\end{enumerate}
+As before, all of the axioms are tautologies. However, we now have \textit{two} rules of deduction!
+
+\begin{definition}[Deduction Rules]
+	\label{deduction-rules}
+    From $p$ and $(p \Ra q)$, we may deduce $q$. This is called \textit{modus ponens}, as in Definition \ref{modus-ponens}.
+    
+    If $x \in \mathrm{FV}(p)$, then from $p$ we may deduce $(\forall x)(p)$, provided that $x$ does not occur as a free variable in any premise used in the proof of $p$. This is called \textit{generalisation}.
+    
+    In proofs, we write (MP) and (Gen) to represent these rules of deduction.
+\end{definition}
+
+This allows us to write down what a proof in first-order predicate logic looks like!
+
+\begin{definition}[Proof]
+    Let $S$ be a set of formulae in a language $L$, and let $p$ be a formula in $L$. A \textit{proof} of $p$ from $S$ is a finite sequence $t_1, \dots, t_k$ of formulae in $L$, such that $t_n = p$, and for every $i$, either:
+    \begin{enumerate}
+	    \item $t_i$ is one of the seven axioms of first-order predicate logic, or
+	    \item $t_i$ is a premise (that is, $t_i \in S$), or
+	    \item $t_i$ follows by \textit{modus ponens}: there are $j,k < i$ with $t_k = (t_j \Ra t_i)$, or
+	    \item $t_i$ follows by \textit{generalisation}: there is $j < i$ with $t_i = (\forall x)(t_j)$, and $x \in \mathrm{FV}(t_j)$, where $x$ is not a free variable in any premise $t_k$ with $k \leq j$.
+	\end{enumerate}
+	If there is such a proof of $p$ from $S$, then we say that $S$ \textit{proves} $p$, and write $S \vdash t$. Alternatively, we say that $S$ \textit{syntactically entails} $t$ (as opposed to \textit{semantically}, per Definition \ref{first-order-semantic-entailment}).
+	
+	If $S$ is a theory in $L$ and $p \in L$ is a sentence, then if $S \vdash p$ we say that $p$ is a \textit{theorem} of $S$.
+\end{definition}
+
+Compare this definition to the one given in the first chapter (\ref{proof-propositional-logic}). There are more axioms to choose from, and we may use generalisation, but otherwise the definitions are identical.
+
+\begin{remark}[Why Exclude $\varnothing$?]
+	\label{no-empty-set-simplifying-first-order}
+    In our definition of a structure (Definition \ref{first-order-structure}), we insisted that the set $A$ was non-empty. In fact, our notion of proof would cause problems if we were to allow $\varnothing$ as a valid structure.
+    
+    Suppose $\varnothing$ was an $L$-structure. Then $(\forall x)(\lnot(x=x))$ is satisfied in $\varnothing$, but $\bot$ is not. Thus we have $\set{(\forall x)(\lnot(x=x))} \not\vDash \bot$, since there is an $L$-structure in which the former is true but the latter is not. However, $\set{(\forall x)(\lnot(x=x))}\vdash \bot$, as shown by the abridged proof below:
+    \begin{enumerate}
+	    \item $\lnot (x = x)$ \hfill (MP on premise and A6)
+	    \item $(\forall x)(x = x) \Ra (x = x)$ \hfill (A6, substituting $x$ for $x$ in  $x=x$)
+	    \item $(x = x)$ \hfill (MP on A4 and previous line)
+	\end{enumerate}
+	which proves $\bot$ by modus ponens. Thus allowing $\varnothing$ as an $L$-structure breaks completeness.
+\end{remark}
+
+Now, we can extend one of the most important results from the first chapter to first-order predicate logic. This was the (Propositional) Deduction Theorem (\ref{deduction-theorem}).
+
+\begin{theorem}[Deduction Theorem]
+    Let $S$ be a set of formulae in a first-order language $L$, and let $p$ and $q$ be formulae in $L$.
+    Then $S \vdash (p \Ra q)$ if and only if $S \cup \set{p} \vdash q$.
+\end{theorem}
+
+\begin{prf}
+    Assume $S \vdash (p \Ra q)$. Then we can write down a proof of $(p \Ra q)$ from $S$. Now, we can simply add $p$ (premise) and $q$ (MP) to obtain a proof of $q$ from $S \cup \set p$ as desired.
+    
+    Now suppose that $(S \cup \set p) \vdash q$, and let $t_1 \dots t_n$ be a proof of $q$ witnessing this. Then $S \vdash (p \Ra t_i)$ for all $i$, which we demonstrate by induction. In the case of $i = n$, this will show $S \vdash (p \Ra q)$.
+    
+    In particular, the induction hypothesis at step $i$ is that
+    ``for all $j < i$, we know that $S \vdash (p \Ra t_j)$,
+    in such a way that if a variable $x$ does not occur free in any premise in the proof $t_1, \dots, t_j$ of $t_j$ from $S \cup \set{p}$,
+    then $x$ does not occur free in any premise used in the proof of $(p \Ra t_j)$ from $S$."
+    This augmented hypothesis is constructed to ensure that generalisation works.
+\end{prf}
+
+We may write down a proof in first-order predicate logic!
+
+\begin{example}[Proof of Symmetry]
+    We wish to prove that the equality relation is symmetric: that is, if $x = y$, then $y = x$. We formalise this as $\set{(x = y)} \vdash (y = x)$.
+    \begin{enumerate}
+	    \item $(\forall x)(\forall y)((x=y) \Ra ((x=z) \Ra (y=z)))$ \hfill (A5)
+	    \item $(\forall x)(\forall y)((x=y) \Ra ((x=z) \Ra (y=z))) \Ra (\forall y)((x=y) \Ra ((x=z) \Ra (y=z)))$ \hfill (A6)
+	    \item $(\forall y)((x=y) \Ra ((x=z) \Ra (y=z)))$ \hfill (MP)
+	    \item $(\forall y)((x=y) \Ra ((x=z) \Ra (y=z))) \Ra ((x=y) \Ra ((x=z) \Ra (y=z)))$ \hfill (A6)
+	    \item $(x=y) \Ra ((x=z) \Ra (y=z))$ \hfill (MP)
+	    \item $x=y$ \hfill (premise)
+	    \item $(x=y) \Ra (y=z)$ \hfill (MP)
+	    \item $(\forall z)((x=z) \Ra (y=z))$ \hfill (Gen)
+	    \item $(\forall z)((x=z) \Ra (y=z)) \Ra ((x=x) \Ra (y=x))$ \hfill (A6)
+	    \item $(x=x) \Ra (y=x)$ \hfill (MP)
+	    \item $(\forall x)(x = x) \Ra (x = x)$ \hfill (A6)
+	    \item $(\forall x)(x = x)$ \hfill (A4)
+	    \item $x = x$ \hfill (MP)
+	    \item $y = x$ \hfill (MP)
+	\end{enumerate}
+	This proof witnesses $\set{(x = y)} \vdash (y = x)$, as expected.
+\end{example}
+
+\begin{note}
+	In a sense, Axiom 6 is the opposite of generalisation. The latter states that if we can prove a statement $p$ for a free variable $x$ without using $x$ in the proof, then it must be true for all $x$. This makes sense, since the same proof works no matter the value of $x$. The former states the opposite: if $p$ is true for all $x$, then in particular it is true for any specific $x$ you might care to name.
+\end{note}
+
+\end{document}
