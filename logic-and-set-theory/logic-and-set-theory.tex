@@ -11,7 +11,7 @@
 \name{Avish Kumar}
 \email{ak2461@cam.ac.uk}
 \website{https://ak1089.github.io/maths/notes}
-\version{1.14}
+\version{1.15}
 \disclaimer{These notes are unofficial and may contain errors. While they are written and published with permission, they are not endorsed by the lecturer or University.}
 
 % Auxiliary files
@@ -205,6 +205,7 @@ How do we use this rule of deduction?
 \end{example}
 
 \begin{example}[Proof of a Theorem]
+	\label{proof-of-self-implication}
     We would like to show that $\vdash (p \Ra p)$. We prove this as follows:
 	\begin{enumerate}
 	    \item $p \Ra ((p \Ra p) \Ra p)$ \hfill (A1)
@@ -1374,7 +1375,7 @@ The \textit{Axiom of Choice} is the assertion that for any set $X = \set{A_i : i
 	As mentioned in the motivation for this section, the existence of this axiom (AC for short) is controversial. Many people do not like the idea of asserting this, because the axiom has many strange consequences, and even those that do often want to verify whether proofs which use AC are in fact still valid without AC.
 \end{note}
 
-In fact, the seminal result of this section will be that two results we have seen before are in fact equivalent to the Axiom of Choice, and thus equivalent to each other: Zorn's Lemma and the Well-Orering Principle (Theorems \ref{zorns-lemma} and \ref{well-ordering-principle}).
+In fact, the seminal result of this section will be that two results we have seen before are in fact equivalent to the Axiom of Choice, and thus equivalent to each other: Zorn's Lemma and the Well-Ordering Principle (Theorems \ref{zorns-lemma} and \ref{well-ordering-principle}).
 
 \begin{theorem}[Axiom of Choice Equivalence]
     The Axiom of Choice is equivalent to Zorn's Lemma (\ref{zorns-lemma}), which is itself equivalent to the Well-Ordering Principle (\ref{well-ordering-principle}). That is, each of these imply the others.
@@ -1805,7 +1806,7 @@ The first three of these are copied wholesale from propositional logic. The next
     \item $(\forall x)(x = x)$ represents the reflexivity of equality.
     \item $(\forall x)(\forall y)((x = y) \Ra (p \Ra p[y/x]))$ states that if $p$ holds for $x$, and $x = y$, then $p$ holds for $y$.
     \item $(\forall x)(p) \Ra p[t/x]$ states that if $p$ holds for all $x$, then in particular it holds for $t$.
-    \item $(\forall x)(p \Ra q) \Ra (p \Ra (\forall x) q)$ states that if $p \Ra q$ for all $x$, then if $p$ is generally true, it must be true for all $x$.
+    \item $(\forall x)(p \Ra q) \Ra (p \Ra (\forall x) q)$ defines transferability of quantification.
 \end{enumerate}
 As before, all of the axioms are tautologies. However, we now have \textit{two} rules of deduction!
 
@@ -1817,8 +1818,6 @@ As before, all of the axioms are tautologies. However, we now have \textit{two} 
     
     In proofs, we write (MP) and (Gen) to represent these rules of deduction.
 \end{definition}
-
-This allows us to write down what a proof in first-order predicate logic looks like!
 
 \begin{definition}[Proof]
     Let $S$ be a set of formulae in a language $L$, and let $p$ be a formula in $L$. A \textit{proof} of $p$ from $S$ is a finite sequence $t_1, \dots, t_k$ of formulae in $L$, such that $t_n = p$, and for every $i$, either:
@@ -1848,26 +1847,7 @@ Compare this definition to the one given in the first chapter (\ref{proof-propos
 	which proves $\bot$ by modus ponens. Thus allowing $\varnothing$ as an $L$-structure breaks completeness.
 \end{remark}
 
-Now, we can extend one of the most important results from the first chapter to first-order predicate logic. This was the (Propositional) Deduction Theorem (\ref{deduction-theorem}).
-
-\begin{theorem}[Deduction Theorem]
-    Let $S$ be a set of formulae in a first-order language $L$, and let $p$ and $q$ be formulae in $L$.
-    Then $S \vdash (p \Ra q)$ if and only if $S \cup \set{p} \vdash q$.
-\end{theorem}
-
-\begin{prf}
-    Assume $S \vdash (p \Ra q)$. Then we can write down a proof of $(p \Ra q)$ from $S$. Now, we can simply add $p$ (premise) and $q$ (MP) to obtain a proof of $q$ from $S \cup \set p$ as desired.
-    
-    Now suppose that $(S \cup \set p) \vdash q$, and let $t_1 \dots t_n$ be a proof of $q$ witnessing this. Then $S \vdash (p \Ra t_i)$ for all $i$, which we demonstrate by induction. In the case of $i = n$, this will show $S \vdash (p \Ra q)$.
-    
-    In particular, the induction hypothesis at step $i$ is that
-    ``for all $j < i$, we know that $S \vdash (p \Ra t_j)$,
-    in such a way that if a variable $x$ does not occur free in any premise in the proof $t_1, \dots, t_j$ of $t_j$ from $S \cup \set{p}$,
-    then $x$ does not occur free in any premise used in the proof of $(p \Ra t_j)$ from $S$."
-    This augmented hypothesis is constructed to ensure that generalisation works.
-\end{prf}
-
-We may write down a proof in first-order predicate logic!
+This allows us to write down what a proof in first-order predicate logic looks like!
 
 \begin{example}[Proof of Symmetry]
     We wish to prove that the equality relation is symmetric: that is, if $x = y$, then $y = x$. We formalise this as $\set{(x = y)} \vdash (y = x)$.
@@ -1893,5 +1873,98 @@ We may write down a proof in first-order predicate logic!
 \begin{note}
 	In a sense, Axiom 6 is the opposite of generalisation. The latter states that if we can prove a statement $p$ for a free variable $x$ without using $x$ in the proof, then it must be true for all $x$. This makes sense, since the same proof works no matter the value of $x$. The former states the opposite: if $p$ is true for all $x$, then in particular it is true for any specific $x$ you might care to name.
 \end{note}
+
+Our target for most of the rest of this chapter is to rebuild as many of the results we proved for propositional logic into the new system of first-order logic. 
+
+Now, we can extend one of the most important results from the first chapter to first-order predicate logic. This was the (Propositional) Deduction Theorem (\ref{deduction-theorem}).
+
+\begin{theorem}[Deduction Theorem]
+	\label{first-order-deduction-theorem}
+    Let $S$ be a set of formulae in a first-order language $L$, and let $p$ and $q$ be formulae in $L$.
+    Then $S \vdash (p \Ra q)$ if and only if $S \cup \set{p} \vdash q$.
+\end{theorem}
+
+
+\begin{prf}
+    Assume $S \vdash (p \Ra q)$. Then we can write down a proof of $(p \Ra q)$ from $S$. Now, we can simply add $p$ (premise) and $q$ (MP) to obtain a proof of $q$ from $S \cup \set p$ as desired.
+    
+    Now suppose that $(S \cup \set p) \vdash q$, and let $t_1 \dots t_n$ be a proof of $q$ witnessing this. Then $S \vdash (p \Ra t_i)$ for all $i$, which we demonstrate by induction. In the case of $i = n$, this will show $S \vdash (p \Ra q)$.
+    
+    In particular, the induction hypothesis at step $i$ is that
+    ``for all $j < i$, we know that $S \vdash (p \Ra t_j)$,
+    in such a way that if a variable $x$ does not occur free in any premise in the proof $t_1, \dots, t_j$ of $t_j$ from $S \cup \set{p}$,
+    then $x$ does not occur free in any premise used in the proof of $(p \Ra t_j)$ from $S$."
+    
+    This augmented hypothesis is constructed to ensure that generalisation works. If we had instead just  supposed that $S \vdash (p \Ra t_j)$ for all $j < i$, this is sometimes not sufficient to continue the proof!
+    
+    Now, we consider four possible cases, based on the form the new line $t_i$ takes at step $i$.
+    
+    If $t_i$ is an axiom or $t_i \in S$, then we can write down the proof that $(p \Ra t_i)$ in the same way as the original Deduction Theorem.
+    \begin{enumerate}
+    	\item $t_i$ \hfill (premise or axiom)
+    	\item $t_i \Ra (p \Ra t_i)$ \hfill (A1)
+    	\item $p \Ra t_i$ \hfill (MP)
+	\end{enumerate}
+    The same goes for the case $t_i = p$, which yields the five-line proof of $(p \Ra p)$ from Example \ref{proof-of-self-implication}.
+    
+    Likewise, if $t_i$ follows by modus ponens, then by the induction hypothesis, we can write down proofs of $(p \Ra t_j)$ and $(p \Ra (t_j \Ra t_i))$. We can add the usual three lines to prove $(p \Ra t_i)$. This uses no new free variables and so satisfies our induction condition.
+	\begin{enumerate}
+    	\item $(p \Ra (t_j \Ra t_i)) \Ra ((p \Ra t_j) \Ra (p \Ra t_i))$ \hfill (A2)
+    	\item $(p \Ra t_j) \Ra (p \Ra t_i)$ \hfill (MP)
+    	\item $p \Ra t_i$ \hfill (MP)
+	\end{enumerate}
+    The last case is when $t_i = (\forall x)t_j$ follows by generalisation from a previous line $t_j$, where $x \in \mathrm{FV}(t_j)$ does not occur free in any of the premises in $t_1, \dots, t_j$. In fact, this splits into two further cases.
+    
+    If $x$ does not occur free in $p$, then our job is easy: we can append the three lines:
+    \begin{enumerate}
+		\item $(\forall x)(p \Ra t_j)$ \hfill (Gen)
+		\item $(\forall x)(p \Ra t_j) \Ra (p \Ra (\forall x)t_j)$ \hfill (A7)
+		\item $p \Ra (\forall x)t_j$ \hfill (MP)
+	\end{enumerate}
+	This obtains a proof of $(p \Ra t_i)$. If $x$ does occur free in $p$, then our job is slightly harder. However, notice that $p$ is not among $t_1, \dots, t_j$ by the induction hypothesis, so in fact we have a proof of $t_j$ from $S$ alone. This means we can append the three lines:
+	\begin{enumerate}
+	    \item $(\forall x)t_j$ \hfill (Gen)
+	    \item $(\forall x)t_j \Ra (p \Ra (\forall x)t_j)$ \hfill (A1)
+	    \item $p \Ra (\forall x)t_j$ \hfill(MP)
+	\end{enumerate}
+	This also obtains a proof of $(p \Ra t_i)$. Neither of the two extensions of our proofs have used $x$ as a free variable in any further premise, so indeed the induction hypothesis is satisfied. In particular, this means $(p \Ra t_i)$ for all $i$, including the final line: $(p \Ra q)$ as required.
+\end{prf}
+
+Our aim now is to prove the Completeness Theorem (\ref{completeness-theorem}) but for first-order logic. In particular, we want to show that the syntactic and semantic entailment symbols $\vdash$ and $\vDash$ coincide. As in the first chapter, this splits into two theorems for the two directions: the Soundness Theorem (\ref{soundness-theorem}) and the Adequacy Theorem (\ref{adequacy-theorem}).
+
+\begin{theorem}[Soundness Theorem]
+    Let $S$ be a set of formulae in a first-order language $L$, and let $p$ be a formula in $L$. Then if $S \vdash p$, we must have $S \vDash p$: the proof structure is \textit{sound}, and does not prove any semantically incorrect propositions.
+\end{theorem}
+
+\begin{prf}
+    We use induction on the length of a proof of $p$ from $S$. In the case $p = (\forall x) q$, there is a subset $S' \subs S$ where $x$ does not occur free in $S'$, and also $S' \vdash q$. By induction, $S' \vDash q$.
+    
+    Since $x$ does not occur free in $S'$, we have $S' \vDash (\forall x) q$, and so $S \vDash p$.
+\end{prf}
+
+
+We now reconstruct the Model Existence Lemma. This was originally Theorem \ref{model-existence-lemma}, and in the chapter on posets we proved a more general case as Theorem \ref{general-model-existence-lemma}.
+
+\begin{theorem}[Model Existence Lemma]
+    Let $S$ be a \textit{consistent} theory in a first order language $L = L(\Omega, \Pi)$: that is, $S \not\vdash \bot$. Then $S$ has a model (as defined in \ref{first-order-predicate-model}).
+\end{theorem}
+
+\begin{prf}
+    The key idea is to build a model $A$ from the language $L$ itself. To begin with, we let $A$ be the set of \textit{closed terms} in $L$: terms with no variables.
+    
+    We turn this into a structure in the obvious way, and deal with issues as they come up. Firstly, if we have an operation with arity $n$, and a list of $n$ terms, then we can interpret this in the structure as simply the combination of their terms: $m_A xy=mxy$.
+    
+    This is sometimes not a model! For example, if $T$ is the theory of fields, then $T \vdash (0 + 1) = 1$, but in $A$, these are two different terms. However, we can solve this by defining an equivalence relation on $A$, whereby $s \sim t$ if and only if $T \vdash (s = t)$. We then consider $A$ to be $A/\sim$.
+    
+    This still doesn't solve all our issues. There are sentences $p$ such that $T$ proves neither $p$ nor $\lnot p$, and so by definition $T$ is not \textit{complete}, as in \ref{model-existence-lemma}. We solve this in the same way: given a consistent theory $S$, there exists some $\bar S \supseteq S$ which is complete.
+    
+    However, we are still not done! Consider the theory of fields $T$ in which 2 has a square root: that is, the theory of fields and the sentence $(\forall x)((x \cdot x = 1 + 1) \Ra \bot) \Ra \bot$, or more concisely, $(\exists x)(x\cdot x = 1+1)$. There is no closed term $t$ such that $T \vdash (t \cdot t = 1 + 1)$. The problem is that $T$ lacks a witness for $(\exists x)p$. We solve this by adding a witness: a new constant $c$ to $L$ and a new sentence to $T$ to obtain $T' = T \cup \set{p[c/x]}$.
+    
+    Now, we formalise this. We start with three observations:
+    \begin{enumerate}
+    	\item If $S$ is a consistent theory and $p$ is a sentence, then either $S \cup p$ or $S \cup \set{\lnot p}$. If not, by the Deduction Theorem (\ref{first-order-deduction-theorem}), $S \vdash \lnot p$ and $S \vdash \lnot \lnot p$, but then $S \vdash \bot$, a contradiction.
+    	\item By Zorn's Lemma, there is therefore a maximal consistent theory $\bar S$ which contains $S$ such that for every sentence $p$, either $p \in \bar S$ or $\lnot p \in \bar S$.
+	\end{enumerate}
+\end{prf}
 
 \end{document}

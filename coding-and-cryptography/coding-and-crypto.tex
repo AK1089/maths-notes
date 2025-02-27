@@ -39,7 +39,7 @@ f^*(\text{``Call me!"}) =
 \]
 
 \begin{definition}[Source, Encoder, Channel, Receiver, Decoder]
-	\label{source-encoder-channel-receiver-decoder}
+    \label{source-encoder-channel-receiver-decoder}
     More generally, we have a \textit{source}, often called Alice.
     She uses an \textit{encoder} to convert plaintext messages into encoded messages.
     These encoded messages are sent through a \textit{channel}:
@@ -2617,6 +2617,7 @@ In fact, this allows us to generalise the idea of Hamming codes!
 We now motivate the famous Reed-Muller code, using  a construction specific to linear codes.
 
 \begin{definition}[Bar Product]
+	\label{bar-product-definition}
     Let $C_2 \subs C_1$ be a pair of nested linear codes of length $n$. Then the \textit{bar product} is defined by:
     \[
 	C_1|C_2 = \set{(x|x+y) : x \in C_1, \, y \in C_2}.
@@ -2624,9 +2625,12 @@ We now motivate the famous Reed-Muller code, using  a construction specific to l
 	Here, $(x|x+y)$ denotes the concatenation of two $n$-long codewords. This is therefore a code of length $2n$, and linearity is preserved.
 \end{definition}
 
-This definition has some nice properties one might desire.
+\begin{note}
+	Here, we require the codes to be nested, though definitions often omit this condition. If we can decode the codes $C_1$ and $C_2$, then we can easily do the same for their bar product $C_1|C_2$.
+\end{note}
 
 \begin{proposition}[Bar Product Properties]
+	\label{bar-product-properties}
     For $C_1$ and $C_2$ as above, the bar product satisfies:
     \begin{enumerate}
 	    \item $\rank(C_1|C_2) = \rank(C_1) + \rank(C_2)$.
@@ -2652,6 +2656,7 @@ This definition has some nice properties one might desire.
 Now, we are almost ready to define the Reed-Muller code. We set up some notation first.
 
 \begin{remark}[Reed-Muller Code Setup]
+	\label{reed-muller-code-setup}
     Let $X = \F_2^d = \set{p_1, \dots, p_{2^d}}$, where we choose some ordering, and set $n = 2^d$. For each $A \subs X$, we get an indicator vector $\mathbf{1}_A \in \F_2^n$ using the rule $(\mathbf{1}_A)_i = 1$ if and only if $p_i \in A$.
     
     For $x, y \in \F_2^n$, we have the addition and ``wedge product" relations:
@@ -2713,5 +2718,135 @@ Now, we can take specific values of $r$:
     \item When $r = 3$, $\mathrm{RM}(3, 3)$ is the span of 8 linearly independent vectors, which is clearly all of $\F_2^8$. This means that $\mathrm{RM}(3, 3)$ is the trivial code of length 8.
 \end{enumerate}
 Indeed, $\mathrm{RM}(d, 0)$ and $\mathrm{RM}(d, d)$ are always the repetition and trivial codes respectively.
+
+\begin{theorem}[Reed-Muller Properties]
+	\label{reed-muller-recurrence}
+    The vectors $v_{i_1} \land \dots \land v_{i_s}$ for $1 \leq i_1 < \dots < i_s \leq d$ and $0 \leq s \leq d$ form a basis for $\F^2_n$, where $n = 2^d$. Moreover, the Reed-Muller code RM($d, r$) is a set with rank
+    \[
+	\rank(\mathrm{RM}(d, r)) = \sum_{s = 0}^r \binom{d}{s}.
+	\]
+	Furthermore, RM($d, r$) is equal to the bar product $\mathrm{RM}(d-1, r)|\mathrm{RM}(d-1, r-1)$, and has a weight of $2^{d-r}$.
+\end{theorem}
+
+\begin{prf}
+    To construct some vector given by the wedge product of $s$ of the $v_i$, we may choose $s$ to be any value from 0 to $d$. Then, we may choose the vectors in $d$ choose $s$ ways. This gives
+    \[
+	\sum_{s = 0}^d \binom{d}{s} = (1 + 1)^d = 2^d = n
+	\]
+	possible vectors, which is the correct size for a basis of $\F_2^n$. Thus we must show that these vectors span $\F_2^n$, or equivalently that the trivial Reed-Muller code $\mathrm{RM}(d, r) = \F_2^n$.
+	
+	Let $p \in X$. We want to find an indicator for $p$. Define
+	\[
+	y_i = \begin{cases}
+		v_i & \text{if the $i\th$ co-ordinate of $p$ is equal to 0} \\
+		v_i + v_0 & \text{if the $i\th$ co-ordinate of $p$ is equal to 1}
+	\end{cases}
+	\]
+	and notice that $\indicator{p} = y_1 \land \dots \land y_d$. Expanding using the distributive law yields $\indicator{p} \in \mathrm{RM}(d, d)$, but these indicator variables clearly span $\F_2^n$.
+	
+	In fact, by definition $\mathrm{RM}(d, r)$ is spanned by vectors $v_{i_1} \land \dots \land v_{i_s}$ as above, but now with $s \leq r$. Now, we know that these vectors are linearly independent, and so are a basis. The number of these vectors, and hence the rank of the code, is now the sum we require:
+    \[
+	\sum_{s = 0}^r \binom{d}{s}.
+	\]
+	Now, we wish to show the recursive bar product relation. Recall that we usually order the set $\F_2^d$ lexicographically, which is the most natural way to do it. However, clearly we may choose any of the $n!$ possible orders of this set, and generate an equivalent code.
+	
+	We choose a clever ordering. Choose $X$ to be the order of $\F_2^d$ which has $v_d = (0, \dots, 0, 1, \dots, 1)$, with $2^{d-1}$ of each to form an $n$-vector. The previous vectors $v_i$ for $0 \leq i < d$ are now instead given by $(v_i'|v_i')$, the bar product, where the $v_i'$ are given by the $X'$ corresponding to $\F_2^{d-1}$.
+	
+	Now, take some element $z \in \mathrm{RM}(d, r)$. By definition, this is the sum of wedge products of the  $v_i$, since the Reed-Muller code is generated by the wedge projects and the closure under addition (by linearity). We can split this up into wedge products which do not contain $v_d$ and those that do.
+	
+	This allows us to use the distributivity of $\land$ to write
+	$z = x + (y \land v_d)$,
+	where $x$ and $y$ are sums of wedge products of $v_0$ to $v_{d-1}$ (that is, they are in the previous code).
+	
+	We have $x = (x'|x')$ for some $x' \in \mathrm{RM}(d-1, r)$, and $y = (y'|y')$ for some $y' \in \mathrm{RM}(d-1, r-1)$ by the same reasoning. Here, this is because $y \land v_d$ is generated by at most $r$ wedge products, by construction of the code, and so $y$ must be generated by at most one fewer.
+	
+	But this means $z = (x'|x') + (y'|y') \land (0, \dots, 0|1, \dots, 1)$. We can rewrite this as $(x'|x' + y')$, which is precisely the description of the bar product $\mathrm{RM}(d-1, r)|\mathrm{RM}(d-1, r-1)$. To verify that the codes are in fact equal, we can use the equality of their ranks.
+	
+	Finally, we wish to verify that the weight of the code is $2^{d-r}$. We can do this easily: for instance the code RM($d, 0$) is the repetition code of length $2^d$ and thus has weight $2^d = 2^{d-0}$. Similarly, the code RM($d, d)$ is the trivial code of length $2^d$ and clearly has weight $1 = 2^{d-d}$ as required.
+	
+	For other weights, that is if $0 < r < d$, we can use induction. By induction, $\mathrm{RM}(d-1, r)$ has a weight of $2^{d-1-r}$, and $\mathrm{RM}(d-1, r)$ has a weight of $2^{d-r}$. But we have just shown that our code $\mathrm{RM}(d, r)$ is the bar product of these codes, and so Proposition \ref{bar-product-properties} gives us that the weight is the minimum of $2^{d-r}$ and $2 \times 2^{d-1-r}$. Both of these are in fact equal to $2^{d-r}$, so this is the weight of our code, exactly as required!
+\end{prf}
+
+\begin{remark}[Reed-Muller Heuristic]
+    A helpful way to think about the Reed-Muller construction is as follows.
+    We take some code number $d$, and define $n = 2^d$ to be the length of our code.
+    We write out all the $d$-vectors in the space $\F_2^d$ (of which there are $2^d = n$), and order them lexicographically. This gives us an $n$-long list of $d$-vectors, which we call $X$.
+    
+    Now, we may consider $n$-vectors in the space $\F_2^n$. We define $d+1$ such vectors: the first is $v_0$, which is the vector $(1, 1, \dots, 1)$, and the next are $v_i$ for $1 \leq i \leq d$, where $v_i$ has a 1 in position $1 \leq j \leq n$ if the $j\th$ element of $X$ has a 0 in position $i$. For example, when $d = 3$:
+    \begin{align*}
+    	X = \set{
+		\texttt{000}, \texttt{001}, \texttt{010}, \texttt{011},
+		\texttt{100}, \texttt{101}, \texttt{110}, \texttt{111}
+		}
+	\end{align*}
+	so $v_2$ would be the 8-vector which has a 1 in precisely those positions corresponding to the elements of $X$ with a 0 in the second position. These are the first, second, fifth, and sixth elements of $X$: 
+	\texttt{000}, \texttt{001}, \texttt{100}, and \texttt{101}. Thus $v_2 = (1, 1, 0, 0, 1, 1, 0, 0)$.
+	
+	We then define the \textit{wedge} product to be ``bitwise AND" on two $n$-vectors. We then choose some $0 \leq r \leq d$, and define the codewords of the Reed-Muller code RM($d, r$) to be precisely the $n$-vectors of the form ``bitwise AND of some collection of at most $r$ of the $v_i$".
+\end{remark}
+
+\begin{note}
+	A different ordering of $\F_2^d$ gives us an equivalent code, which is a property we used in the proof of Theorem \ref{reed-muller-recurrence}. In fact, the recurrence relation between codes we proved yields another way to define the Reed-Muller code! We start with $\mathrm{RM}(d, 0)$ and $\mathrm{RM}(d, d)$ as the repetition and trivial codes of length $n = 2^d$, and define other codes using the bar product recurrence relation:
+\end{note}
+\[
+\mathrm{RM}(d, r) = \mathrm{RM}(d-1, r)|\mathrm{RM}(d-1, r-1).
+\]
+
+% ================================================================== %
+
+\pagebreak
+\section{New Stuff}
+\subsection{An Overview of Algebra}
+
+The results we will prove later, especially when we study cryptography, are going to involve a lot of formal algebra, and especially the study of groups and rings. While we do not formally prove all the material we use, an overview of these mathematical objects will be helpful later on. We begin with an introduction here.
+
+\begin{note}
+	These definitions and results should of course all be familiar already!
+\end{note}
+
+\begin{definition}[Group]
+    A \textit{group} $(G, \cdot)$ is a non-empty set $G$ with a binary operation $\cdot$ which takes two elements in $G$ and returns a third element (not necessarily distinct). This set satisfies the properties:
+    \begin{enumerate}
+	    \item \textit{Associativity}: for all $x$, $y$, and $z$ in $G$, we have $(x \cdot y) \cdot z = x \cdot (y \cdot z)$.
+	    \item \textit{Identity}: there is a fixed element $e \in G$ such that for all $x \in G$, we have $e \cdot x = x \cdot e = x$.
+	    \item \textit{Inverses}: for each element $x \in G$, there is an element $y \in G$ such that $x \cdot y = y \cdot x = e$.
+	\end{enumerate}
+\end{definition}
+
+\begin{definition}[Ring]
+    A \textit{ring} $R$ is a non-empty set with two binary operations $+$ and $\times$. We insist that $(R, +)$ is a \textit{commutative} group with $\times$ \textit{distributive} over $+$. That is, for all $x$, $y$, and $z$ in $R$, we have
+    \[
+	a \times (b + c) = (a \times b) + (b \times c).
+	\]
+	We often write $ab$ for $a \times b$ and $a + b \times c$ for $a + (b \times c)$. The integers $\Z$ are an infinite ring, as is $\F_2^n$ under $+$ and $\land$ (as we remarked in \ref{reed-muller-code-setup}).
+\end{definition}
+
+\begin{definition}[Ideal]
+    An \textit{ideal} $I \triangleleft R$ is an additive \textit{subgroup} of a ring (a subset of a group which is a group in its own right with the same identity), which is closed even under external multiplication. That is, if $a \in I$ and $r \in R$, then $ra \in I$. The even integers are an ideal of the integers.
+\end{definition}
+
+\begin{theorem}[Correspondence Theorem]
+    Let $I \triangleleft R$ be an ideal of $R$, and let $q$ be the \textit{quotient map} $q : R \to R/I$. The quotient map is the function which sends elements in $R$ to the equivalence classes $R/I$, where two elements of $R$ are equivalent if their difference is in the ideal $I$.
+    
+    Then there is a bijection between the set of ideals $J \triangleleft R$ such that $I \subs J$ and the set of ideals in the quotient ring $R/I$. In particular, the bijection is given by $J \mapsto J/I$, and the inverse is $K \mapsto \set{r \in R : q(r) \in K}$.
+\end{theorem}
+
+\begin{definition}[Principal Ideal Domain]
+    An ideal is \textit{principal} if it is generated by a single element: we can write every element in terms of that element. For example, the ideal $6\Z \triangleleft \Z$ is generated by the element 6, and we write $6\Z = (6)$. If every ideal of $R$ is principal, then $R$ is a \textit{principal ideal domain}, or PID.
+\end{definition}
+
+\begin{definition}[Field]
+    A \textit{field} is a ring where multiplication is also commutative and which contains a multiplicative identity (which we call 1) such that every element apart from the additive identity (called 0) has a multiplicative inverse.
+    
+    For example, $\Q$ is a field, because every rational number $p/q$ has the multiplicative inverse $q/p \in \Q$, if $p/q \neq 0$. However $\Z$ is not a field, since there is no element such that $2 \cdot x = 1$.
+    
+    If $F$ is a field, then the \textit{polynomial ring} $F[X]$, which is the set of polynomials in $X$ taking coefficients in $F$, is a principal ideal domain.
+\end{definition}
+
+\begin{example}[Rings and Fields]
+    We can take $\Z$ to be a ring. As we noted earlier, $6\Z$ is a principal ideal of $\Z$ generated by 6. The only ideals in $\Z$ are of the form $n\Z$, and so the ideals which contain $6\Z$ are precisely $\Z$, $2\Z$, $3\Z$, and of course $6\Z$ itself.
+    
+    Now, consider $\F_2[X]$, which is the set of polynomials taking values in $\F_2 = \set{0, 1}$. Take the ideal generated by the element $X^3 + 1$. Then the ideals which contain this are those which divide this polynomial: $(1)$, $(X+1)$, $(X^2 + X + 1)$, and of course $(X^3 + 1)$ itself.
+\end{example}
 
 \end{document}
