@@ -1,0 +1,19 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=state] (0) at (0, 0) {$q_0$};
+		\node [style=state] (1) at (4, 0) {$q_1$};
+		\node [style=pale green] (2) at (4, 4) {$q_2$};
+		\node [style=none] (3) at (1.5, 2.5) {0};
+		\node [style=none] (4) at (2, -0.5) {1};
+		\node [style=none] (5) at (4.5, 2) {0};
+		\node [style=none] (6) at (5, -1) {1};
+		\node [style=none] (7) at (4, 5.25) {$0, 1$};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=transition] (0) to (2);
+		\draw [style=transition] (1) to (2);
+		\draw [style=transition] (0) to (1);
+		\draw [style=transition, in=0, out=-90, loop] (1) to ();
+		\draw [style=transition, in=135, out=45, loop] (2) to ();
+	\end{pgfonlayer}
+\end{tikzpicture}
