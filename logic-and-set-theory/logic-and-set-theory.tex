@@ -11,7 +11,7 @@
 \name{Avish Kumar}
 \email{ak2461@cam.ac.uk}
 \website{https://ak1089.github.io/maths/notes}
-\version{1.15}
+\version{1.16}
 \disclaimer{These notes are unofficial and may contain errors. While they are written and published with permission, they are not endorsed by the lecturer or University.}
 
 % Auxiliary files
@@ -798,7 +798,7 @@ All of the ordinals we have constructed so far have been countable. Are there un
 
 \begin{theorem}[Hartog's Lemma]
 	\label{hartogs-lemma}
-    For any set $X$, there is some ordinal $\gamma$ which does not inject into $X$.
+    For any set $X$, there is some ordinal $\gamma$ which does not inject into $X$, which we write as $\gamma(X)$.
 \end{theorem}
 
 \begin{prf}
@@ -1933,6 +1933,7 @@ Now, we can extend one of the most important results from the first chapter to f
 Our aim now is to prove the Completeness Theorem (\ref{completeness-theorem}) but for first-order logic. In particular, we want to show that the syntactic and semantic entailment symbols $\vdash$ and $\vDash$ coincide. As in the first chapter, this splits into two theorems for the two directions: the Soundness Theorem (\ref{soundness-theorem}) and the Adequacy Theorem (\ref{adequacy-theorem}).
 
 \begin{theorem}[Soundness Theorem]
+	\label{first-order-soundness-theorem}
     Let $S$ be a set of formulae in a first-order language $L$, and let $p$ be a formula in $L$. Then if $S \vdash p$, we must have $S \vDash p$: the proof structure is \textit{sound}, and does not prove any semantically incorrect propositions.
 \end{theorem}
 
@@ -1942,12 +1943,16 @@ Our aim now is to prove the Completeness Theorem (\ref{completeness-theorem}) bu
     Since $x$ does not occur free in $S'$, we have $S' \vDash (\forall x) q$, and so $S \vDash p$.
 \end{prf}
 
-
 We now reconstruct the Model Existence Lemma. This was originally Theorem \ref{model-existence-lemma}, and in the chapter on posets we proved a more general case as Theorem \ref{general-model-existence-lemma}.
 
 \begin{theorem}[Model Existence Lemma]
+	\label{first-order-model-existence-lemma}
     Let $S$ be a \textit{consistent} theory in a first order language $L = L(\Omega, \Pi)$: that is, $S \not\vdash \bot$. Then $S$ has a model (as defined in \ref{first-order-predicate-model}).
 \end{theorem}
+
+\begin{note}
+	The proof of this theorem is non-examinable.
+\end{note}
 
 \begin{prf}
     The key idea is to build a model $A$ from the language $L$ itself. To begin with, we let $A$ be the set of \textit{closed terms} in $L$: terms with no variables.
@@ -1960,11 +1965,116 @@ We now reconstruct the Model Existence Lemma. This was originally Theorem \ref{m
     
     However, we are still not done! Consider the theory of fields $T$ in which 2 has a square root: that is, the theory of fields and the sentence $(\forall x)((x \cdot x = 1 + 1) \Ra \bot) \Ra \bot$, or more concisely, $(\exists x)(x\cdot x = 1+1)$. There is no closed term $t$ such that $T \vdash (t \cdot t = 1 + 1)$. The problem is that $T$ lacks a witness for $(\exists x)p$. We solve this by adding a witness: a new constant $c$ to $L$ and a new sentence to $T$ to obtain $T' = T \cup \set{p[c/x]}$.
     
-    Now, we formalise this. We start with three observations:
+    Now, we formalise this. We start with four observations:
     \begin{enumerate}
-    	\item If $S$ is a consistent theory and $p$ is a sentence, then either $S \cup p$ or $S \cup \set{\lnot p}$. If not, by the Deduction Theorem (\ref{first-order-deduction-theorem}), $S \vdash \lnot p$ and $S \vdash \lnot \lnot p$, but then $S \vdash \bot$, a contradiction.
+    	\item If $S$ is a consistent theory and $p$ is a sentence, then either $S \cup p$ or $S \cup \set{\lnot p}$ is consistent. If not, by the Deduction Theorem (\ref{first-order-deduction-theorem}), $S \vdash \lnot p$ and $S \vdash \lnot \lnot p$, but then $S \vdash \bot$, a contradiction.
     	\item By Zorn's Lemma, there is therefore a maximal consistent theory $\bar S$ which contains $S$ such that for every sentence $p$, either $p \in \bar S$ or $\lnot p \in \bar S$.
+    	\item Suppose that $S \vdash (\exists x) p$, where $p$ is a formula with exactly one free variable $x$. If there is no witness, we add a new constant (nullary operator) to $L$, and claim that the set $S \cup \set{p[c/x]}$ is consistent. If not, the Deduction Theorem yields a proof witnessing $S \vdash \lnot p[c/x]$. But $c$ does not appear in $S$, which means $S \vdash \lnot p$. By generalisation (\ref{deduction-rules}), $S \vdash (\forall x) \lnot p$, but this is a contradiction, since $S \vdash (\exists x) p$.
+    	\item We can do this for every theorem of $S$ of the form $(\exists x) p$, to obtain a new language, which we write as $\bar L = L(\Omega \cup C, \Pi)$. Here, $C$ is a set of new constants disjoint from $\Omega$ and $\Pi$. We also obtain a new consistent theory $\bar S$ with $S \subs \bar S$ containing witnesses for $S$: for any such theorem in $S$, there is a closed term in $\bar L$ with $\bar S \vdash p[t/x]$ .
 	\end{enumerate}
+	We now repeat the procedure in these observations. We start with a consistent theory $S_0 = S$ in the language $L_0 = L(\Omega, \Pi)$, and define by induction a series of theories $S_0 \subs S_1 \subs T_1 \subs S_2 \subs \dots $ and new languages $L_n = L(\Omega \cup C_1 \cup \dots \cup C_n, \Pi)$, with all $n+2$ sets pairwise disjoint.
+	
+	For all $n$, $S_n$ is a complete and consistent theory in $L_{n-1}$, and $T_n$ is a consistent theory in $L_n$ with witnesses for each theorem in $S_n$ of the form $(\exists x)p$. We set $L^*$ and $S^*$ to be the union of the $L_n$ and $S_n$ respectively: it is easy to check that $S^*$ is a consistent theory in $L^*$, contains $S$, is complete, and has witnesses. Therefore, without loss of generality, take $S^* = S$ and $L^* = L$.
+	
+	We let $A$ be the set of equivalence classes of closed terms in $L$, where we say that two closed terms $s$ and $t$ are equivalent if and only if $S \vdash (s=t)$. We make $A$ an $L$-structure in the obvious way:
+	\[
+	\omega_A([t_1], \dots, [t_n]) = [\omega t_1 \dots t_n]
+	\quad \where \omega \in \Omega \with \alpha(\omega) = n,
+	\text{ and } t_1, \dots, t_n \text{ are closed terms}.
+	\]
+	We then set $\varphi_A([t_1], \dots, [t_n]) = 1$ if and only if $S \vdash \varphi t_1 \dots t_n$.
+	
+	We prove by induction on the terms of the language: if $S$ is a term with variables in $\set{x_1, \dots, x_n}$, then we let $s_A([t_1], \dots, [t_n])$ be the equivalence class of $s[t_1/x_1, \dots, t_n/x_n]$. As a result, if $S$ is a closed term, then $s_A$ is the equivalence class of $s$.
+	
+	Similarly, for any formula $p$ with free variables $\mathrm{FV}(p) \subs \set{x_1, \dots, x_n}$, we have:
+	\[
+	p_A([t_1], \dots, [t_n]) = 1 \iff S \vdash p[t_1/x_1, \dots, t_n/x_n].
+	\]
+	In particular, if $p \in S$, then $S \vdash p$, so $p_A = 1$. But this is exactly what we wanted! The $A$ which we have constructed is an $L$-structure such that if $p \in S$, then $p_A = 1$. This is therefore a model of $S$, which is what we set out to find.
 \end{prf}
+
+\begin{theorem}[Adequacy Theorem]
+	\label{first-order-adequacy-theorem}
+    Let $S$ be a set of formulae in a first-order language $L$, and let $p$ be a formula in $L$. If $S \vDash p$, then in fact $S \vdash p$. That is, if $S$ semantically entails $p$, then there is a proof witnessing that $S$ also syntactically entails $p$.
+\end{theorem}
+
+\begin{note}
+	The proof of this theorem is also non-examinable.
+\end{note}
+
+\begin{prf}
+    Take $S$ to be a theory, and $p$ a sentence. As in the definition of semantic entailment (\ref{first-order-semantic-entailment}), we take $S' \vDash p'$. If we can deduce that $S' \vdash p'$, then it follows that $S \vdash p$.
+    
+    Since $S \vDash p$, we have $S \cup \set{\lnot p} \vDash \bot$. By the Model Existence Lemma (\ref{first-order-model-existence-lemma}), $S \cup \set{\lnot p} \vdash \bot$. Also, by the Deduction Theorem (\ref{first-order-deduction-theorem}), we have $S \vdash \lnot\lnot p$. Putting these together yields a proof of $p$, using Axiom 3.
+\end{prf}
+
+Like in \S\ref{section-syntactic-entailment}, we can combine two of results we have just proved. The Soundness Theorem and the Adequacy Theorem (originally \ref{soundness-theorem} and \ref{adequacy-theorem}, now \ref{first-order-soundness-theorem} and \ref{first-order-adequacy-theorem}) combine  to make the Completeness Theorem (originally \ref{completeness-theorem}, now \ref{first-order-completeness-theorem}).
+
+\begin{theorem}[G\"odel's Completeness Theorem For First-Order Logic]
+    \label{first-order-completeness-theorem}
+    Let $S$ be a set of formulae in a first-order language $L$, and let $p$ be a formula in $L$. Then the notions of semantic and syntactic entailment coincide: $S \vDash p$ if and only if $S \vdash p$.
+\end{theorem}
+
+\begin{prf}
+    Obvious by the Soundness Theorem (\ref{first-order-soundness-theorem}) and the Adequacy Theorem (\ref{first-order-adequacy-theorem}).
+\end{prf}
+
+\begin{theorem}[Compactness Theorem]
+    Let $S$ be a first-order theory. If every finite subset of $S$ has a model, then $S$ has a model.
+\end{theorem}
+
+\begin{prf}
+    If $S \vDash \bot$, then $S \vdash \bot$. But then we can write down a proof of $\bot$ from $S$. Since this proof is finite, there is some finite $S' \subs S$ with $S' \vdash \bot$. But then $S' \vDash \bot$, which is a contradiction.
+\end{prf}
+
+Considering the Compactness Theorem, we might wonder if we can axiomatise the theory of finite groups. That is, does there exist a theory in a suitable first-order language whose models are precisely the finite groups?
+
+We may try letting $t_n$ be the sentence $(\exists x_1)(\exists x_2)\dots(\exists x_n)(\forall x)(x = x_1 \lor \dots \lor x = x_n)$. This is the sentence ``there are at most $n$ elements": if $t_n$ is satisfied in some $L$-structure $A$, then $A$ is a group of at most $n$ elements.
+
+But then we would need $T$ to be the theory of groups together with the ``sentence" $t = t_1 \lor t_2 \lor \cdots$, which is not actually a sentence, as it is infinite. Of course, this doesn't mean we cannot axiomatise the finite groups, merely that this attempt has failed. However, this really is impossible!
+
+\begin{proposition}[No Axiomatisation of Finite Groups]
+   The finite groups cannot be axiomatised as a first-order theory. That is, there is no theory $T$ in any first-order language $L$ whose models are exactly the finite groups.
+\end{proposition}
+
+\begin{prf}
+    Suppose that $T$ is such a theory. Then let
+    \[
+	S = T \cup \set{\lnot t_1, \, \lnot t_2, \, \lnot t_3, \, \dots}
+	\where t_n = (\exists x_1)(\exists x_2)\dots(\exists x_n)(\forall x)(x = x_1 \lor \dots \lor x = x_n).
+	\]
+	Any finite subset of $S$ as a model. For example, $C_n$, where $n = 1 + \max \set{i : \lnot t_i \in S}$, is a model of $S$. But then by compactness, $S$ has a model, which is a contradiction.
+\end{prf}
+
+\begin{corollary}
+    If a first-order theory $T$ has arbitrarily large finite models, then in fact it has some infinite model, using the same argument!
+\end{corollary}
+
+In fact, we can prove an even stronger result.
+
+\begin{theorem}[The Upward L\"owenheim-Skolem Theorem]
+    If a first-order theory $S$ has an infinite model, then $S$ has an uncountable model.
+\end{theorem}
+
+\begin{prf}
+    We can add uncountably many new constants $\set{c_i : i \in I}$ to the language, for some index set $I$ which is uncountable. Then, consider:
+    \[
+	S' = S \cup \set{\lnot (c_i = c_j) : i, j \in I \with i \neq j}.
+	\]
+	By assumption, $S$ has an infinite model, which is a model of every finite subset of $S'$. But then by compactness $S'$ has a model $A'$, which is a model $A$ of $S$ and a finite set of sentences given with an injection $I \to A$ with $c_i \mapsto (c_i)_A$. But then $A'$ is uncountable, as required.
+\end{prf}
+
+\begin{corollary}
+	By Hartog's Lemma (Theorem \ref{hartogs-lemma}), we can take $I = \gamma(X)$. Then the proof of the above yields a model of $S$ which cannot inject into $X$.
+\end{corollary}
+
+\begin{note}
+	It is easy to write down arbitrarily large groups, but comparatively much harder to write down arbitrarily large fields.
+\end{note}
+
+
+
+
+
 
 \end{document}

@@ -11,7 +11,7 @@
 \name{Avish Kumar}
 \email{ak2461@cam.ac.uk}
 \website{https://ak1089.github.io/maths/notes}
-\version{1.14}
+\version{1.16}
 \disclaimer{These notes are unofficial and may contain errors. While they are written and published with permission, they are not endorsed by the lecturer or University.}
 
 % Auxiliary files
@@ -2335,12 +2335,16 @@ with negligible risk of error in the long run. So if the game lasts for a suffic
 
 % ================================================================== %
 
+\pagebreak
+\section{Algebraic Codes}
 \subsection{Linear Codes}
+\label{subsection-linear-codes}
 
-So far, we have considered binary codes as being arbitrary subsets $C \subs \binset$.
-Now, instead we insist on some extra structure.
+We have considered binary codes as arbitrary subsets $C \subs \binset$.
+Now we insist on some structure.
 
 \begin{definition}[Field Of Two Elements]
+	\label{field-of-two-elements}
     We define $\F_2 = \set{0, \, 1}^n$ to be a \textit{field}
     over two elements: 0 and 1.
     Addition and multiplication are possible in this field modulo 2.
@@ -2350,9 +2354,8 @@ Now, instead we insist on some extra structure.
 
 We can consider vector spaces over the field $\F_2$.
 These are elements of $\F_2^n$ for some length $n$,
-where we take addition to be element-wise.
-That is, an element of $\F_2^n$ is an $n$-long vector with all entries 0 or 1.
-We use this to define a linear code.
+where addition is element-wise.
+An element of $\F_2^n$ is thus an $n$-vector with all entries 0 or 1.
 
 \begin{definition}[Linear Code]
     A code $C \subs F_2^n$ is \textit{linear}
@@ -2423,7 +2426,6 @@ We use this to define a linear code.
 Take $V = \F_2^n$, and $V^*$ is the set of linear maps from $V \to \F_2$.
 Then consider $\phi : V \to V^*$, which sends $x \mapsto \theta_x$,
 with $\theta_x : y \mapsto x \cdot y$ is a linear map in $V^*$.
-
 Then $\phi$ is a linear map!
 Suppose $x \in \ker \phi$. Then $x \cdot y = 0$ for all $y \in V$.
 Taking $y = e_i$, which is the vector with all entries 0 except entry $i$,
@@ -2433,7 +2435,6 @@ and thus the kernel is trivial.
 But since $\dim V = \dim V^*$, $\phi$ must be an isomorphism.
 So $\phi(C^\bot) = \set{\theta \in V^* : \theta(x) = 0 \ \forall x \in C}$,
 which is the ``annihilator of $C$" $C^0$.
-
 This means that
 $\dim C + \dim \phi(C^\bot) = \dim C + \dim C^\bot = n$.
 
@@ -2467,8 +2468,6 @@ $\dim C + \dim \phi(C^\bot) = \dim C + \dim C^\bot = n$.
 	\quad
 	\text{ a $k \times n$ matrix}
 	\]
-	where row echelon form means that the leading non-zero term in each row is to the right of the leading non-zero term of the row above.
-	
 	That is, there is some $\ell(1) < \ell(2) < \dots < \ell(k)$, where $G_{ij} = 0$ if $j < \ell(i)$ and 1 if $j = \ell(i)$.
 	
 	Now, using equivalence, we can permute the columns to pull the 1s into the right place, so that the left block of the matrix is $I_k$.
@@ -2481,11 +2480,11 @@ $\dim C + \dim \phi(C^\bot) = \dim C + \dim C^\bot = n$.
 \end{note}
 
 \begin{proposition}[Parity Check Matrix]
-    An $(n, k)$ linear code with generator matrix $G = (I_k \ \ B)$ has parity check matrix $H$, where $H = (-B^T \ \ I_{n-k})$
+    An $(n, k)$ linear code with generator matrix $(I_k \ \ B)$ has parity check matrix $(-B^T \ \ I_{n-k})$.
 \end{proposition}
 
 \begin{prf}
-    Since $GH^T = (I_K \ \ B) (-B \ \ I_{n-k})^T = -B + B = 0$, the rows of $H$ generate a subcode of $C^\bot$. But in fact the dimensions match: $\dim(C^\bot) = n - k = \rank(H)$. So the rows of $H$ must be a basis of $C^\bot$ as required.
+    As $(I_K \ \ B) (-B \ \ I_{n-k})^T = -B + B = 0$, the rows generate a subcode of $C^\bot$. Also, the dimensions match: $\dim(C^\bot) = n - k = \rank(H)$. So the rows of $H$ are indeed a basis of $C^\bot$.
 \end{prf}
 
 \begin{definition}[Hamming Weight]
@@ -2494,18 +2493,10 @@ $\dim C + \dim \phi(C^\bot) = \dim C + \dim C^\bot = n$.
 \end{definition}
 
 \begin{corollary}
-    The minimum distance of a linear code $C$ is then the minimum weight of a non-zero codeword, since $d(x, y) = d(x-y, \mathbf{0}) = d(x + y, \mathbf{0}) = w(x+y)$, and so $x$ and $y$ are distinct if and only if $x + y \neq \mathbf{0}$. This gives the minimum distance as the minimum weight of $x + y$.
+    The minimum distance of a linear code $C$ is then the minimum weight of a non-zero codeword, since $d(x, y) = d(x-y, \mathbf{0}) = d(x + y, \mathbf{0}) = w(x+y)$, and so $x$ and $y$ are distinct if and only if $x + y \neq \mathbf{0}$. This gives the minimum distance as the minimum weight of $x + y$. This is called the \textit{weight} of $C$, and is easier to find than the minimum distance of an arbitrary binary code.
 \end{corollary}
 
-\begin{note}
-	For a linear code $C$, this minimum distance is called the \textit{weight} of $C$.
-	It is thus far easier to find the weight of a linear code in particular compared to any arbitrary binary code.
-\end{note}
-
-We now return to syndrome decoding, which we briefly considered earlier when studying Hamming's original code in Example \ref{hammings-original-code}.
-
 % ================================================================== %
-
 \subsection{Syndrome Decoding}
 
 Suppose $C$ is an $(n, r)$ linear code with parity check matrix $H$.
@@ -2795,7 +2786,6 @@ Indeed, $\mathrm{RM}(d, 0)$ and $\mathrm{RM}(d, d)$ are always the repetition an
 % ================================================================== %
 
 \pagebreak
-\section{New Stuff}
 \subsection{An Overview of Algebra}
 
 The results we will prove later, especially when we study cryptography, are going to involve a lot of formal algebra, and especially the study of groups and rings. While we do not formally prove all the material we use, an overview of these mathematical objects will be helpful later on. We begin with an introduction here.
@@ -2826,14 +2816,18 @@ The results we will prove later, especially when we study cryptography, are goin
 \end{definition}
 
 \begin{theorem}[Correspondence Theorem]
+	\label{correspondence-theorem}
     Let $I \triangleleft R$ be an ideal of $R$, and let $q$ be the \textit{quotient map} $q : R \to R/I$. The quotient map is the function which sends elements in $R$ to the equivalence classes $R/I$, where two elements of $R$ are equivalent if their difference is in the ideal $I$.
     
     Then there is a bijection between the set of ideals $J \triangleleft R$ such that $I \subs J$ and the set of ideals in the quotient ring $R/I$. In particular, the bijection is given by $J \mapsto J/I$, and the inverse is $K \mapsto \set{r \in R : q(r) \in K}$.
 \end{theorem}
 
 \begin{definition}[Principal Ideal Domain]
+	\label{principal-ideal-domain}
     An ideal is \textit{principal} if it is generated by a single element: we can write every element in terms of that element. For example, the ideal $6\Z \triangleleft \Z$ is generated by the element 6, and we write $6\Z = (6)$. If every ideal of $R$ is principal, then $R$ is a \textit{principal ideal domain}, or PID.
 \end{definition}
+
+We have met fields already, first in Definition \ref{field-of-two-elements}, where we considered $\F_2$.
 
 \begin{definition}[Field]
     A \textit{field} is a ring where multiplication is also commutative and which contains a multiplicative identity (which we call 1) such that every element apart from the additive identity (called 0) has a multiplicative inverse.
@@ -2848,5 +2842,173 @@ The results we will prove later, especially when we study cryptography, are goin
     
     Now, consider $\F_2[X]$, which is the set of polynomials taking values in $\F_2 = \set{0, 1}$. Take the ideal generated by the element $X^3 + 1$. Then the ideals which contain this are those which divide this polynomial: $(1)$, $(X+1)$, $(X^2 + X + 1)$, and of course $(X^3 + 1)$ itself.
 \end{example}
+
+\begin{theorem}[Finite Fields]
+    Let $K$ be a finite field. Then $\abs K = p^r$ for some prime $p$ and $r \geq 1$, and $\F_p \subs K$.
+    
+    Moreover, if $q = p^r$, then there exists a unique field $\F_q$ with $q$ elements up to isomorphism.
+\end{theorem}
+
+\begin{proposition}[Isomorphism]
+    Let $q = p^r$ be a prime power. Then there is some element $\alpha \in \F_q$ such that
+    \[
+    \F_q^\times = \F_q \setminus 0 = \set{1, \alpha, \alpha^2, \dots, \alpha^{q-2}}.
+    \]
+    That is, $\F_2^\times$ is the cyclic group $C_{q-1}$, and $\alpha$ is called a primitive element.
+    
+    If $r \mid s$, then $\F_{p^r}$ is a subfield of $\F_{p^s}$. Also, if $f(X) \in \F_q[X]$, then there exists some $r \geq 1$ such that $f(X)$ factors completely into linear factors.
+\end{proposition}
+
+\begin{definition}[Derivative]
+    Let $\F$ be a field and define a polynomial over the field to be:
+    \[
+	f(X) = \sum_{k=0}^n a_k X^k \in \F[X].
+	\]
+	We define the \textit{derivative} of $f$, written $f'(X)$, to be the sum:
+	\[
+	f'(X) = \sum_{k=1}^n ka_k X^{k-1} \in \F[X].
+	\]
+	This is a formal series, and has nothing to do with limits or continuity.
+\end{definition}
+
+\begin{proposition}[Differentiation]
+    Let $\F$ be a field and $f(X)$ and $f'(X)$ as above. Then let $a \in \F$. If $(X-a)^2 \mid f(X)$, then both $f(a)$ and $f'(a)$ are 0.
+\end{proposition}
+
+\begin{prf}
+    We have $f(X) = (X-a)^2 g(X)$, so $f'(X) = 2(X-a)g(X) + (X-a)^2g'(X)$. Thus we have $f(a) = f'(a) = 0$, as required.
+\end{prf}
+
+In particular, consider $(X^N - 1) \in \F_q[X]$ for $N$ odd. Then there is some $K$ with $\F_q \subs K$ such that $(X^N-1)$ factorises into linear factors in $K[X]$. Furthermore, $X^N-1$ has distinct roots.
+
+% ================================================================== %
+
+\subsection{Cyclic Codes}
+
+Much like when we defined linear codes in \S\ref{subsection-linear-codes}, we motivate the study of cyclic codes by insisting on extra structure being enforced on our subsets.
+
+\begin{definition}[Cyclic Code]
+    A code $C \subs \F_2^n$ is \textit{cyclic} if it is linear and if we have:
+    \begin{align*}
+		&(a_0, a_1, \dots, a_{n-2}, a_{n-1}) \in C \\
+		\implies
+		&(a_1, a_2 \dots, a_{n-1}, a_0) \in C
+	\end{align*}
+	That is, we may cycle the elements around any number of places.
+\end{definition}
+
+\begin{note}
+	We identify $\F_2^n$ with the quotient $\F_2[X] / (X^n - 1)$. In fact, we can take $\pi$ to be the natural isomorphism $\pi : (a_0, \dots, a_{n-1}) \mapsto a_0 + a_1X + \dots + a_{n-1}X^{n-1}$.
+\end{note}
+
+\begin{proposition}[Cyclic Conditions]
+    A code $C \subs \F_2^n$ is cyclic if and only if $\calC = \pi(C)$ satisfies:
+    \begin{enumerate}
+	    \item $0 \in \calC$.
+	    \item If $f$ and $g$ are in $\calC$, then so is $f + g$.
+	    \item If $f \in \calC$ and $g \in \F_2[X]$, then $gf \in C$.
+	\end{enumerate}
+\end{proposition}
+
+\begin{prf}
+    The first two must hold by linearity of $C$. Lastly, notice that
+    \[
+	X f(X) = a_{n-1} + a_{0}X + \dots + a_{n-2}X^{n-1} \pmod{X^n - 1}
+	\]
+	and so the last point holds for $g(X) = X$. In fact, repeating this procedure shows that it holds for all functions of the form $g(X) = X^r$, so linearity proves the last point.
+\end{prf}
+
+\begin{corollary}
+    $C$ is a cyclic code of length $n$ if and only if $\calC$ is an ideal in $\F_2[X] / (X^n - 1)$.
+\end{corollary}
+
+\begin{note}
+	From now on, we identify the code $C$ with the ideal $\calC$, and simply write $C$ for both.
+\end{note}
+
+\begin{definition}[Generator Polynomial]
+    A \textit{generator polynomial} $g(X)$ for a cyclic code $C$ is a polynomial dividing $X^n - 1$ such that
+    \[
+	C = \set{f(X)g(X) \pmod{X^n - 1} : f(X) \in \F_2[X]}.
+	\]
+\end{definition}
+
+\begin{theorem}[Generator Polynomial Existence]
+    In fact, every cyclic code has a generator polynomial!
+\end{theorem}
+
+\begin{prf}
+    $C$ is an ideal in $\F_2[X] / (X^n - 1)$. By the Correspondence Theorem (\ref{correspondence-theorem}), $C = J/(X^n-1)$ for some $(X^n-1) \subs J \triangleleft \F_2[X]$. But this is a principal ideal domain (\ref{principal-ideal-domain}), and so $J = (g(X))$ for some $g(X) \in \F_2[X]$. But then $(X^n - 1) \subs (g(X))$, and so $g(X) \mid X^n - 1$.
+\end{prf}
+
+\begin{corollary}
+    If we insist that they are monic, then generator polynomials are unique. But in fact this is always true, since every polynomial in $\F_2[X]$ is monic!
+\end{corollary}
+
+\begin{corollary}
+    There is a bijection between the cyclic codes of length $n$ and the factors of $X^n-1$ in the polynomial ring $\F_2[X]$.
+\end{corollary}
+
+\begin{corollary}
+    If cyclic codes $C_1$ and $C_2$ have generator polynomials $g_1$ and $g_2$, then $g_1(X) \mid g_2(X)$ if and only if $C_2$ is a subcode of $C_1$.
+\end{corollary}
+
+\begin{corollary}
+    If $n$ is odd, then $f(X) = X^n - 1$ has no repeated roots. But then $X^n - 1 = f_1(X) \times \dots \times f_k(X)$ for distinct irreducible polynomials $f_i(X) \in \F_2[X]$. The number of cyclic codes of length $n$ is therefore $2^k$.
+\end{corollary}
+
+\begin{proposition}[Generator Basis]
+    Suppose that $C$ is a cyclic code of length $n$ with generator polynomial
+    \[
+	g(X) = a_0 + a_1X + \dots + a_{k-1} X^{k-1} + X^k.
+	\]
+	Then $\set{g(X), \, Xg(X), \, \dots, \, X^{n-k-1}g(X)}$ is a basis for $C$.
+\end{proposition}
+
+\begin{prf}
+    We show linear independence first. Suppose that $f(X)g(X) \equiv 0 \pmod{X^n-1}$ for some $f(X) \in \F_2[X]$ with $\deg(f) \leq n - k - 1$. Then $\deg(fg) \leq n-1$, so $f(X)g(X) = 0 \Ra f(X)=0$.
+    
+    Now, we show that this set spans. Let $p(X) \in \F_2[X]$, representing an element of $C$ Without loss of generality, we may assume that $\deg(p) < n$. Then $p(X) = f(X)g(X)$ for some $f(X) \in \F_2[X]$ with degree $\deg(f) = \deg(p) - \deg(g) < n - k$.
+    
+    But then $p(X)$ is in the span of this set, as required, so this set is a basis for $C$.
+\end{prf}
+
+\begin{corollary}
+    The code $C$ has rank $n - k$.
+\end{corollary}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \end{document}
