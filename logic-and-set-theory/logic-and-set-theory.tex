@@ -11,7 +11,7 @@
 \name{Avish Kumar}
 \email{ak2461@cam.ac.uk}
 \website{https://ak1089.github.io/maths/notes}
-\version{1.16}
+\version{1.17}
 \disclaimer{These notes are unofficial and may contain errors. While they are written and published with permission, they are not endorsed by the lecturer or University.}
 
 % Auxiliary files
@@ -29,7 +29,7 @@
 The language of propositional logic consists of a set $P$ of \textit{primitive propositions}, and the set $L(P)$ of propositions. These statements in the language are meaningful, and can be \texttt{true} or \texttt{false}.
 
 \begin{definition}[Set of Propositions $L$]
-	\label{set-of-propositions}
+	\label{definition-set-of-propositions}
     Given a set $P$ of primitive propositions, the set $L$ is defined to be the smallest set containing $P$ with $\bot \in L$ (the symbol for \texttt{false}) such that if $p$ and $q$ are in $L$, then $(p \Ra q)$ is in $L$.
 \end{definition}
 
@@ -44,8 +44,8 @@ In fact, every proposition is built \textit{uniquely} using this construction. F
 \end{note}
 
 \begin{definition}[Valuation]
-	\label{valuation}
-    A \textit{valuation} on $L$ is a function $v: L \to \set{\texttt{0}, \texttt{1}}$ with $v(\bot) = \texttt{0}$ satisfying:
+	\label{definition-propositional-valuation}
+    A \textit{definition-propositional-valuation} on $L$ is a function $v: L \to \set{\texttt{0}, \texttt{1}}$ with $v(\bot) = \texttt{0}$ satisfying:
 	\[
 	v(p \Ra q) = \begin{cases}
 		\texttt{0} & \text{if } v(p) = \texttt{1} \text{ and } v(q) = \texttt{0} \\
@@ -129,6 +129,7 @@ As desired, the valuation of $(p \Ra (q \Ra p))$ is always \texttt{1}.
 % ================================================================== %
 
 \subsection{Semantic Entailment}
+\label{section-propositional-logic-semantic-entailment}
 
 \begin{definition}[Semantic Entailment]
     For $S \subseteq L$ and $t \in L$, we say $S$ \textit{semantically entails} $t$ if for any valuation $v$ which satisfies $v(s) = \texttt{1}$ for all $s \in S$, we also have $v(t) = \texttt{1}$. We write $S \vDash t$.
@@ -147,8 +148,8 @@ As desired, the valuation of $(p \Ra (q \Ra p))$ is always \texttt{1}.
 \end{example}
 
 \begin{definition}[Model]
-	\label{model}
-    For $t \in L$ and a valuation $v$, we say that $t$ is ``true in $v$" (or ``$v$ is a \textit{model} of $t$") if $v(t) = \texttt{1}$. Similarly, for $S \subs L$, we say $v$ is a model of $S$ if $v(s) = \texttt{1}$ for all $s \in S$.
+	\label{definition-propositional-model}
+    For $t \in L$ and a valuation $v$, we say that $t$ is ``true in $v$" (or ``$v$ is a \textit{definition-propositional-model} of $t$") if $v(t) = \texttt{1}$. Similarly, for $S \subs L$, we say $v$ is a model of $S$ if $v(s) = \texttt{1}$ for all $s \in S$.
 \end{definition}
 
 \begin{corollary}
@@ -158,7 +159,7 @@ As desired, the valuation of $(p \Ra (q \Ra p))$ is always \texttt{1}.
 % ================================================================== %
 
 \subsection{Syntactic Entailment}
-\label{section-syntactic-entailment}
+\label{section-propositional-logic-syntactic-entailment}
 
 A notion of \textit{proof} consists of \textit{axioms} and \textit{rules of deduction}. These are statements taken as true no matter what, and rules by which we can deduce more statements as true. In the model of propositional logic, we have the following three axioms:
 \begin{enumerate}
@@ -174,14 +175,14 @@ A notion of \textit{proof} consists of \textit{axioms} and \textit{rules of dedu
 In propositional logic, we also have only one rule of deduction.
 
 \begin{definition}[Modus Ponens]
-	\label{modus-ponens}
+	\label{propositional-modus-ponens}
     From $p$ and $(p \Ra q)$, we may deduce $q$.
 \end{definition}
 
 How do we use this rule of deduction?
 
 \begin{definition}[Proof]
-	\label{proof-propositional-logic}
+	\label{propositional-proof}
     Given $S \subset L$ and $t \in L \setminus S$, a proof of $t$ from $S$ is a finite sequence of propositions $t_1 \dots t_n \in L$ such that $t_n = t$, and for each $t_i$ we have either:
     \begin{enumerate}
     	\item $t_i$ is an axiom of propositional logic.
@@ -205,7 +206,7 @@ How do we use this rule of deduction?
 \end{example}
 
 \begin{example}[Proof of a Theorem]
-	\label{proof-of-self-implication}
+	\label{example-proof-of-self-implication}
     We would like to show that $\vdash (p \Ra p)$. We prove this as follows:
 	\begin{enumerate}
 	    \item $p \Ra ((p \Ra p) \Ra p)$ \hfill (A1)
@@ -217,7 +218,7 @@ How do we use this rule of deduction?
 \end{example}
 
 \begin{theorem}[Deduction Theorem]
-	\label{deduction-theorem}
+	\label{propositional-deduction-theorem}
     Let $S \subs L$ with $p, q \in L$. Then $S \vdash (p \Ra q)$ if and only if $(S \cup \set p) \vdash q$.
 \end{theorem}
 
@@ -250,7 +251,7 @@ We now have two notions of entailment: semantic entailment $\vDash$ and syntacti
 This splits into two parts: the Soundness Theorem claims that $(S \vdash t)$ implies $(S \vDash t)$, while the Adequacy Theorem means the converse. This means that our syntactic system is \textit{sound} (it doesn't prove false statements) and that it is \textit{adequate} (it is able to prove all true statements).
 
 \begin{theorem}[Soundness Theorem]
-	\label{soundness-theorem}
+	\label{propositional-soundness-theorem}
     If $S \subs L$ and $t \in L$ where $S \vdash t$, then $S \vDash t$.
 \end{theorem}
 
@@ -283,7 +284,7 @@ Now, we aim for the Adequacy Theorem, which is the converse of this statement. T
 This definition allows us to prove an important theorem.
 
 \begin{theorem}[Model Existence Lemma]
-	\label{model-existence-lemma}
+	\label{propositional-model-existence-lemma}
     Let $S \subs L$. If $S$ is consistent, then $S$ has a model.
 \end{theorem}
 
@@ -297,9 +298,9 @@ This definition allows us to prove an important theorem.
 	\]
 	Unfortunately, this is nonsense. It is quite possible that $S \not\vdash t$ and $S \not\vdash \lnot t$. We will enlarge $S$ to avoid this issue. (Note that we only consider the case where set $P$ of primitive propositions is countable: we prove the general case later on in \ref{general-model-existence-lemma}.)
 	
-	Consider the recursive definition of the set of propositions (following \ref{set-of-propositions}). We note that $L$ must be countable as a consequence of this definition, as the countable union of countable sets $L_n$.
+	Consider the recursive definition of the set of propositions (following \ref{definition-set-of-propositions}). We note that $L$ must be countable as a consequence of this definition, as the countable union of countable sets $L_n$.
 	
-	We enumerate $L$ as $t_1, t_2 \dots$ and consider consistent sets $T \subs L$. If $t \in L$, then one of $T \cup \set t$ or $T \cup \set {\lnot t}$ is consistent. If not, then we would have $(T \cup \set t) \vdash \bot$ and $(T \cup \set {\lnot t}) \vdash \bot$, so by the Deduction Theorem (\ref{deduction-theorem}) we have both $T \vdash t$ and $T \vdash (t \Ra \bot)$, and hence Modus Ponens (\ref{modus-ponens}) yields $T \vdash \bot$, contradicting the consistency of $T$.
+	We enumerate $L$ as $t_1, t_2 \dots$ and consider consistent sets $T \subs L$. If $t \in L$, then one of $T \cup \set t$ or $T \cup \set {\lnot t}$ is consistent. If not, then we would have $(T \cup \set t) \vdash \bot$ and $(T \cup \set {\lnot t}) \vdash \bot$, so by the Deduction Theorem (\ref{propositional-deduction-theorem}) we have both $T \vdash t$ and $T \vdash (t \Ra \bot)$, and hence Modus Ponens (\ref{propositional-modus-ponens}) yields $T \vdash \bot$, contradicting the consistency of $T$.
 	
 	Now start with the consistent set $S_0 = S$. Define the sets $S_n$ by induction, assuming that $S_{n-1}$ is defined and consisrent. Then let $S_n$ be either $S_{n-1} \cup \set{t_n}$ or $S_{n-1} \cup \set{\lnot t_n}$ so that it is consistent. Finally, we define $\bar S$ to be the union of these $S_n$.
 	
@@ -320,13 +321,13 @@ This definition allows us to prove an important theorem.
 	\begin{enumerate}
     	\item If $v(p) = \texttt{1}$ and $v(q) = \texttt{0}$, we need $v(p \Ra q) = \texttt{0}$. If not, then we have $\bar S \vdash (p \Ra q)$. This allows us to write down a proof of $p \Ra q$ from $\bar S$ and follow it by $p$ (premise) and $q$ (MP) to attain a proof of $q$ from $\bar S$. By deductive closure, $q \in \bar S$, so $v(q) = \texttt{1}$ (a contradiction).
     	\item If $v(q) = \texttt{1}$, we need $v(p \Ra q) = \texttt{1}$. Given $q$, we can write down the proof $q \Ra (p \Ra q)$ (A1), $q$ (premise), and then $p \Ra q$ (MP). So $\bar S \vdash (p \Ra q)$, so $v(p \Ra q) = \texttt{1}$ as required.
-    	\item Finally, consider $v(p) = \texttt{0}$, so we need $v(p \Ra q) = \texttt{1}$, that is $\bar S \vdash (p \Ra q)$. By the Deduction Theorem (\ref{deduction-theorem}) this is equivalent to $\bar S \cup \set p \vdash q$. We can do this using $p$ (premise), $p \Ra \bot$ (premise, since $p \notin \bar S$), $\bot$ (MP), $\bot \Ra ((q \Ra \bot) \Ra \bot)$ (A1), and then using MP to prove $\lnot q$ followed by $q$. Therefore we have $v(p \Ra q) = \texttt{1}$ as required.
+    	\item Finally, consider $v(p) = \texttt{0}$, so we need $v(p \Ra q) = \texttt{1}$, that is $\bar S \vdash (p \Ra q)$. By the Deduction Theorem (\ref{propositional-deduction-theorem}) this is equivalent to $\bar S \cup \set p \vdash q$. We can do this using $p$ (premise), $p \Ra \bot$ (premise, since $p \notin \bar S$), $\bot$ (MP), $\bot \Ra ((q \Ra \bot) \Ra \bot)$ (A1), and then using MP to prove $\lnot q$ followed by $q$. Therefore we have $v(p \Ra q) = \texttt{1}$ as required.
 	\end{enumerate}
 	Therefore this $v$ is a valuation, and thus a model of $\bar S$ and thereby $S$.
 \end{prf}
 
 \begin{theorem}[Adequacy Theorem]
-	\label{adequacy-theorem}
+	\label{propositional-adequacy-theorem}
 	If $S \subs L$ and $t \in L$ where $S \vDash t$, then $S \vdash t$.
 \end{theorem}
 
@@ -335,15 +336,16 @@ This definition allows us to prove an important theorem.
 \end{prf}
 
 \begin{theorem}[Completeness Theorem]
-	\label{completeness-theorem}
+	\label{propositional-completeness-theorem}
     The notions of semantic and syntactic entailment ``$\vDash$" and ``$\vdash$" are in fact equivalent: if $S \subs L$ and $t \in L$, then $S \vDash t \iff S \vdash t$.
 \end{theorem}
 
 \begin{prf}
-    Obvious by the Soundness Theorem (\ref{soundness-theorem}) and the Adequacy Theorem (\ref{adequacy-theorem}).
+    Obvious by the Soundness Theorem (\ref{propositional-soundness-theorem}) and the Adequacy Theorem (\ref{propositional-adequacy-theorem}).
 \end{prf}
 
 \begin{theorem}[Compactness Theorem]
+	\label{propositional-compactness-theorem}
     Let $S \subs L$ and $t \in L$. If $S \vDash t$, then there is a finite subset $S' \subs S$ with $S \vDash t$.
 \end{theorem}
 
@@ -384,11 +386,12 @@ This definition allows us to prove an important theorem.
 \pagebreak
 \section{Well-Orderings and Ordinals}
 \subsection{Orderings and Order-Isomorphism}
+\label{section-ordinals-order-isomorphism}
 
 We now consider 	\textit{orderings}, which are ways of equipping sets with a notion of ``bigger" elements.
 
 \begin{definition}[Total Order]
-	\label{total-linear-order}
+	\label{definition-total-linear-order}
     A \textit{linear} (or \textit{total}) order on a set $X$ is a binary relation $<$ on $X$ which is:
     \begin{enumerate}
     	\item irreflexive: for all $x \in X$, we have $\lnot (x < x)$.
@@ -449,7 +452,7 @@ We say that ``$X$ is linearly ordered by $<$" if the relation $<$ satisfies this
 \end{note}
 
 \begin{definition}[Order-Isomorphism]
-	\label{order-isomorphism}
+	\label{definition-order-isomorphism}
     Let $X$ and $Y$ be linearly ordered sets. Then we say $X$ and $Y$ are \textit{order-isomorphic} if there is an \textit{order-preserving bijection}: a function $f : X \to Y$ which respects the order in that
     \[
 	(x < y) \implies (f(x) < f(y)) \quad \text{for all $x, y \in X$}.
@@ -462,7 +465,7 @@ We say that ``$X$ is linearly ordered by $<$" if the relation $<$ satisfies this
 \end{corollary}
 
 \begin{example}[Order-Isomorphism]
-	\label{order-isomorphism-example}
+	\label{example-order-isomorphism}
     $\N$ is isomorphic to $\Q$, but it the sets are not order-isomorphic. However, $\Q$ is order-isomorphic to $\Q \setminus \set 0$. Similarly, define
     \[
 	A = \set{\frac{1}{2}, \, \frac{2}{3}, \, \frac{3}{4}, \, \dots } = \set{\frac{n}{n+1} : \ninn}.
@@ -475,7 +478,7 @@ We say that ``$X$ is linearly ordered by $<$" if the relation $<$ satisfies this
 \end{example}
 
 \begin{definition}[Initial Segment]
-	\label{initial-segment}
+	\label{definition-initial-segment}
     A subset $I \subs X$ of a linearly ordered set $X$ is an initial segment of $X$ if for every element $x \in I$, $I$ contains all the predecessors of $x$. That is, $(x \in I) \land (y < x) \implies (y \in I)$.
     
     For example, $\set{1, 2, 3, 4}$ is an initial segment of $\N$, but $\set{1, 2, 3, 5}$ is not.
@@ -522,7 +525,7 @@ We say that ``$X$ is linearly ordered by $<$" if the relation $<$ satisfies this
 \end{note}
 
 \begin{proposition}[Unique Order-Isomorphism]
-	\label{unique-order-isomorphism}
+	\label{order-isomorphism-uniqueness}
     Let $X$ and $Y$ be order-isomorphic well-ordered sets. Then there is a unique order-isomorphism $f$ between them.
 \end{proposition}
 
@@ -549,12 +552,12 @@ Induction has allowed us to prove things. Now, we need a tool to \textit{constru
 \end{remark}
 
 \begin{theorem}[Definition by Recursion]
-	\label{recursion}
+	\label{definition-by-recursion}
     Let $X$ be a well-ordered set and $Y$ an arbitrary set. Then for any function $G: \powerset{X \times Y} \to Y$ there is a unique $f: X \to Y$ such that for all $x \in X$, we have $f(x) = G(f|_{I_x})$.
     
     For example, we take $x = \min X$. Then $f(x) = G(\varnothing)$. Then, let $y = \min X \setminus \set x$. Then $f(y) = G(\set{x, G(\varnothing)})$ and $I_y = \set x$, and so on.
     
-    Say $h$ is an \textit{attempt} if $h$ is a function $I \to Y$ where the domain of $h$ (denoted $\dom h$) is an initial segment (\ref{initial-segment}) $I \subs X$ and for all $x \in \dom h$, $h(x) = G(h|_{I_x})$.
+    Say $h$ is an \textit{attempt} if $h$ is a function $I \to Y$ where the domain of $h$ (denoted $\dom h$) is an initial segment (\ref{definition-initial-segment}) $I \subs X$ and for all $x \in \dom h$, $h(x) = G(h|_{I_x})$.
     
     Then, there is a unique attempt whose domain is $X$.
 \end{theorem}
@@ -570,14 +573,14 @@ Induction has allowed us to prove things. Now, we need a tool to \textit{constru
 \end{prf}
 
 \begin{proposition}[Subset Collapse]
-	\label{subset-collapse}
-    Let $Y$ be a well-ordered set and $X \subs Y$. Then there is a unique initial segment of $Y$ which is order-isomorphic (\ref{order-isomorphism}) to $X$.
+	\label{subset-collapse-result}
+    Let $Y$ be a well-ordered set and $X \subs Y$. Then there is a unique initial segment of $Y$ which is order-isomorphic (\ref{definition-order-isomorphism}) to $X$.
 \end{proposition}
 
 \begin{prf}
-    First, we show uniqueness. Assume that $f$ is an order-isomorphism from $X$ to some initial segment of $Y$. By Proposition \ref{order-isomorphism-restriction}, $f(x) = \min(Y \setminus \set{f(y) : y < x})$ for all $x$. By induction, $f$ must be uniquely determined, as in the proof of order-isomorphisms being unique (\ref{unique-order-isomorphism}).
+    First, we show uniqueness. Assume that $f$ is an order-isomorphism from $X$ to some initial segment of $Y$. By Proposition \ref{order-isomorphism-restriction}, $f(x) = \min(Y \setminus \set{f(y) : y < x})$ for all $x$. By induction, $f$ must be uniquely determined, as in the proof of order-isomorphisms being unique (\ref{order-isomorphism-uniqueness}).
     
-    Now, we show existence. As the case $Y = \varnothing$ is trivial, we take $Y \neq \varnothing$ and fix $y_0 \in Y$. Define the function $f: X \to Y$ by recursion (\ref{recursion}), using:
+    Now, we show existence. As the case $Y = \varnothing$ is trivial, we take $Y \neq \varnothing$ and fix $y_0 \in Y$. Define the function $f: X \to Y$ by recursion (\ref{definition-by-recursion}), using:
     \[
 	f(x) = \begin{cases}
 		 \min(Y \setminus \set{f(y) : y < x}) & \text{if this is non-empty} \\
@@ -598,6 +601,7 @@ Induction has allowed us to prove things. Now, we need a tool to \textit{constru
 % ================================================================== %
 
 \subsection{Ordering Well-Ordered Sets}
+\label{section-ordinals-ordering-well-ordered-sets}
 
 For well-ordered sets $X$ and $Y$, we write $X \leq Y$ for ``$X$ is order-isomorphic to some initial segment of $Y$". Is this notation sensible? In fact, it is: we have trichotomy for this relation.
 
@@ -613,7 +617,7 @@ For well-ordered sets $X$ and $Y$, we write $X \leq Y$ for ``$X$ is order-isomor
 		y_0 & \!\otherwise
 	\end{cases}
 	\]
-	Assume the ``otherwise" case arises. Then there is a least $x \in X$ where this happens. Then consider the initial segment $I_x$. Since $Y \setminus\set{f(y) : y < x} = \varnothing$, we must have $f(I_x) = Y$, and so for all $y < x$ we have $f(y) = \min (Y \setminus \set{f(z) : z < y})$. Previously (in Proposition \ref{subset-collapse}), we showed that $f|_{I_x}$ is order-preserving. So $Y$ is order-isomorphic to an initial segment of $X$: a contradiction.
+	Assume the ``otherwise" case arises. Then there is a least $x \in X$ where this happens. Then consider the initial segment $I_x$. Since $Y \setminus\set{f(y) : y < x} = \varnothing$, we must have $f(I_x) = Y$, and so for all $y < x$ we have $f(y) = \min (Y \setminus \set{f(z) : z < y})$. Previously (in Proposition \ref{subset-collapse-result}), we showed that $f|_{I_x}$ is order-preserving. So $Y$ is order-isomorphic to an initial segment of $X$: a contradiction.
 	
 	If the ``otherwise" case doesn't arise, then $f$ is an order-preserving function with $\mathrm{im}(f)$ an initial segment of $Y$, and so $X \leq Y$, which proves trichotomy.
 \end{prf}
@@ -631,7 +635,7 @@ Can we have both directions of this relation hold? Obviously we can, for example
 We write $X < Y$ for well-ordered sets with $X \leq Y$ and $X$ not order-isomorphic to $Y$.
 
 \begin{corollary}
-    $<$ is a linear order (\ref{total-linear-order}) on the collection of well-ordered sets, if we identify sets which are order-isomorphic to each other as being equivalent. Reflexivity is obvious, transitivity is easy to show, and we have just shown trichotomy.
+    $<$ is a linear order (\ref{definition-total-linear-order}) on the collection of well-ordered sets, if we identify sets which are order-isomorphic to each other as being equivalent. Reflexivity is obvious, transitivity is easy to show, and we have just shown trichotomy.
 \end{corollary}
 
 \begin{note}
@@ -674,6 +678,7 @@ We write $X < Y$ for well-ordered sets with $X \leq Y$ and $X$ not order-isomorp
 % ================================================================== %
 
 \subsection{Ordinals}
+\label{section-ordinals-ordinals-intro}
 
 Now, we consider \textit{ordinals}. These are the same as the well-ordered sets on which we have focused so far in this section, but we treat them differently.
 
@@ -704,7 +709,7 @@ Now, we consider \textit{ordinals}. These are the same as the well-ordered sets 
     
     We write $\omega$ for the order type of $\N$ (or equivalently $\N_0$).
     
-    Notice that $\Q$ contains subsets of order type 0, 1, 2, and so on, as well as of order type $\omega$. For example, the set $A$ from Example \ref{order-isomorphism-example} has order type $\omega$.
+    Notice that $\Q$ contains subsets of order type 0, 1, 2, and so on, as well as of order type $\omega$. For example, the set $A$ from Example \ref{example-order-isomorphism} has order type $\omega$.
     
     However, the set $A \cup \set 1$ doesn't have any of these order types: it must be something more. In fact, it must be $\alpha^+$.
 \end{example}
@@ -825,7 +830,7 @@ All of the ordinals we have constructed so far have been countable. Are there un
 % ================================================================== %
 
 \subsection{Ordinal Arithmetic}
-\label{ordinal-arithmetic}
+\label{section-ordinals-arithmetic}
 
 Now, we formalise our notion of adding ordinals. We had loosely constructed $\omega + 1$ and even $\omega + \omega$, but introduced this as notation only, without ever formally defining ordinal addition.
 
@@ -841,7 +846,7 @@ Now, we formalise our notion of adding ordinals. We had loosely constructed $\om
 \end{definition}
 
 \begin{note}
-	Technically, recursion as defined in \ref{recursion} relies on a set, but we saw in \ref{burali-forti-paradox} that the ordinals do not form a set. We should therefore fix an ordinal $\gamma$ and define $\alpha + \beta$ by recursion on $\beta$ in the well-ordered set $I_\gamma$. By uniqueness in recursion, this does indeed give a well-defined $\alpha + \beta$ for any pair of ordinals. In general, this justifies recursive definitions on all ordinals.
+	Technically, recursion as defined in \ref{definition-by-recursion} relies on a set, but we saw in \ref{burali-forti-paradox} that the ordinals do not form a set. We should therefore fix an ordinal $\gamma$ and define $\alpha + \beta$ by recursion on $\beta$ in the well-ordered set $I_\gamma$. By uniqueness in recursion, this does indeed give a well-defined $\alpha + \beta$ for any pair of ordinals. In general, this justifies recursive definitions on all ordinals.
 \end{note}
 
 \begin{proposition}[Ordinal Induction]
@@ -1070,6 +1075,7 @@ A similar induction shows the non-strict version on the right side.
 \pagebreak
 \section{Posets and Zorn's Lemma}
 \subsection{Partially Ordered Sets}
+\label{section-posets}
 
 This section will require a lot of basic definitions and examples before we see any results.
 
@@ -1086,7 +1092,7 @@ This section will require a lot of basic definitions and examples before we see 
 \end{definition}
 
 \begin{note}
-	Compare this to the definition of a \textit{total} order given in \ref{total-linear-order}. In fact, any linearly ordered set is also a poset.
+	Compare this to the definition of a \textit{total} order given in \ref{definition-total-linear-order}. In fact, any linearly ordered set is also a poset.
 \end{note}
 
 \begin{example}[Posets]
@@ -1134,7 +1140,7 @@ This section will require a lot of basic definitions and examples before we see 
 \end{example}
 
 \begin{definition}[Chain, Antichain]
-	\label{chain-antichain}
+	\label{definition-chain-antichain}
     A subset $S$ of a poset $X$ is a \textit{chain} if $S$ is linearly ordered by the partial order on $X$.
     
     Meanwhile, a subset $S$ is called an \textit{antichain} if no two distinct elements of $S$ are related. That is, for all $x, y$ in $S$, if $x \leq y$ then $x = y$.
@@ -1195,7 +1201,7 @@ This section will require a lot of basic definitions and examples before we see 
 \end{definition}
 
 \begin{note}
-	In Definition \ref{order-isomorphism}, we defined an order-preserving map using strict equalities. In particular, this guaranteed that any such map was injective. This is not the case for posets: indeed, any map of the form $f(x) = y_0$ for some constant $y_0 \in Y$ independent of $X$ is order-preserving.
+	In Definition \ref{definition-order-isomorphism}, we defined an order-preserving map using strict equalities. In particular, this guaranteed that any such map was injective. This is not the case for posets: indeed, any map of the form $f(x) = y_0$ for some constant $y_0 \in Y$ independent of $X$ is order-preserving.
 \end{note}
 
 \begin{corollary}
@@ -1203,7 +1209,7 @@ This section will require a lot of basic definitions and examples before we see 
 \end{corollary}
 
 \begin{theorem}[Knaster-Tarski Fixed Point Theorem]
-	\label{knaster-tarski-fixed-point}
+	\label{knaster-tarski-fixed-point-theorem}
     Let $X$ be a complete poset and $f : X \to X$ be an order-preserving map. Then $f$ must have a fixed point $x \in X$, such that $f(x) = x$.
 \end{theorem}
 
@@ -1233,12 +1239,13 @@ This section will require a lot of basic definitions and examples before we see 
 	
 	Define $H : \powerset{A} \to \powerset{A}$ by $H(P) = A \setminus g(B \setminus f(P))$. Recall that $\powerset{A}$ is a complete poset under the inclusion relation, and $H$ is order-preserving.
 	
-	By Knaster-Tarski (Theorem \ref{knaster-tarski-fixed-point}), there is a fixed point $P \subs A$ such that $H(P) = P$. Then setting $Q = A \setminus P$, $R = f(P)$, and $S = B \setminus R$ gives the required partitions.
+	By Knaster-Tarski (Theorem \ref{knaster-tarski-fixed-point-theorem}), there is a fixed point $P \subs A$ such that $H(P) = P$. Then setting $Q = A \setminus P$, $R = f(P)$, and $S = B \setminus R$ gives the required partitions.
 \end{prf}
 
 % ================================================================== %
 
 \subsection{Zorn's Lemma}
+\label{section-posets-zorns-lemma}
 
 We now prove one of the most important and famous results in set theory: Zorn's Lemma. First, we need an introductory definition.
 
@@ -1262,7 +1269,7 @@ Now, we are ready to prove Zorn's Lemma.
 
 \begin{theorem}[Zorn's Lemma]
 	\label{zorns-lemma}
-    Let $X$ be a non-empty poset in which every chain (\ref{chain-antichain}) has an upper bound. Then $X$ must have a maximal element.
+    Let $X$ be a non-empty poset in which every chain (\ref{definition-chain-antichain}) has an upper bound. Then $X$ must have a maximal element.
 \end{theorem}
 
 \begin{prf}
@@ -1317,7 +1324,7 @@ Now, we are ready to prove Zorn's Lemma.
 	Zorn's lemma is very widely applicable. For example, the existence of maximal ideals in rings with 1, the existence of continuous linear functionals in a normed space, the proof that every connected graph has a spanning tree, and more all use this result.
 \end{note}
 
-We now complete the proof of the \textit{model existence lemma} (Theorem \ref{model-existence-lemma}) from the first section on propositional logic, in the case of an arbitrary (possibly uncountable) set of primitive propositions.
+We now complete the proof of the \textit{model existence lemma} (Theorem \ref{propositional-model-existence-lemma}) from the first section on propositional logic, in the case of an arbitrary (possibly uncountable) set of primitive propositions.
 
 \begin{theorem}[General Model Existence Lemma]
 	\label{general-model-existence-lemma}
@@ -1327,7 +1334,7 @@ We now complete the proof of the \textit{model existence lemma} (Theorem \ref{mo
 \end{theorem}
 
 \begin{prf}
-    We seek a maximal (with regard to inclusion) consistent set $\bar S$ containing $S$. Then we complete the proof by taking an arbitrary $t \in L$ and noticing that either $\bar S \cup \set t$ or $\bar S \cup \set{\lnot t}$ is consistent: if not then $\bar S \vdash \lnot t$ and $\bar S \vdash \lnot \lnot t$ by the Deduction Theorem (\ref{deduction-theorem}). Then $\bar S \vdash \bot$ by modus ponens, which contradicts $\bar S$ being consistent.
+    We seek a maximal (with regard to inclusion) consistent set $\bar S$ containing $S$. Then we complete the proof by taking an arbitrary $t \in L$ and noticing that either $\bar S \cup \set t$ or $\bar S \cup \set{\lnot t}$ is consistent: if not then $\bar S \vdash \lnot t$ and $\bar S \vdash \lnot \lnot t$ by the Deduction Theorem (\ref{propositional-deduction-theorem}). Then $\bar S \vdash \bot$ by modus ponens, which contradicts $\bar S$ being consistent.
     
     Now, let $X = \set{T \subs L : T \text{ is consistent and } S \subs T}$, partially ordered by inclusion. Since $S \in X$, $X \neq \varnothing$. We now prove that every chain has an upper bound.
     
@@ -1364,6 +1371,7 @@ The ability to do this is one of the most controversial disputes in mathematics,
 % ================================================================== %
 
 \subsection{The Axiom of Choice}
+\label{section-posets-axiom-of-choice}
 
 The \textit{Axiom of Choice} is the assertion that for any set $X = \set{A_i : i \in I}$ of nonempty sets, there is a function $f : I \to \cup_{i \in I} A_i$ such that $f(i) \in A_i$ for all $i \in I$. This is called a \textit{choice function}. This is trivial when $I$ is finite: we can prove it by induction on the size of $I$. However, when $I$ is infinite, the existence of such a function is granted only by this axiom.
 
@@ -1397,7 +1405,7 @@ In fact, the seminal result of this section will be that two results we have see
 	The rest of this chapter is \textbf{not examinable}.
 \end{note}
 
-We now consider two definitions, which seek to formalise ideas we have seen before. We use this to prove another fixed-point theorem (like Theorem \ref{knaster-tarski-fixed-point}) with and without the Axiom of Choice.
+We now consider two definitions, which seek to formalise ideas we have seen before. We use this to prove another fixed-point theorem (like Theorem \ref{knaster-tarski-fixed-point-theorem}) with and without the Axiom of Choice.
 
 \begin{definition}[Chain-Complete]
     A poset $X$ is \textit{chain-complete} if $X \neq \varnothing$ and every non-empty chain has a supremum.
@@ -1438,7 +1446,7 @@ We may now use these two definitions to state and prove a fixed-point theorem.
 \end{prf}
 
 \begin{note}
-	The AC-free proof is very similar to the proof of the Knaster-Tarski Fixed Point Theorem (Theorem \ref{knaster-tarski-fixed-point}). In fact, this theorem is often called the \textit{choice-free} part of Zorn's Lemma.
+	The AC-free proof is very similar to the proof of the Knaster-Tarski Fixed Point Theorem (Theorem \ref{knaster-tarski-fixed-point-theorem}). In fact, this theorem is often called the \textit{choice-free} part of Zorn's Lemma.
 \end{note}
 
 \begin{theorem}[AC + BW $\Ra$ ZL]
@@ -1465,6 +1473,7 @@ We may now use these two definitions to state and prove a fixed-point theorem.
 
 \pagebreak
 \section{First-Order Predicate Logic}
+\label{section-first-order-predicate-logic}
 
 Now, we return from set theory to logic once more. Our original model of basic propositional logic was easy to work with, but it was difficult to model actual mathematical theories, let alone the rich variety of statements present in modern mathematics. We aim now to take another step towards being able to formalise as much as we can.
 
@@ -1486,13 +1495,14 @@ In fact, we can formalise all manner of other things, like transitivity:
 \[
 ``(\forall x)(\forall y)(\forall z)(((x \leq y) \land (y \leq z)) \Ra (x \leq z))".
 \]
-The valuations we have described so far (Definition \ref{valuation}) will become \textit{structures}. These are sets $A$ together with functions $p_A: A^n \to \binset$ for any formula $p$, with $n$ the number of variables in $p$.
+The valuations we have described so far (Definition \ref{definition-propositional-valuation}) will become \textit{structures}. These are sets $A$ together with functions $p_A: A^n \to \binset$ for any formula $p$, with $n$ the number of variables in $p$.
 
-Similarly, if $S$ is a set of formulae, we regard the notion of a \textit{model} (Definition \ref{model}) for $S$, as well as the notions of semantic and syntactic entailment from the chapter on Propositional Logic, all in the language of First-Order Predicate Logic.
+Similarly, if $S$ is a set of formulae, we regard the notion of a \textit{definition-propositional-model} (Definition \ref{definition-propositional-model}) for $S$, as well as the notions of semantic and syntactic entailment from the chapter on Propositional Logic, all in the language of First-Order Predicate Logic.
 
 % ================================================================== %
 
 \subsection{Language}
+\label{section-first-order-language}
 
 Now, having introduced a heuristic idea of logic, we begin to consider it formally.
 
@@ -1630,12 +1640,13 @@ We now formalise this definition of interpretation for first-order languages: as
 % ================================================================== %
 
 \subsection{Theories and Models}
+\label{section-first-order-theories}
 
 Now, having formalised interpretation, we consider the truth values of formulae with respect to a given $L$-structure $A$. When is some formula $p$ true in $A$?
 
 \begin{definition}[Model]
 	\label{first-order-predicate-model}
-    If $L = L(\Omega, \Pi)$ is a first order language, and $A$ is an $L$-structure, then we say that a formula $p \in L$ ``\textit{holds} in $A$", or ``$p$ is \textit{satisfied} in $A$", or ``$p$ is \textit{true} in $A$", or ``$A$ is a \textit{model} of $p$", if $p_A = A^n$. Equivalently, if $p_A : A^n \to \set{0, \, 1}$ is the constant function 1, where $n = \# \mathrm{FV}(p)$.
+    If $L = L(\Omega, \Pi)$ is a first order language, and $A$ is an $L$-structure, then we say that a formula $p \in L$ ``\textit{holds} in $A$", or ``$p$ is \textit{satisfied} in $A$", or ``$p$ is \textit{true} in $A$", or ``$A$ is a \textit{definition-propositional-model} of $p$", if $p_A = A^n$. Equivalently, if $p_A : A^n \to \set{0, \, 1}$ is the constant function 1, where $n = \# \mathrm{FV}(p)$.
 \end{definition}
 
 \begin{corollary}
@@ -1650,7 +1661,6 @@ Now, having formalised interpretation, we consider the truth values of formulae 
 
 Now, it's time to formalise some existing structures we know and love into first-order theories. To do this, we must write down sets $\Omega$ and $\Pi$, define the arities of all of their elements, and then write down sentences in the language $L = L(\Omega, \Pi)$.
 
-We now consider two specific examples.
 
 \begin{example}[Group Theory]
     The language of group theory is $\Omega = \set{m, i, e}$ with arities $\alpha(m) = 2$, $\alpha(i) = 1$, $\alpha(e) = 0$, and $\Pi = \varnothing$. We now define  a \textit{theory} of groups.
@@ -1719,15 +1729,15 @@ Finally, we show that propositional logic, from \S\ref{section-propositional-log
 	
     Let $P$ be a set of primitive propositions. Define $\Omega = \varnothing$, and $\Pi = P$, with $\alpha(p) = 0$ for all $p \in P$. That is, every proposition is a predicate with arity 0, and thus each $p \in P$ is an atomic formula in the language $L = L(\Omega, \Pi)$.
     
-    Now, each formula $t \in L(P)$ (Definition \ref{set-of-propositions}) is a formula in $L$! An $L$-structure is a set $A$ with associated functions $p_A : A^0 \to \set{0, \, 1}$ with $p \in P$. That is, $p_A \in \set{0, \, 1}$ for all $p \in P$.
+    Now, each formula $t \in L(P)$ (Definition \ref{definition-set-of-propositions}) is a formula in $L$! An $L$-structure is a set $A$ with associated functions $p_A : A^0 \to \set{0, \, 1}$ with $p \in P$. That is, $p_A \in \set{0, \, 1}$ for all $p \in P$.
     
     But this yields a function $v : P \to \set{0, \, 1}$, with $v(p) = p_A$. This is just a valuation!
     
-    For every $t \in L(P)$, we have $t_A \in \set{0, \, 1}$ as defined earlier. So we have a natural extension of $v$ to $L(P)$, with $v(t)$ matching the definition of a valuation given in Definition \ref{valuation}.
+    For every $t \in L(P)$, we have $t_A \in \set{0, \, 1}$ as defined earlier. So we have a natural extension of $v$ to $L(P)$, with $v(t)$ matching the definition of a valuation given in Definition \ref{definition-propositional-valuation}.
     
     So for $S \subs L(P)$, a model of $S$ in the sense of Definition \ref{first-order-predicate-model} is an $L$-structure $A$ together with a function $v : p \to \set{0, \, 1}$ such that for all $p \in S$, $p_A = 1$, that is $v(p) = 1$.
     
-    But this is the same as the notion of a model from Definition \ref{model}, so propositional logic really can be axiomatised in first-order predicate logic!
+    But this is the same as the notion of a model from Definition \ref{definition-propositional-model}, so propositional logic really can be axiomatised in first-order predicate logic!
 \end{prf}
 
 \begin{definition}[Basic Semantic Entailment]
@@ -1789,8 +1799,9 @@ This motivates many of the familiar definitions from \S\ref{section-propositiona
 % ================================================================== %
 
 \subsection{Syntactic Entailment}
+\label{section-first-order-syntactic-entailment}
 
-Much like in the world of propositional logic, we may model formal syntactic proofs in first-order predicate logic. Previously in \S\ref{section-syntactic-entailment}, we axiomatised propositional logic with three main axioms. Now, we do the same for first-order predicate logic. The seven axioms are:
+Much like in the world of propositional logic, we may model formal syntactic proofs in first-order predicate logic. Previously in \S\ref{section-propositional-logic-syntactic-entailment}, we axiomatised propositional logic with three main axioms. Now, we do the same for first-order predicate logic. The seven axioms are:
 \begin{enumerate}
     \item For formulae $p, q \in L$, $p \Ra (q \Ra p)$.
     \item For formulae $p, q, r \in L$, $p \Ra (q \Ra r) \Ra ((p \Ra q) \Ra (p \Ra r))$.
@@ -1811,8 +1822,8 @@ The first three of these are copied wholesale from propositional logic. The next
 As before, all of the axioms are tautologies. However, we now have \textit{two} rules of deduction!
 
 \begin{definition}[Deduction Rules]
-	\label{deduction-rules}
-    From $p$ and $(p \Ra q)$, we may deduce $q$. This is called \textit{modus ponens}, as in Definition \ref{modus-ponens}.
+	\label{first-order-deduction-rules}
+    From $p$ and $(p \Ra q)$, we may deduce $q$. This is called \textit{modus ponens}, as in Definition \ref{propositional-modus-ponens}.
     
     If $x \in \mathrm{FV}(p)$, then from $p$ we may deduce $(\forall x)(p)$, provided that $x$ does not occur as a free variable in any premise used in the proof of $p$. This is called \textit{generalisation}.
     
@@ -1832,7 +1843,7 @@ As before, all of the axioms are tautologies. However, we now have \textit{two} 
 	If $S$ is a theory in $L$ and $p \in L$ is a sentence, then if $S \vdash p$ we say that $p$ is a \textit{theorem} of $S$.
 \end{definition}
 
-Compare this definition to the one given in the first chapter (\ref{proof-propositional-logic}). There are more axioms to choose from, and we may use generalisation, but otherwise the definitions are identical.
+Compare this definition to the one given in the first chapter (\ref{propositional-proof}). There are more axioms to choose from, and we may use generalisation, but otherwise the definitions are identical.
 
 \begin{remark}[Why Exclude $\varnothing$?]
 	\label{no-empty-set-simplifying-first-order}
@@ -1876,7 +1887,7 @@ This allows us to write down what a proof in first-order predicate logic looks l
 
 Our target for most of the rest of this chapter is to rebuild as many of the results we proved for propositional logic into the new system of first-order logic. 
 
-Now, we can extend one of the most important results from the first chapter to first-order predicate logic. This was the (Propositional) Deduction Theorem (\ref{deduction-theorem}).
+Now, we can extend one of the most important results from the first chapter to first-order predicate logic. This was the (Propositional) Deduction Theorem (\ref{propositional-deduction-theorem}).
 
 \begin{theorem}[Deduction Theorem]
 	\label{first-order-deduction-theorem}
@@ -1905,7 +1916,7 @@ Now, we can extend one of the most important results from the first chapter to f
     	\item $t_i \Ra (p \Ra t_i)$ \hfill (A1)
     	\item $p \Ra t_i$ \hfill (MP)
 	\end{enumerate}
-    The same goes for the case $t_i = p$, which yields the five-line proof of $(p \Ra p)$ from Example \ref{proof-of-self-implication}.
+    The same goes for the case $t_i = p$, which yields the five-line proof of $(p \Ra p)$ from Example \ref{example-proof-of-self-implication}.
     
     Likewise, if $t_i$ follows by modus ponens, then by the induction hypothesis, we can write down proofs of $(p \Ra t_j)$ and $(p \Ra (t_j \Ra t_i))$. We can add the usual three lines to prove $(p \Ra t_i)$. This uses no new free variables and so satisfies our induction condition.
 	\begin{enumerate}
@@ -1930,7 +1941,7 @@ Now, we can extend one of the most important results from the first chapter to f
 	This also obtains a proof of $(p \Ra t_i)$. Neither of the two extensions of our proofs have used $x$ as a free variable in any further premise, so indeed the induction hypothesis is satisfied. In particular, this means $(p \Ra t_i)$ for all $i$, including the final line: $(p \Ra q)$ as required.
 \end{prf}
 
-Our aim now is to prove the Completeness Theorem (\ref{completeness-theorem}) but for first-order logic. In particular, we want to show that the syntactic and semantic entailment symbols $\vdash$ and $\vDash$ coincide. As in the first chapter, this splits into two theorems for the two directions: the Soundness Theorem (\ref{soundness-theorem}) and the Adequacy Theorem (\ref{adequacy-theorem}).
+Our aim now is to prove the Completeness Theorem (\ref{propositional-completeness-theorem}) but for first-order logic. In particular, we want to show that the syntactic and semantic entailment symbols $\vdash$ and $\vDash$ coincide. As in the first chapter, this splits into two theorems for the two directions: the Soundness Theorem (\ref{propositional-soundness-theorem}) and the Adequacy Theorem (\ref{propositional-adequacy-theorem}).
 
 \begin{theorem}[Soundness Theorem]
 	\label{first-order-soundness-theorem}
@@ -1943,7 +1954,7 @@ Our aim now is to prove the Completeness Theorem (\ref{completeness-theorem}) bu
     Since $x$ does not occur free in $S'$, we have $S' \vDash (\forall x) q$, and so $S \vDash p$.
 \end{prf}
 
-We now reconstruct the Model Existence Lemma. This was originally Theorem \ref{model-existence-lemma}, and in the chapter on posets we proved a more general case as Theorem \ref{general-model-existence-lemma}.
+We now reconstruct the Model Existence Lemma. This was originally Theorem \ref{propositional-model-existence-lemma}, and in the chapter on posets we proved a more general case as Theorem \ref{general-model-existence-lemma}.
 
 \begin{theorem}[Model Existence Lemma]
 	\label{first-order-model-existence-lemma}
@@ -1961,7 +1972,7 @@ We now reconstruct the Model Existence Lemma. This was originally Theorem \ref{m
     
     This is sometimes not a model! For example, if $T$ is the theory of fields, then $T \vdash (0 + 1) = 1$, but in $A$, these are two different terms. However, we can solve this by defining an equivalence relation on $A$, whereby $s \sim t$ if and only if $T \vdash (s = t)$. We then consider $A$ to be $A/\sim$.
     
-    This still doesn't solve all our issues. There are sentences $p$ such that $T$ proves neither $p$ nor $\lnot p$, and so by definition $T$ is not \textit{complete}, as in \ref{model-existence-lemma}. We solve this in the same way: given a consistent theory $S$, there exists some $\bar S \supseteq S$ which is complete.
+    This still doesn't solve all our issues. There are sentences $p$ such that $T$ proves neither $p$ nor $\lnot p$, and so by definition $T$ is not \textit{complete}, as in \ref{propositional-model-existence-lemma}. We solve this in the same way: given a consistent theory $S$, there exists some $\bar S \supseteq S$ which is complete.
     
     However, we are still not done! Consider the theory of fields $T$ in which 2 has a square root: that is, the theory of fields and the sentence $(\forall x)((x \cdot x = 1 + 1) \Ra \bot) \Ra \bot$, or more concisely, $(\exists x)(x\cdot x = 1+1)$. There is no closed term $t$ such that $T \vdash (t \cdot t = 1 + 1)$. The problem is that $T$ lacks a witness for $(\exists x)p$. We solve this by adding a witness: a new constant $c$ to $L$ and a new sentence to $T$ to obtain $T' = T \cup \set{p[c/x]}$.
     
@@ -1969,7 +1980,7 @@ We now reconstruct the Model Existence Lemma. This was originally Theorem \ref{m
     \begin{enumerate}
     	\item If $S$ is a consistent theory and $p$ is a sentence, then either $S \cup p$ or $S \cup \set{\lnot p}$ is consistent. If not, by the Deduction Theorem (\ref{first-order-deduction-theorem}), $S \vdash \lnot p$ and $S \vdash \lnot \lnot p$, but then $S \vdash \bot$, a contradiction.
     	\item By Zorn's Lemma, there is therefore a maximal consistent theory $\bar S$ which contains $S$ such that for every sentence $p$, either $p \in \bar S$ or $\lnot p \in \bar S$.
-    	\item Suppose that $S \vdash (\exists x) p$, where $p$ is a formula with exactly one free variable $x$. If there is no witness, we add a new constant (nullary operator) to $L$, and claim that the set $S \cup \set{p[c/x]}$ is consistent. If not, the Deduction Theorem yields a proof witnessing $S \vdash \lnot p[c/x]$. But $c$ does not appear in $S$, which means $S \vdash \lnot p$. By generalisation (\ref{deduction-rules}), $S \vdash (\forall x) \lnot p$, but this is a contradiction, since $S \vdash (\exists x) p$.
+    	\item Suppose that $S \vdash (\exists x) p$, where $p$ is a formula with exactly one free variable $x$. If there is no witness, we add a new constant (nullary operator) to $L$, and claim that the set $S \cup \set{p[c/x]}$ is consistent. If not, the Deduction Theorem yields a proof witnessing $S \vdash \lnot p[c/x]$. But $c$ does not appear in $S$, which means $S \vdash \lnot p$. By generalisation (\ref{first-order-deduction-rules}), $S \vdash (\forall x) \lnot p$, but this is a contradiction, since $S \vdash (\exists x) p$.
     	\item We can do this for every theorem of $S$ of the form $(\exists x) p$, to obtain a new language, which we write as $\bar L = L(\Omega \cup C, \Pi)$. Here, $C$ is a set of new constants disjoint from $\Omega$ and $\Pi$. We also obtain a new consistent theory $\bar S$ with $S \subs \bar S$ containing witnesses for $S$: for any such theorem in $S$, there is a closed term in $\bar L$ with $\bar S \vdash p[t/x]$ .
 	\end{enumerate}
 	We now repeat the procedure in these observations. We start with a consistent theory $S_0 = S$ in the language $L_0 = L(\Omega, \Pi)$, and define by induction a series of theories $S_0 \subs S_1 \subs T_1 \subs S_2 \subs \dots $ and new languages $L_n = L(\Omega \cup C_1 \cup \dots \cup C_n, \Pi)$, with all $n+2$ sets pairwise disjoint.
@@ -2008,7 +2019,7 @@ We now reconstruct the Model Existence Lemma. This was originally Theorem \ref{m
     Since $S \vDash p$, we have $S \cup \set{\lnot p} \vDash \bot$. By the Model Existence Lemma (\ref{first-order-model-existence-lemma}), $S \cup \set{\lnot p} \vdash \bot$. Also, by the Deduction Theorem (\ref{first-order-deduction-theorem}), we have $S \vdash \lnot\lnot p$. Putting these together yields a proof of $p$, using Axiom 3.
 \end{prf}
 
-Like in \S\ref{section-syntactic-entailment}, we can combine two of results we have just proved. The Soundness Theorem and the Adequacy Theorem (originally \ref{soundness-theorem} and \ref{adequacy-theorem}, now \ref{first-order-soundness-theorem} and \ref{first-order-adequacy-theorem}) combine  to make the Completeness Theorem (originally \ref{completeness-theorem}, now \ref{first-order-completeness-theorem}).
+Like in \S\ref{section-propositional-logic-syntactic-entailment}, we can combine two of results we have just proved. The Soundness Theorem and the Adequacy Theorem (originally \ref{propositional-soundness-theorem} and \ref{propositional-adequacy-theorem}, now \ref{first-order-soundness-theorem} and \ref{first-order-adequacy-theorem}) combine  to make the Completeness Theorem (originally \ref{propositional-completeness-theorem}, now \ref{first-order-completeness-theorem}).
 
 \begin{theorem}[G\"odel's Completeness Theorem For First-Order Logic]
     \label{first-order-completeness-theorem}
@@ -2053,6 +2064,7 @@ But then we would need $T$ to be the theory of groups together with the ``senten
 In fact, we can prove an even stronger result.
 
 \begin{theorem}[The Upward L\"owenheim-Skolem Theorem]
+	\label{upward-lowenheim-skolem}
     If a first-order theory $S$ has an infinite model, then $S$ has an uncountable model.
 \end{theorem}
 
@@ -2072,9 +2084,139 @@ In fact, we can prove an even stronger result.
 	It is easy to write down arbitrarily large groups, but comparatively much harder to write down arbitrarily large fields.
 \end{note}
 
+There is also another version of this theorem, which is in some sense the opposite.
 
+\begin{theorem}[The Downward L\"owenheim-Skolem Theorem]
+	\label{downward-lowenheim-skolem}
+    Let $S$ be a theory in a countable language $L = L(\Omega, \Pi)$. That is, $\Omega \cup \Pi$ is countable. Then if $S$ has a (possibly uncountable) model, then in fact it has a countable model.
+\end{theorem}
 
+\begin{prf}
+    By the Soundness Theorem (\ref{first-order-soundness-theorem}), $S$ must be consistent, as it has a model. But then the model constructed in the proof of the first-order Model Existence Lemma (\ref{first-order-model-existence-lemma}) is countable!
+\end{prf}
 
+% ================================================================== %
+
+\subsection{Peano Arithmetic}
+\label{section-first-order-peano-arithmetic}
+
+We now wish to axiomatise the natural numbers $\N$ as a first-order theory. In fact, the key property of $\N$ is \textit{induction}: in fact, this uniquely determines the set! We will try to construct our set using the property of induction with some axioms.
+
+The language then consists of operation symbols $\Omega = \set{0, S, +, \times}$, with arities 0, 1, 2, and 2. We take no predicates, so $\Pi = \varnothing$. 0 is the constant ``zero", $S$ is the ``successor" operator $n \mapsto n + 1$, and addition $+$ and multiplication $\times$ will be constructed in the familiar way.
+
+We are now ready to formalise the natural numbers!
+
+\begin{definition}[Peano Arithmetic]
+    \textit{Peano Arithmetic} (PA), also known as \textit{formal number theory}, consists of the sentences:
+    \begin{enumerate}
+	    \item $(\forall x)(\lnot Sx = 0)$. ``Nothing comes before 0."
+	    \item $(\forall x)(\forall y)((Sx = Sy) \Ra (x = y))$. ``The successor function is injective."
+	    \item $(\forall x)(x + 0 = x)$. ``Zero is the additive identity."
+	    \item $(\forall x)(\forall y)(x + Sy = S(x+y))$. ``Associativity of addition holds with 1."
+	    \item $(\forall x)(x \times 0 = 0)$. ``Zero is a multiplicative fixed point."
+	    \item $(\forall x)(\forall y)(x \times Sy = x\times y + x)$. ``Multiplication distributes over the successor."
+	    \item $(\forall y_1)(\forall y_2) \dots (\forall y_n) ((p[0/x] \land (\forall x) (p \Ra p[Sx/x])) \Ra (\forall x) p)$. ``Induction works."
+	\end{enumerate}
+	In the last sentence, $p$ is a formula with free variables $\mathrm{FV}(p) = \set{x, y_1, \dots y_n}$. In fact, this is an infinite collection of sentences, which defines induction for every formula.
+\end{definition}
+
+\begin{example}[Induction]
+    To see why parameters are needed, consider the formula $p$ given by $(x + y) + z = x + (y + z)$, representing associativity of addition. We prove that $(\forall x)(\forall y)(\forall z)p$ by induction on $z$.
+    
+    Fix $x$ and $y$ in some model of PA. We verify that $p[0/z]$ and $(\forall z)(p \Ra p[Sz/z])$ hold. By induction, $(\forall z)p$ holds. The Completeness Theorem (\ref{first-order-completeness-theorem}) then yields $\mathrm{PA} \vdash (\forall x)(\forall y)(\forall z)p$.
+\end{example}
+
+An obvious model of PA is $\N_0 = \set{0, 1, 2, \dots}$. In fact, $\N$ is also a model, but including 0 is more natural.
+But by the Upward L\"owenheim-Skolem Theorem (\ref{upward-lowenheim-skolem}), there is an uncountable model of PA. So is the countable set $\N$ is not unique as a set with our desired properties?
+
+Actually, no! The formulation of induction we wanted to replicate was:
+\[
+(\forall A \subs \N_0)(0 \in A \land (\forall x)(x \in A \Ra Sx \in A) \implies A = \N_0).
+\]
+That is, if a subset of $\N_0$ contains 0 and is closed under the successor operation, then in fact the subset must contain every natural number. The problem is that in first-order logic, we cannot do this quantification over subsets of a structure. Since the language of PA is countable, the induction axiom-scheme only captures countably many subsets of $\N_0$.
+
+\begin{definition}[Definable]
+    A subset $A \subs \N_0$ is called \textit{definable} in Peano Arithmetic if there is a formula $p$ in PA with one free variable such that $A = p_{\N_0}$.
+    
+    The set of squares is thus definable in PA by the formula $(\exists y)(y \times y = x)$. The set of primes is definable by $(x \neq 1) \land (y \mid x \Ra (y = 1 \lor y = x))$.
+\end{definition}
+
+\begin{note}
+	We tend to use a lot of abbreviations for conciseness, if it is clear what we mean. For example, $y \mid x$ is short for ``$(\exists z)(y \times z = x)$", 1 is short for $S0$, and $(x \neq y)$ is short for $\lnot(x = y)$.
+\end{note}
+
+\begin{theorem}[G\"odel's Incompleteness Theorem]
+    Peano Arithmetic is not a complete theory of the natural numbers. That is, there exists some formula $p$ which is true in the natural numbers, but which Peano Arithmetic does not prove.
+\end{theorem}
+
+\begin{prf}
+    This theorem is proved using \textit{G\"odel numbering}, and constructing a sentence which means ``this sentence is not provable in PA". This sentence cannot be provable, by consistency, but also cannot be disprovable!
+\end{prf}
+
+% ================================================================== %
+
+\pagebreak
+\section{Set Theory}
+\label{section-set-theory}
+
+Set theory is really just another mathematical theory. We will axiomatise it as a first-order theory, much like the theory of groups and rings. This section is therefore a \textit{very} extended worked example similar to Example \ref{rings-and-fields-example}.
+
+\begin{note}
+	Of course, any model of set theory should contain all of mathematics, since everything is in some sense a set. We therefore expect this example to be really quite complicated.
+\end{note}
+
+% ================================================================== %
+
+\subsection{Zermelo-Fraenkel Set Theory (ZF)}
+\label{section-set-theory-zf}
+
+We will study a particular first-order axiomatisation of set theory, developed by Ernst Zermelo and Abraham Fraenkel. This is often referred to as ZF for short.
+
+The language of this theory has no operation symbols, so $\Omega = \varnothing$. There is a single predicate $\in$, which has arity 2. This is going to be the ``is a member of" predicate.
+
+\begin{definition}[Set-Theoretic Universe]
+    A \textit{definition-propositional-model} of ZF will be denoted by $V$, which is a non-empty set with an interpretation of the binary predicate $\in_V \subs V \times V$. Elements of $V$ will then be called \textit{sets}.
+
+	If $(a, b)$ is in $\in_V$, we say ``$a$ is a member of $b$", or ``$a$ is an element of $b$", or ``$b$ contains $a$".
+	
+	$V$ is then called the \textit{set-theoretic universe}.
+\end{definition}
+
+\begin{note}
+	The words ``set", ``member", and so on no longer have the theoretical meaning we usually ascribe to them in the world of mathematics. Instead, they simply refers to an object or predicate in $V$. However, we will still talk about the existing world of mathematics, of which $V$ is a part! This is likely to become confusing, but using other words would be cumbersome.
+\end{note}
+
+The study of set theory is then really an attempt to describe $V$.
+
+There are nine ``axioms" of this theory, which are sentences in first-order logic of this theory. The first two are introductory, the next four allow us to build sets, and the last three are properties of sets which are perhaps less obvious.
+
+Let us consider these axioms now. Each axiom comes with a name, as well as an abbreviation, for use in proofs. We give a heuristic description of each axiom as well as the sentence to which it corresponds in first-order logic. The first two axioms are \textit{Extensionality} and \textit{Separation}.
+
+\begin{enumerate}
+    \item The Axiom of Extensionality (Ext): ``if two sets have the same members, they are equal." \\
+    $(\forall x)(\forall y)((\forall z)(z \in x \Leftrightarrow z \in y) \Ra x = y)$.
+    \item The Axiom of Separation (Sep): ``we can take a subset of an existing set using a property." \\
+    $(\forall t_1)(\forall t_2) \dots (\forall t_n)((\forall x)(\exists y)((\forall z)(z \in y \Leftrightarrow (z \in x \land p))))$.
+\end{enumerate}
+
+\begin{note}
+	Here, $p$ is a formula with free variables $\mathrm{FV}(p) = \set{z, t_1, \dots t_n}$. By the first axiom, this $y$ is unique: we denote it by $\set{z \in X : p}$. Formally, this is an $(n+1)$-ary operation symbol within the language. We need the parameters here: given $t$ and $x$, we may want to form $\set{z \in x: t \in z}$.
+\end{note}
+
+These axioms do not guarantee that any sets exist! Let us construct the first set: the empty set.
+
+\begin{enumerate}
+	\setcounter{enumi}{2}
+    \item The Empty-Set Axiom (Emp): ``there is a set without any elements." \\
+    $(\exists x)((\forall y)\lnot(y \in x))$. This is unique by (Ext), and we call it $\varnothing$, like a new nullary operator.
+    \item The Pair-Set Axiom (Pair): ``for any $x$ and $y$, we can form the set $\set{x, y}$." \\
+    $(\forall x)(\forall y)(\exists z)(\forall t) (t \in z \Leftrightarrow (t = x \lor t = y))$. \\
+    By (Ext), this is unique, and $z$ is denoted by $\set{x, y}$. We write $\set x$ for $\set{x, x}$.
+\end{enumerate}
+
+\begin{note}
+	Indeed, (Ext) gives us the general ``ignore repeats" property of sets for free!
+\end{note}
 
 
 \end{document}
