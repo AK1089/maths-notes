@@ -11,7 +11,7 @@
 \name{Avish Kumar}
 \email{ak2461@cam.ac.uk}
 \website{https://ak1089.github.io/maths/notes}
-\version{1.17}
+\version{1.19}
 \disclaimer{These notes are unofficial and may contain errors. While they are written and published with permission, they are not endorsed by the lecturer or University.}
 
 % Auxiliary files
@@ -24,6 +24,7 @@
 
 \section{Noiseless Coding}
 \subsection{The Coding Problem}
+\label{section-noiseless-coding-problem}
 
 The general problem of coding is that of
 transmitting a message across a communication channel.
@@ -88,6 +89,7 @@ How might we achieve these?
 % ================================================================== %
 
 \subsection{Communication Channels}
+\label{section-noiseless-communication-channels}
 
 \begin{definition}[Channel]
 	\label{channel-definition}
@@ -177,6 +179,7 @@ we thus say that $P$ is a \textit{stochastic matrix}.
 % ================================================================== %
 
 \subsection{Strings and Alphabets}
+\label{section-noiseless-strings-and-alphabets}
 
 We frequently work with alphabets,
 which are simply sets of elements called letters or characters.
@@ -385,6 +388,7 @@ As a result, we mostly restrict our attention to prefix-free codes.
 % ================================================================== %
 
 \subsection{Mathematical Entropy}
+\label{section-noiseless-entropy}
 
 Entropy is a measure of ``randomness" or ``uncertainty".
 Suppose a random variable $X$
@@ -427,7 +431,7 @@ This is not a formal definition yet: we consider some examples first.
 This gives us enough to write down our formal definition.
 
 \begin{definition}[Entropy]
-	\label{entropy}
+	\label{random-variable-entropy}
     For a random variable $X$
     taking values $x_1 \dots x_n$
     with probabilities $p_1 \dots p_n$,
@@ -530,6 +534,7 @@ We now prove a result which will come up frequently in the study of entropy.
 % ================================================================== %
 
 \subsection{Optimal Noiseless Coding}
+\label{section-noiseless-optimal-coding}
 
 Recall that the coding problem considers alphabets $\Sigma_1$ and $\Sigma_2$
 of sizes $m, a \geq 2$ respectively.
@@ -779,6 +784,7 @@ Now, we may prove our target theorem.
 % ================================================================== %
 
 \subsection{Coding Sequences}
+\label{section-noiseless-coding-sequences}
 
 In Shannon's Noiseless Coding Theorem (\ref{shannon-noiseless-coding-theorem})
 we don't always attain the lower bound $H(X) / \log a$.
@@ -947,6 +953,7 @@ of the asymptotic equipartition property
 \pagebreak
 \section{Error Control Codes}
 \subsection{Binary Codes}
+\label{section-error-control-binary-codes}
 
 Recall our initial schematic of a code
 (Definition \ref{source-encoder-channel-receiver-decoder}).
@@ -1367,6 +1374,7 @@ Conversely, we may want to go the other way, sacrificing robustness for efficien
 % ================================================================== %
 
 \subsection{Bounds on Codes}
+\label{section-error-control-bounds}
 
 Now, we try and find bounds on codes with certain nice or maximal properties.
 Recall that the Hamming distance (\ref{hamming-distance}) is a metric.
@@ -1562,6 +1570,7 @@ and the limit supremum bounds the asymptotic behaviour of such a code.
 % ================================================================== %
 
 \subsection{Operational Channel Capacity}
+\label{section-error-control-operational-capacity}
 
 Now, we consider channels again,
 in order to describe properties of channels
@@ -1692,7 +1701,7 @@ This allows us to prove a nice result about operational channel capacity.
 \end{prf}
 
 Now, we return to the idea of entropy,
-and expand our understanding from the basic case (\ref{entropy}) of one variable
+and expand our understanding from the basic case of one variable (\ref{random-variable-entropy})
 to multiple variables.
 
 \begin{definition}[Joint Entropy]
@@ -1908,6 +1917,7 @@ In fact, we can quantify precisely how much information!
 % ================================================================== %
 
 \subsection{Informational Channel Capacity}
+\label{section-error-control-informational-capacity}
 
 We now consider a different definition of the channel capacity,
 which also measures how good a channel is at transmitting.
@@ -1955,7 +1965,7 @@ Now, we consider the \textit{informational} channel capacity.
 	This is Shannon's second coding theorem,
 	with the first being the \textit{noiseless} version
 	(\ref{shannon-noiseless-coding-theorem}).
-	We prove some cases in \S\ref{shannon-noisy-coding-theorem-proofs},
+	We prove some cases in \S\ref{section-error-control-shannon-noisy-coding-theorem-proofs},
 	first computing the capacity of certain channels assuming this result.
 \end{note}
 
@@ -2062,6 +2072,7 @@ Now, we consider the \textit{informational} channel capacity.
 \end{note}
 
 \begin{remark}[Entropy of the English Language]
+	\label{remark-on-english-language-entropy}
     The 26 letters of the English language are obviously neither equiprobable nor independent. What is the \textit{actual} information rate of English, assuming we consider only the 26 letters and excluding other characters?
 
 	Of course, the maximum entropy would be $\log_2(26)$, if all probabilities were the same: this is around 4.70. But of course, this isn't true. Samuel Morse (who invented Morse code) wanted to assign probabilities to letters to make his code shorter. He estimated these by counting the letters in sets of \textit{printer's type}, which was a set of metal blocks used for traditional ink pressing in the 1800s.
@@ -2121,7 +2132,7 @@ Now, we consider the \textit{informational} channel capacity.
 % ================================================================== %
 
 \subsection{Shannon's Noisy Coding Theorem}
-\label{shannon-noisy-coding-theorem-proofs}
+\label{section-error-control-shannon-noisy-coding-theorem-proofs}
 
 We now consider Shannon's Noisy Coding Theorem
 (Theorem \ref{shannon-noisy-coding-theorem})
@@ -2275,7 +2286,10 @@ At first, this result is surprising, as the operational channel capacity is defi
 	Since these proofs used random codes, they were entirely non-constructive. In practice, we build redundancy into our codes to transmit at or below a desired error probability.
 \end{note}
 
+% ================================================================== %
+
 \subsection{The Kelly Criterion}
+\label{section-error-control-kelly-criterion}
 
 In 1956, John Larry Kelly Jr. was working at Bell Labs, and published \textit{A New Interpretation of Information Rate}, a paper which applied the lessons of noisy coding and transmission rates to something very different: gambling.
 
@@ -2324,21 +2338,37 @@ which is therefore the proportion of our wealth we should bet!
 When $u = 2$, which corresponds to ``even odds", we therefore bet money if and only if $p > 1/2$: that is, if the game is biased in our favour.
 This again matches our heuristic.
 
+\begin{note}
+	Economists often assume that people have utility functions which grow approximately as fast as the logarithm of their wealth, so that how good a doubling of one's capital is for you is close to being independent of your current capital. Under this framework, utility maximisation is indeed log-wealth maximisation, but the Kelly criterion is \textit{totally independent} of this assumption!
+\end{note}
+
 Kelly showed how to interpret this using information theory.
 In his model, the gambler receives information about the game
 (in his example, a horse race) over a noisy channel.
+
 Just like in Shannon's Noisy Coding Theorem
 (Theorem \ref{shannon-noisy-coding-theorem}),
 information can be transmitted close to the channel capacity
 with negligible risk of error in the long run. So if the game lasts for a sufficiently long time, the gambler can increase their fortune at arbitrarily close to this optimal rate with very high probability!
 
+\begin{corollary}
+    Using the Kelly criterion is equivalent to maximising expected wealth in almost every world: for any fixed $\delta$, you can get your wealth to grow at this rate with probability $1-\delta$.
+\end{corollary}
+
+\begin{note}
+	This is \textit{not} the same as expected wealth maximisation: such an agent ``should" go all-in on every bet with positive expected value, even though they eventually go broke with probability 1.
+\end{note}
+
+\begin{corollary}
+    No strategy can beat the Kelly criterion in more than half of possible worlds. This is optimal, as the other strategy could itself be the Kelly criterion!
+\end{corollary}
 
 % ================================================================== %
 
 \pagebreak
 \section{Algebraic Codes}
 \subsection{Linear Codes}
-\label{subsection-linear-codes}
+\label{section-algebraic-linear-codes}
 
 We have considered binary codes as arbitrary subsets $C \subs \binset$.
 Now we insist on some structure.
@@ -2414,7 +2444,7 @@ An element of $\F_2^n$ is thus an $n$-vector with all entries 0 or 1.
     Let $C \subs \F_2^n$ be a linear code.
     The \textit{dual code} $C^\bot$ is defined to be
     \[
-	C^\bot = \set{x \in \F^2_n : x \cdot y = 0 \ \forall y \in C}.
+	C^\bot = \set{x \in \F_2^n : x \cdot y = 0 \ \forall y \in C}.
 	\]
 \end{definition}
 
@@ -2498,7 +2528,9 @@ $\dim C + \dim \phi(C^\bot) = \dim C + \dim C^\bot = n$.
 \end{corollary}
 
 % ================================================================== %
+
 \subsection{Syndrome Decoding}
+\label{section-algebraic-syndrome-decoding}
 
 Suppose $C$ is an $(n, r)$ linear code with parity check matrix $H$.
 In particular, we must have that $C = \set{c \in \F_2^n : Hc = \mathbf{0}}$, when considering the $c$ as column vectors.
@@ -2606,7 +2638,7 @@ In fact, this allows us to generalise the idea of Hamming codes!
 % ================================================================== %
 
 \subsection{Reed-Muller Codes}
-\label{subsection-reed-muller-code}
+\label{section-algebraic-reed-muller-code}
 
 We now motivate the famous Reed-Muller code, using  a construction specific to linear codes.
 
@@ -2715,7 +2747,7 @@ Indeed, $\mathrm{RM}(d, 0)$ and $\mathrm{RM}(d, d)$ are always the repetition an
 
 \begin{theorem}[Reed-Muller Properties]
 	\label{reed-muller-recurrence}
-    The vectors $v_{i_1} \land \dots \land v_{i_s}$ for $1 \leq i_1 < \dots < i_s \leq d$ and $0 \leq s \leq d$ form a basis for $\F^2_n$, where $n = 2^d$. Moreover, the Reed-Muller code RM($d, r$) is a set with rank
+    The vectors $v_{i_1} \land \dots \land v_{i_s}$ for $1 \leq i_1 < \dots < i_s \leq d$ and $0 \leq s \leq d$ form a basis for $\F_2^n$, where $n = 2^d$. Moreover, the Reed-Muller code RM($d, r$) is a set with rank
     \[
 	\rank(\mathrm{RM}(d, r)) = \sum_{s = 0}^r \binom{d}{s}.
 	\]
@@ -2790,6 +2822,7 @@ Indeed, $\mathrm{RM}(d, 0)$ and $\mathrm{RM}(d, d)$ are always the repetition an
 
 \pagebreak
 \subsection{An Overview of Algebra}
+\label{section-algebraic-grm-overview}
 
 The results we will prove later, especially when we study cryptography, are going to involve a lot of formal algebra, and especially the study of groups and rings. While we do not formally prove all the material we use, an overview of these mathematical objects will be helpful later on. We begin with an introduction here.
 
@@ -2887,8 +2920,9 @@ In particular, consider $(X^N - 1) \in \F_q[X]$ for $N$ odd. Then there is some 
 % ================================================================== %
 
 \subsection{Cyclic Codes}
+\label{section-algebraic-cyclic-codes}
 
-Much like when we defined linear codes in \S\ref{subsection-linear-codes}, we motivate the study of cyclic codes by insisting on extra structure being enforced on our subsets.
+Much like when we defined linear codes in \S\ref{section-algebraic-linear-codes}, we motivate the study of cyclic codes by insisting on extra structure being enforced on our subsets.
 
 \begin{definition}[Cyclic Code]
 	\label{cyclic-code-original}
@@ -3019,6 +3053,7 @@ Then in fact this is a parity check matrix (\ref{generator-parity-check-matrix})
 % ================================================================== %
 
 \subsection{BCH Codes}
+\label{section-algebraic-bch-codes}
 
 We now consider a particular type of cyclic code, discovered by Bose and Ray-Chaudhuri and later discovered independently by Hocquenghem. To motivate this, we first consider an alternative formulation of a cyclic code to the one given in Definition \ref{cyclic-code-original}.
 
@@ -3035,7 +3070,7 @@ With this alternative ``polynomial-first" definition, we may define the BCH code
 \begin{definition}[BCH Code]
     Let $K$ be some field containing $\F_2$. Suppose $n$ is odd and $\alpha \in K$ is a primitive $n\th$ root of unity, so the roots of $X^n-1$ are $1, \alpha, \alpha^2, \dots \alpha^{n-1}$.
     
-    Then the cyclic code with defining set $A = \set{\alpha, \alpha^2, \dots, \alpha^{\delta-1}}$ is called the \textit{BCH Code} with a \textit{design distance} of $d$.
+    Then the cyclic code with defining set $A = \set{\alpha, \alpha^2, \dots, \alpha^{\delta-1}}$ is called the \textit{BCH Code} with a \textit{design distance} of $\delta$.
 \end{definition}
 
 \begin{note}
@@ -3054,7 +3089,8 @@ With this alternative ``polynomial-first" definition, we may define the BCH code
     We work in the ring $\Z[x_1, \dots, x_n]$. When $x_i = x_j$, the determinant is zero, so $(x_i - x_j)$ (and thus the product) divides the determinant. But both sides have the same degree and coefficient of $x_2x_3^2\dots x_n^{n-1}$, which is 1, so in fact they must be the same polynomial.
 \end{prf}
 
-\begin{theorem}[Design Distance]
+\begin{theorem}[Design Distance Theorem]
+	\label{design-distance-theorem}
     The \textit{minimum distance} of a BCH code is at least the design distance $\delta$.
 \end{theorem}
 
@@ -3105,7 +3141,279 @@ With this alternative ``polynomial-first" definition, we may define the BCH code
 \end{example}
 
 \begin{note}
-	This is the fourth time we have constructed Hamming's original code! We first met it in Example \ref{hammings-original-code}, then again in Example \ref{hamming-original-code-redux} as a linear code, then in \S\ref{subsection-reed-muller-code} as the Reed-Muller code $\mathrm{RM}(3, 1)$, then finally as the BCH code with length 7 and design distance 3 here!
+	This is the fourth time we have constructed Hamming's original code! We first met it in Example \ref{hammings-original-code}, then again in Example \ref{hamming-original-code-redux} as a linear code, then in \S\ref{section-algebraic-reed-muller-code} as the Reed-Muller code $\mathrm{RM}(3, 1)$, then finally as the BCH code with length 7 and design distance 3 here!
 \end{note}
+
+How do we decode BCH codes? Suppose that $K$ is a field containing $\F_2$ and that $\alpha$ is an $n\th$ root of unity in $K$, where $n$ is odd. Then we choose $\delta \leq n$ to be the design distance, and consider the set $\set{\alpha, \alpha^2, \dots, \alpha^{\delta-1}}$ to be the generator of our code $C$. That is:
+\[
+C = \set{f(X) \pmod{X^n-1} : f(\alpha^i) = 1 \; \text{for all } 1 \leq i < \delta}.
+\]
+We send $c \in C$ and receive $r = c + e$ for some \textit{error vector} which we call $e$. By the Design Distance Theorem (\ref{design-distance-theorem}), the minimum distance of $C$ is at least $\delta$, and so we can correct at least $t = \floor{\frac{\delta-1}{2}}$ errors. Identify $r$, $c$, and $e$ with polynomials in the quotient ring $\F_2^n/(X^n-1)$.
+
+\begin{definition}[Error-Locator Polynomial]
+    For polynomials $r(X)$, $c(X)$, and $e(X)$, define $\xi = \set{0 \leq i \leq n-1 : e_i \neq 0}$. This is the set of exponents where $e(X)$ has a non-zero coefficient, or alternatively the set of indices at which there was an error in transmission.
+    Then the \textit{error-locator polynomial} is given by:
+    \[
+	\sigma(X) = \prod_{i \in \xi} (1-\alpha^i X).
+	\]
+	The degree of this polynomial is $\abs \xi$. Assuming that $\deg(\sigma) = \abs \xi \leq t$ (the number of errors we can certainly correct), our task is to recover $\sigma(X)$ only from $r(X)$.
+\end{definition}
+
+\begin{theorem}[Error-Locator Polynomial Recovery]
+	\label{error-locator-polynomial-recovery}
+    The error-locator polynomial $\sigma(X)$ has constant term 1, and satisfies the congruence:
+    \[
+	\sigma(X) \sum_{j=1}^L r(\alpha^j)X^j \equiv w(X) \pmod{X^{2t+1}}
+	\]
+	for some polynomial $w(X)$ of degree at most $t$. Moreover, $\sigma(X)$ is the \textit{unique} polynomial of least degree which satisfies this congruence.
+\end{theorem}
+
+\begin{prf}
+    We first define a candidate polynomial:
+    \[
+	w(X) = -X \sigma'(X) = \sum_{i \in \xi} \alpha^i X \prod_{j \neq i \in \xi} (1-\alpha^j X).
+	\]
+	This $w(X)$ has degree equal to $\deg(\sigma) \leq t$. From now on, we work in the ring of \textit{formal power series} $K[[X]]$, which are possibly infinite linear combinations of the form $\beta_i X^i$ with the $\beta_i \in K$.
+	In particular, we have the crucial formal power series:
+	\[
+	\frac{1}{1-\alpha^i X} = \sum_{n=0}^\infty (\alpha^iX)^n \in K[[X]].
+	\]
+	\begin{align*}
+	    \frac{w(X)}{\sigma(X)} = \sum_{i \in \xi} \frac{\alpha^iX}{1-\alpha^iX}
+	    = \sum_{i \in \xi} \sum_{j=1}^\infty (\alpha^iX)^j
+	    = \sum_{j=1}^\infty \underbrace{\sum_{i \in \xi} (\alpha^j)^i}_{e(\alpha^j)} X^j
+	    = \sum_{j=1}^\infty e(\alpha^j) X^j.
+	\end{align*}
+	Multiplying through by $\sigma(X)$ therefore proves the congruence, as the degrees match. (By definition of $C$, we have $c(\alpha^j) = 0$ for $1 \leq j < \delta$, ie. for $1 \leq \delta \leq 2t$. Thus $r(\alpha^j) = e(\alpha^j)$ for $1 \leq j \leq 2t$.)
+
+	Now, if we have $\tilde \sigma(X)$ and $\tilde w(X)$ with $\deg(\tilde \sigma) \leq \deg(\sigma)$, then $\sigma(X) \tilde w(X) \equiv \tilde \sigma(X)w(X)$ mod $X^{2t+1}$, and so are equal (since all are of degree $\leq t$). Since $\sigma(X)$ has distinct non-zero roots, $\sigma(X)$ and $w(X) = -X\sigma'(X)$ are coprime. But then $\sigma(X) \mid \tilde\sigma(X)$, and since $\deg(\tilde\sigma) \leq \deg(\sigma)$, $\tilde\sigma(X)$ is just a scalar multiple of $\sigma(X)$. As the constant terms match, $\sigma = \tilde\sigma$, proving uniqueness.
+\end{prf}
+
+% ================================================================== %
+
+\subsection{Feedback Shift Registers}
+\label{section-algebraic-shift-registers}
+
+We now consider a function between vector spaces $\F_2^d$. These will represent a common mechanism used in digital logic, called a \textit{shift register}.
+
+\begin{definition}[Feedback Shift Register]
+    A \textit{general feedback shift register} is a function $f: \F_2^d \to \F_2^d$ of the form:
+    \[
+	f(x_0, \dots, x_{d-1}) = f(x_1, \dots, x_{d-1}, c(x_0, \dots, x_{d-1})),
+	\]
+	where $c : \F_2^d \to \F_2$ is some function. That is, this function ``deletes the first letter, moves the other letters back to fill the spot, then appends some function of the original letters."
+	
+	If $c$ is a linear function, then we call $f$ a \textit{linear feedback shift register}, or LFSR.
+\end{definition}
+
+What does this look like in practice? We take some register in $\F_2^d$, and apply the linear function $c$ to it to generate a new element. Then, we push it to the end, and make space at the front.
+
+\ctikzfig{linear-feedback-shift-register-definition}
+
+We can repeatedly apply this process to generate a stream of registers! Since each register in the sequence shares almost all its elements with the previous register, except one new element at the end generated by applying $c$, we can consider the sequence to be over these elements.
+
+\begin{definition}[Stream, Feedback Polynomial]
+    Suppose we have an \textit{initial fill} $y_0, \dots, y_{d-1}$, which we consider to be some initialising sequence for the register in $\F_2^d$.
+    
+    Consider a linear feedback shift register $f$ associated with a linear function $c$, which we write as $c(x_0, \dots, x_{d-1}) = a_0 x_0 + \dots + a_{d-1} x_{d-1}$.
+    
+	Then the \textit{stream} associated with $f$ and the initial fill $y_0, \dots, y_{d-1}$ of the register is the sequence of $y_i$ which, for $n \geq d$, progresses as:
+	\[
+	y_n = a_0 y_{n-d} + a_1 y_{n-d+1} + \dots + a_{d-2} y_{n-2} + a_{d-1}y_{n-1}
+	= c(y_{n-d}, \dots, y_{n-1}).
+	\]
+	This is a recurrence relation, or difference equation. The \textit{feedback polynomial} is then:
+	\[
+	P(X) = X^d + a_{d-1} X^{d-1} + \dots + a_1 X + a_0.
+	\]
+\end{definition}
+
+We now consider a new way of looking at infinite sequences of elements in $\F_2$. For finite sequences, we could identify an equivalent generating polynomial. For infinite sequences, this will not be a \textit{polynomial} per se, but a \textit{formal power series} like in the proof of Theorem \ref{error-locator-polynomial-recovery}.
+
+\begin{definition}[Generating Function]
+    A sequence $x_0, x_1, x_2, \dots$ of elements in $\F_2$ has \textit{generating function}:
+    \[
+	G(X) = \sum_{j=0}^\infty x_j X^j = x_0 + x_1X + x_2X^2 + \dots \in \F_2[[X]].
+	\]
+	This is a \textit{formal power series} with coefficients in $\F_2$.
+\end{definition}
+
+\begin{theorem}[LFSR Stream Theorem]
+    The stream $x_0, x_1, \dots$ comes from a linear feedback shift register with feedback polynomial $P(X)$ with $a_0 \neq 0$ if and only if the generating function is:
+    \[
+	G(X) = \frac{B(X)}{A(X)}
+	\]
+	where $A(X)$ is the reverse of $P(X)$ and $B(X)$ is a polynomial with $\deg B < \deg A$.
+\end{theorem}
+
+\begin{prf}
+    Suppose that $P(X) = a_d X^d + a_{d-1} X^{d-1} + \dots + a_1 X + a_0$ with $a_d = 1$. Then the reverse is $A(X) = a_0 X^d + a_1 X^{d-1} + \dots + a_{d-1} X + a_d$. So we can compute:
+    \[
+	A(X) G(X) =
+	\left( \sum_{i=0}^d a_{d-i} X^i \right)
+	\left( \sum_{j=0}^\infty x_j X^j \right).
+	\]
+	We want this to be $B(X)$, a polynomial of degree less than $\deg A = d$. This is true if and only if the coefficient of $X^r$ in $A(X)G(X)$ is zero for all $r \geq d$. Equivalently, we require:
+	\[
+	\left( \sum_{i=0}^d a_{d-i} x_{r-i} \right) = 0 \text{ for all $r \geq d$}
+	\]
+	which is true if and only if the sequence $(x_n)$ comes from an LFSR with polynomial $P(X)$.
+\end{prf}
+
+\begin{corollary}
+    The congruence $G(X)A(X) \equiv B(X) \pmod{X^{2d}}$ determines $A$, and hence $P$, similarly to the Error-Locator Polynomial Recovery Theorem (\ref{error-locator-polynomial-recovery}).
+\end{corollary}
+
+\begin{note}
+	If $a_0 = 0$, then the output stream is $x_0, y_0, y_1, \dots$, where $(y_n)$ is the output of an LFSR with feedback polynomial $X^{d-1} + a_{d-1} X^{d-2} + \dots + a_2 X + a_1$. That is, the first digit is ignored!
+\end{note}
+
+% ================================================================== %
+
+\subsection{The Berlekamp-Massey Algorithm}
+\label{section-algebraic-berlekamp-massey}
+
+Now, we turn to what is in some sense the reverse problem of computing the stream of an LFSR. If the sequence $(x_n)$ is the output stream of a binary LFSR with an unknown polynomial, how would we go about finding the unknown $d$ and $a_0, \dots, a_{d-1}$ with
+\[
+x_n + \sum_{i=1}^d a_{d-i} x_{n-i} = 0 \text{ for all $n \geq d$}?
+\]
+In this case, we can write down the matrix equation:
+\[
+\begin{pmatrix}
+	x_{d} & x_{d-1} & \cdots & x_1 & x_0 \\
+	x_{d+1} & x_{d} & \cdots & x_1 & x_0 \\
+	\vdots & \vdots & \ddots & \vdots & \vdots \\
+	x_{2d} & x_{2d-1} & \cdots & x_{d+1} & x_{d}
+\end{pmatrix}
+\begin{pmatrix}
+	1 \\ a_{d-1} \\ \vdots \\ a_0
+\end{pmatrix}
+=
+\begin{pmatrix}
+	0 \\ 0 \\ 0 \\ 0
+\end{pmatrix}
+\]
+How would we find a solution?
+The answer comes in the form of the \textit{Berlekamp-Massey Algorithm}. We look sucessively at the matrices of the form:
+\[
+A_0 = \begin{pmatrix}
+	x_0
+\end{pmatrix}
+\qquad
+A_1 = \begin{pmatrix}
+	x_1 & x_0 \\
+	x_2 & x_1
+\end{pmatrix}
+\qquad
+A_2 = \begin{pmatrix}
+	x_2 & x_1 & x_0 \\
+	x_3 & x_2 & x_1 \\
+	x_4 & x_3 & x_2
+\end{pmatrix}
+\]
+starting at $A_r$, if we happen to know that $r \geq d$ in advance.
+
+\begin{note}
+	The matrices $A_i$ are nested, with all but the bottom and left row and column of $A_{i+1}$ being the previous matrix $A_i$.
+\end{note}
+
+For each $i$, we compute $\det A_i$. If $\det(A_i) \neq 0$, then $d \neq i$, because the vector of coefficients cannot be mapped to the zero vector under $A_i$. If $\det A_i = 0$, then we solve the matrix equation on the assumption that $d = i$ to obtain a putative polynomial solution.
+
+We check our solution over the number of terms in the stream to which we have access, and if it fails for any element of the sequence, we know that $d \neq i$. If we have proceeded inductively so far, we know in fact that $d > i$, so we can begin with the hypothesis $A = A_{i+1}$.
+
+\begin{note}
+	When checking, it is easier to use Gaussian elimination rather than expanding along the rows and columns.
+\end{note}
+
+The Berlekamp-Massey algorithm can definitively rule out certain degrees $d$, but is vulnerable to ``false positives". In fact, it is impossible for any algorithm not to be vulnerable to this! No matter how many terms of the sequence are checked, it is impossible to distinguish between the initial fill of the LFSR and the ``feedback phase".
+
+More generally, any finite sequence can be generated by infinitely many LFSRs. If we have a bound on the degree (that is, a fixed $M$ such that we know $d \leq M$), can we find the solution?
+
+Trivially, not always! For example, if the initial fill is a list of $M$ zeros, then in fact the sequence will be entirely filled with zeros forever, and so we cannot possibly determine the ``true" polynomial.
+
+However, the algorithm does always find the \textit{minimal solution}. That is, for \textit{any} finite sequence $x_0, \dots, x_m$ which is generated by an LFSR, the algorithm will return the minimal polynomial (by degree) $P(X)$ such that if $\deg P = d$, then the sequence $x_0, \dots, x_{d-1}$ generates the above sequence of $m+1$ terms when used as the initial fill of an LFSR with polynomial $P$.
+
+% ================================================================== %
+
+\pagebreak
+\section{Cryptography}
+\subsection{Cryptosystems}
+
+In \S\ref{section-noiseless-coding-problem}, we remarked that there were three very common desiderata for the communication problem over a possibly noisy channel.
+
+\begin{enumerate}
+    \item Economy: we would like to minimise the amount of unnecessary information sent: the code should not be too long, as it wastes time and money.
+    \item Reliability: the decoder should be able to successfully decipher the plaintext with very high probability, or mistakes should be detectable.
+    \item Privacy: we may want only someone with the decoder to be able to read the message.
+\end{enumerate}
+
+We have focused thus far on the first two of these problems: in the noiseless case, we sought to make our codes as efficient as possible (optimising in \S\ref{section-noiseless-optimal-coding}) and in the noisy case, we sought to prove bounds on how accurate we could make our codes even over an unreliable channel.
+
+Now, we turn from \textit{coding} to \textit{cryptography}, which focuses on preserving \textit{privacy}. What if we not only want our receiver to be able to reliably decode what we want to say, but for \textit{nobody else} to be able to do so, even if they can intercept out message?
+
+\begin{definition}[Cryptosystem]
+	\textit{Encryption} is the process of turning unencrypted original text into a secret, encrypted message which only our desired recipient can access.
+    We use the phrase ``plaintext" to refer to this unencrypted text, and ``ciphertext" to refer to the result.
+    
+    Before transmission, the parties share some secret information called the \textit{key}. Then the sets of interest to the problem of cryptography are:
+    \begin{align*}
+		\calM &= \set{\text{all possible unencrypted messages}} \\
+		\calC &= \set{\text{all possible encrypted messages}} \\
+		\calK &= \set{\text{all possible keys}}.
+	\end{align*}
+    A \textit{cryptosystem} is then a collection of these sets $\calM$, $\calC$, and $\calK$, as well as functions:
+    \[
+	e: \calM \times \calK \to \calC
+	\qquad
+	d: \calC \times \calK \to \calM
+	\]
+	called the \textit{encryption} and \textit{decryption} functins respectively, with the property that:
+	\[
+	d(e(m, k), k) = m \qquad \forall \, m,k \in \calM \times \calK.
+	\]
+	That is, for all possible keys and all possible messages, the message can be decrypted using the key! Of course, ideally the message will not be decodable without the key.
+\end{definition}
+
+\begin{example}[Simple Substitution Cipher]
+    Some examples of the basis cryptosystems will encrypt the letters of the English language. We often take $\calM = \calC = \Sigma$, where $\Sigma$ is some alphabet like $\set{\mathrm{A, B, C, \dots, Z}}$.
+    
+    The \textit{simple substitution} cipher takes $\calK$ to be the set of permutations of $\Sigma$. The encryption function $e$ then sends each letter to its image under the permutation. In the case where the permutation is of the form ``send each letter to the letter $X$ places after", we recover the classic \textit{Caesar Shift} cipher used by Julius Caesar: if $X = 13$, we recover ROT13.
+\end{example}
+
+\begin{example}[Vigen\`ere Cipher]
+    The \textit{Vigen\`ere} cipher is a generalisation of the Caesar cipher, but with $\calK = \Sigma^d$. We now take the messages to be in the alphabet $\Sigma^*$ of English strings. Here, we write the key under the message, and ``add letters".
+    
+    This is better than the Caesar shift, because letters in the original plaintext are not always mapped to the same letters in the ciphertext. One advantage of this is that it is resistant to \textit{frequency analysis}. Recall from Remark \ref{remark-on-english-language-entropy} that English letters are not equally distributed. If a plaintext has a high density of \texttt{W}, for instance, it is very likely that \texttt{E} was mapped to \texttt{W}.
+    
+    First documented in 1553, this cryptosystem was named the ``unbreakable cipher" until 1863, when Friedrich Wilhelm Kasiski managed to publish a method of breaking it.
+\end{example}
+
+\begin{note}
+	This cipher shows that in general, it is not the case that the concatenation of the encryption of two messages is the encryption of the concatenation!
+\end{note}
+
+Other famous examples include the Enigma code used by the German army in World War II, and the cipher used in the  Voynich Manuscript (Voynichese), a famous $15\th$ century codex written in a bizarre script which is still undeciphered!
+
+Now, we want to make our cryptosystem resistant to adversaries. What does this mean?
+
+\begin{remark}[Three Levels of Attack]
+    From now on, we use terminology standard in the world of cryptography, where the sender of a message (who knows the plaintext) is named Alice, and the recipient is named Bob. An \textit{eavesdropper}, who is an adversary trying to crack the cryptosystem and decipher the secret message intended only for Bob, is aptly named Eve.
+    
+    We assume that Eve may know the functions $d$ and $e$, and the probability distributions used over $\calM$ and $\calK$, but not the specific key $k$ chosen itself. They seek to read messages from the encrypted ciphertext, and decipher the message $m$ (or more generally, discover the key $k$).
+    
+    We consider three possible levels of attack that Alice and Bob may face:
+    \begin{enumerate}
+	    \item[L1.]  ``Ciphertext only": Eve knows only the specific piece of ciphertext sent.
+	    \item[L2.] ``Known plaintext": Eve has a considerable length of ciphertext as well as the plaintext to which this decrypts, and wants to break the key in full generality.
+	    \item[L3.] ``Chosen plaintext": Eve has access to the encryption function $e$, and can encrypt any plaintext of her choice.
+	\end{enumerate}
+	We describe cryptosystems by the levels of attack to which they are resistant. Of course, this is often a qualitative judgment: sometimes it is the case that a message is decipherable, but it would take trillions of years for even a supercomputer to find the plaintext.
+	
+	In modern ``industrial scale applications", we want as high a resistance as possible.
+	
+	For sufficiently long pieces of normal (non-random) English text, the Caesar Shift cipher is vulnerable even to level 1. However, if the text being sent is purely a random sequence of letters, then Eve's job becomes much harder!
+	
+	Good cryptosystems require mathematics as well as good engineering and management.
+\end{remark}
 
 \end{document}

@@ -11,7 +11,7 @@
 \name{Avish Kumar}
 \email{ak2461@cam.ac.uk}
 \website{https://ak1089.github.io/maths/notes}
-\version{1.17}
+\version{1.19}
 \disclaimer{These notes are unofficial and may contain errors. While they are written and published with permission, they are not endorsed by the lecturer or University.}
 
 % Auxiliary files
@@ -2214,9 +2214,258 @@ These axioms do not guarantee that any sets exist! Let us construct the first se
     By (Ext), this is unique, and $z$ is denoted by $\set{x, y}$. We write $\set x$ for $\set{x, x}$.
 \end{enumerate}
 
+\begin{remark}[Ordered Pairs and Functions]
+    Indeed, (Ext) gives us the general ``ignore repeats and ordering" property of sets for free, because $\set{x, y} = \set{y, x}$. Likewise, $\set{x, x} = \set{x}$.
+    
+    Ordered pairs can be constructed by the following device: for the two sets $x$ and $y$, the \textit{ordered pair} is $\set{\set{x}, \set{x,y}}$. This has ``first element" $x$ and ``second element" $y$. We denote this pair as $(x, y)$ for short, and it has the nice property that $(a, b) = (c, d)$ if and only if $a=b \land c=d$.
+    
+    In general, we say that ``$x$ is an ordered pair" if $(\exists y)(\exists z)(x = \set{y, \set{y, z}})$.
+    
+    Similarly, we define functions. The phrase ``$f$ is a function" means that:
+    \[
+	(\forall x)(
+	x \in f \Ra
+	\underbrace{(\exists y)(\exists z)(x = \set{y, \set{y, z}}))}_{\text{$x$ is an ordered pair}}
+	\land 
+	(\forall x)(\forall y)(\forall z) (
+	\underbrace{((x, y) \in f) \land ((x, z) \in f) \Ra y=z}_{\text{function outputs are unique}}).
+	\]
+	More specifically, ``$f$ is a function from $x$ to $y$", written $f: x \to y$, means that:
+	\begin{enumerate}
+	    \item $f$ is a function.
+	    \item $(\forall s)((\exists t)((s, t) \in f) \Leftrightarrow s \in x)$: the first element of all pairs in $f$ is an element of $x$, and moreover every element in $x$ has some such pair (the function is defined everywhere).
+	    \item $(\forall t)((\exists s)((s, t) \in f) \Ra t \in y)$: the output of $f$ is always an element of $y$.
+	\end{enumerate}
+	These are formal definitions of ordered pairs and functions!
+\end{remark}
+
+Now, we return to the axioms, now allowing us to construct more new sets.
+
+\begin{enumerate}
+	\setcounter{enumi}{4}
+    \item The Union Axiom (Un): ``we can combine two sets." \\
+    $(\forall x)(\exists y)(\forall z)(z \in y \Leftrightarrow (\exists t)(t \in x \land z \in t))$. \\
+    This $y$ is unique by extensionality, and denoted by $\bigcup x$. It is the union of all elements in $x$, so contains all the elements which are members of members of $x$.
+\end{enumerate}
+In fact, this allows us to show that intersections exist! We can prove that:
+\[
+(\forall x)(\lnot(x = \varnothing) \Ra (\exists y)(\forall z)(z = y \Leftrightarrow (\forall t)(t \in x \Ra z \in t))).
+\]
+We can start with a non-empty set $x$, and form the set $y = \set{z \in \bigcup x : (\forall t)(t \in x \Ra z \in t)}$. This is a valid construction using (Un) and (Sep), and is unique by (Ext). We write $\bigcap x$ for this $y$.
+
 \begin{note}
-	Indeed, (Ext) gives us the general ``ignore repeats" property of sets for free!
+	Technically, we work in a model, and deduce the above proof of the existence of intersections using the Completeness Theorem (\ref{first-order-completeness-theorem}).
 \end{note}
 
+\begin{note}
+	We write $a \cup b$ for the union of the pair-set $\set{a, b}$, and $a \cap b$ for its intersection.
+\end{note}
+
+\begin{corollary}
+    We can now define the domain of a function $f$. If $(x, y) \in f$, then both $x$ and $y$ are members of $\bigcup \bigcup f$, since $(x, y) = \set{\set{x}, \set{x, y}}$. We can thus form the set $\dom(f)$, which we call the \textit{domain} of $f$, using the construction $\dom(f) = \set{x \in \bigcup\bigcup f : (\exists y)((x, y) \in f)}$.
+\end{corollary}
+
+\begin{note}
+	As always, when we define new notation like this, we introduce new operation symbols into the language of set theory, with appropriate arities.
+\end{note}
+
+\begin{enumerate}
+	\setcounter{enumi}{5}
+    \item The Power-Set Axiom (Pow): ``we can form the power-set of a set." \\
+    $(\forall x)(\exists y)(\forall z)(z \in y \Leftrightarrow z \subs x)$, where $z \subs x$ is shorthand for $(\forall t)(t \in z \Ra t \in x)$. \\
+    This $y$ is unique by extensionality, and denoted by $\wp x$.
+\end{enumerate}
+
+\begin{corollary}
+    We can construct the \textit{Cartesian product} of two sets $x$ and $y$. If $s \in x$ and $t \in y$, then $(s, t) = \set{\set{s}, \set{s, t}} \in \wp\wp(x \cup y)$. This allows us to form
+    \[
+	x \times y = \set{z \in \wp\wp(x \cup y) : (\exists s)(\exists t)(s \in x \land t \in y \land z = (s, t))}.
+	\]
+	using (Un), (Pow), and (Sep). In turn, we can form the set $y^x$ of all functions $f: x \to y$, defined as $y^x = \set{f \in \powerset{x \times y} : f \text{ is a function from $x$ to $y$}}$, using (Pow) and (Sep).
+\end{corollary}
+
+\begin{remark}[Infinity]
+	\label{remark-on-infinity-in-sets}
+    We can do quite a lot of mathematics with the axioms we have introduced so far. Any model $V$ of what we have defined so far mus be infinite, because the sequence of sets
+	\[
+	\varnothing, \, \wp\varnothing, \, \wp\wp\varnothing, \, \wp\wp\wp\varnothing, \, \wp\wp\wp\wp\varnothing, \dots
+	\]
+	are all pairwise distinct. For another example, we can model the natural numbers!
+	
+	For any set $x$, define the successor of $x$ to be the set $x^+ = x \cup \set{x}$, using (Pair) and (Union). Then the sets $\varnothing$, $\varnothing^{+}$, $\varnothing^{++}$, $\varnothing^{+++}$, and so on are also pairwise distinct.
+	
+	In fact, we can use this to describe $\N_0$. We can write:
+	\[
+	0 = \varnothing, \;
+	1 = 0^+ = \set{0}, \;
+	2 = 1^+ = \set{0, 1} = \set{0, \set{0}}, \;
+	3 = 2^+ = \set{0, 1, 2} = \set{0, \set{0}, \set{0, \set{0}}}
+	\]
+	and so on to construct all natural numbers. Of course, formally we introduce new constant symbols to the language of ZF.
+	
+	However, while we have infinitely many sets, we do not yet have any \textit{infinite sets}. That is, we merely have an infinite collection of individually finite sets.
+\end{remark}
+
+What about the set of all sets in $V$? This would be infinite, but in fact it is not a set! This is called \textit{Russell's Paradox}, and closely mirrors the Burali-Forti Paradox (Theorem \ref{burali-forti-paradox}).
+
+\begin{theorem}[Russell's Paradox]
+	\label{russells-paradox}
+	There is no ``set of all sets". That is, the sentence $(\exists x)(\forall y)(y \in x)$ is false.
+\end{theorem}
+
+\begin{prf}
+	If this sentence holds in $V$, then form the set $y = \set{z \in x : \lnot(z \in z)}$ by (Sep). But this is a contradiction, since $y \in y \iff \lnot(y \in y)$.
+\end{prf}
+
+So we cannot easily construct infinite sets with the above axioms. We should add a new axiom, which asserts the existence of such sets directly.
+
+\begin{definition}[Successor Set]
+    We say that $x$ is a \textit{successor set} if $(\varnothing \in x) \land (\forall y \in x)(y^+ \in x)$. Here, $(\forall y \in x)p$ is shorthand for $(\forall y)(y \in x \Ra p)$, for any formula $p$, and $y^+ = y \cup \set{y}$ as in Remark \ref{remark-on-infinity-in-sets}.
+    
+    Using $0 = \varnothing$, $1 = 0^+$, and so on, it is clear that 0, 1, 2, and so on are all in any successor set.
+\end{definition}
+
+With this definition, we may write down our axiom asserting the existence of successor sets.
+
+\begin{enumerate}
+	\setcounter{enumi}{6}
+    \item The Axiom of Infinity (Inf): ``there are infinite/successor sets." \\
+    $(\exists x)(x \text{ is a successor set})$. \\
+    We can show that there is a smallest successor set, contained within every other.
+\end{enumerate}
+
+\begin{corollary}
+    In a model, use this axiom to pick some successor set $y$. Then, use (Pow) and (Sep) to form the set $z = \set{t \in \wp y : t \text{ is a successor set}}$. Then, since $y \in z$. form $x = \bigcap z$. This is the smallest successor set, which we denote by $\omega$.
+\end{corollary}
+
+Every successor set contained in $\omega$ is $\omega$. This means that inside $V$ we have true induction, since we are quantifying over all subsets of $\omega$! We call this process $\omega$-induction.
+
+It is easy to see that $(\forall x \in \omega)(x^+ \neq 0)$, where this is an abbreviation for $(\forall x)(x \in \omega \Ra \lnot(x^+  0))$. Also, $(\forall x \in \omega)(\forall y \in \omega)((x^+ = y^+) \Ra (x = y))$.
+
+We are getting close to being able to redefine PA inside of the set $\omega$ in ZF!
+
+We introduce new abbreviations: ``$x$ is finite" means there is a $y \in \omega$ such that $x$ bijects with $y$, which can be defined formally if desired.
+
+This still leaves two more axioms to define to finish our definition of Zermelo-Fraenkel set theory. So far, we have $\omega$, which contains 0, 1, 2, and so on. This was one example of an infinite sequence of pairwise distinct sets from Remark \ref{remark-on-infinity-in-sets}. The other example was $\varnothing$, $\wp\varnothing$, $\wp\wp\varnothing$, $\wp\wp\wp\varnothing$, and so on.
+
+In fact, there is a map inside $V$ which sends $0 \mapsto \varnothing$, $1 \mapsto \wp\varnothing$, and so on, which is given by some formula. Such a map is called a \textit{function class}. We need an axiom which says that the image of a set under a function class is also a set.
+
+First, let us investigate the notion of a \textit{class}. We have discussed these before: having proved the Burali-Forti Paradox (Theorem \ref{burali-forti-paradox}), we remarked that ON was the class of all ordinals.
+
+\begin{definition}[Class]
+	A \textit{class} is a collection $C$ of elements of $V$ such that there is a formula $p$ with one free variable such that $C = p_V$. That is, $x$ is in the class $C$ if and only if $p(x)$ holds in $V$: $p_V(x) = 1$.
+\end{definition}
+
+\begin{corollary}
+    $V$ is a class, as we may take any trivial property like $(x = x)$. The collection of sets of size 1 is also a class, by taking $p$ to be $(\exists y)(x = \set y)$.
+\end{corollary}
+
+\begin{definition}[Proper Class]
+    A class $C$ given by such a formula $p$ with one free variable $x$ is a set if $(\exists y)(\forall x)(x \in y \Leftrightarrow p)$. That is, if there is a set $y$ with the members of $y$ being precisely those sets for which $p$ holds.
+	
+	If a class $C$ is not a set, we call it a \textit{proper class}.
+\end{definition}
+
+\begin{corollary}
+    We know that $V$ is such a proper class, by Russell's Paradox (Theorem \ref{russells-paradox}).
+	However, the class given by the formula $(\forall y)(y \text{ is a successor set} \Ra x \in y)$ is in fact $\omega$, which is a set! Thus it is not a proper class.
+\end{corollary}
+
+\begin{definition}[Function Class]
+    A \textit{function class} is a subset $F \subs V \times V$ with $F = p_V$ for some formula $p$ with precisely two free variables $x$ and $y$, which in $V$ satisfies the sentence:
+    \[
+	(\forall x)(\forall y)(\forall z)((p \land p[z/y]) \Ra (y = z)).
+	\]
+	So $(x, y)$ is in $F$ if and only if $p(x, y)$ holds in $V$, which we write as $F(x) = y$. The ``set map" $x \mapsto \set x$ is a function class, as we can take $p$ to be the formula $(y = \set x)$.
+\end{definition}
+
+Now, we are ready to define the eighth axiom of ZF. This is the \textit{Axiom of Replacement}, which is an axiom-scheme asserting that the image of a set under a function-class is also a set.
+
+\begin{enumerate}
+	\setcounter{enumi}{7}
+    \item The Axiom of Replacement (Rep): ``the image of a set under a function-class is a set." \\
+    $((\forall x)(\forall y)(\forall z)((p \land p[z/y]) \Ra (y = z))) \Ra ((\forall x)(\exists y)(\forall z)(z \in y \Leftrightarrow (\exists u)(u \in x \land p[u/x, z/y])))$. \\
+    This applies for any formula $p$ with free variables $x$, $y$, and $t_1, \dots, t_n$.
+\end{enumerate}
+
+Notice that the first part of this formula is precisely the definition of a function class. The latter part of this essentially states that there is a set $y$ (the image) for which each element $z$ corresponds to at least one $u \in x$ with $p(u, z)$ holding.
+
+This leaves one axiom! We want a picture of the set-theoretic universe in which sets appear at a certain time, such that we don't have some set appearing before all of its elements. In particular, we want to avoid weird behaviour, like $x \in x$ or $x \in y \land y \in x$ (recursion).
+
+We thus want to define a notion of \textit{minimality} for sets under the $\in$ relation. This brings us to our ninth  and final axiom of Zermelo-Fraenkel set-theory.
+
+\begin{enumerate}
+	\setcounter{enumi}{8}
+    \item The Axiom of Foundation (Found): ``the set-theoretic universe is regular." \\
+    $(\forall x)(\lnot (x = \varnothing) \Ra (\exists y)(y \in x \land (\forall z \in x)\lnot (z \in y)))$. \\
+    That is, all non-empty sets $x$ contain some set $y$ such that $y$ does not contain anything in $x$.
+\end{enumerate}
+
+\begin{corollary}
+    No set contains itself: if $x \in x$, then there would not exist a $y \in x$ such that $x \notin y$.
+\end{corollary}
+
+In \S\ref{section-posets-axiom-of-choice}, we studied the Axiom of Choice. This is sometimes used as the ``tenth axiom": when we do this, we are working in a model of ``Zermelo-Fraenkel Set Theory + Choice" (ZFC).
+
+\begin{enumerate}
+	\setcounter{enumi}{9}
+    \item The Axiom of Choice (Choice): ``choice functions exist." \\
+    $(\forall x)((\forall y \in x)(\lnot(y = \varnothing) \Ra (\exists f)(f : x \to \bigcup x \land (\forall y \in x)(f(y) \in y))))$. \\
+    These are the \textit{choice functions} we used in the proof of Zorn's Lemma, for example.
+\end{enumerate}
+
+\begin{note}
+	From now on, we simply work in ZF, rather than ZFC, so we do not assume (Choice).
+\end{note}
+
+% ================================================================== %
+
+\subsection{Induction and Recursion}
+
+We now aim to prove slightly more general versions of induction and recursion than the ones we have used previously. Then, we provide a more proper definition of ordinals than the one in \S\ref{section-ordinals-ordinals-intro}, which will allow us to further characterise the universe $V$.
+
+\begin{definition}[Transitive Set]
+    A set $x$ is called \textit{transitive} if every member of a member of $x$ is in $x$. That is:
+    \[
+	(\forall y)((\exists z)(z \in x \land y \in z) \Ra y \in x).
+	\]
+	That is, if there is a $z \in x$ with $y \in z$, then in fact $y \in x$. Equivalently, $\bigcup x \subs x$.
+\end{definition}
+
+\begin{note}
+	This is \textit{not} the same as saying that $\in$ is a transitive relation on the elements of $x$.
+\end{note}
+
+Every member of $\omega$ is transitive, by an easy $\omega$-induction. In fact, $\omega$ itself is also transitive, since for all $x \in \omega$, we have $x \subs \omega$.
+
+\begin{proposition}[Transitive Closure Lemma]
+	For all sets $x$, there is a transitive set $t$ with $x \subs t$.
+\end{proposition}
+
+\begin{prf}
+    Suppose $x \subs y$, with $y$ transitive. Then $\bigcup x \subs \bigcup y \subs y$, and in turn $\bigcup \bigcup x \subs y$ and so on. We then want to take the union of all of these.
+    
+    To form this union, we want to show that $0 \mapsto x$, $1 \mapsto \bigcup x$, $2 \mapsto \bigcup\bigcup x$ and so on is a function-class. This would allow us to apply (Rep), as the image of $\omega$ would be our desired $t$.
+    
+    In the spirit of Definition by Recursion (\ref{definition-by-recursion}), we define an \textit{attempt} to be a function $f$ with:
+    \[
+	(\dom f = \omega)
+	\land
+	(f(0) = x)
+	\land
+	(\forall n \in \omega)
+	(n^+ \in \dom f \Ra f(n^+) = \bigcup f(n)).
+	\]
+	An easy $\omega$-induction then shows that two attempts agree on their common domain. That is:
+	\[
+	(\forall f)(\forall g)(\forall n)
+	(``f \text{ and } g \text{ are attempts}" \land (n \in \dom f \cap \dom g) \Ra f(u) = g(u)).
+	\]	
+	Likewise, we may prove that every $n \in \omega$ is in the domain of some attempt.
+\end{prf}
+
+\begin{corollary}
+    Since the intersection of a non-empty set of transitive sets is transitive, there is a smallest transitive set containing $x$. This is called the \textit{transitive closure} of $x$, denoted by $\mathrm{TC}(x)$.
+\end{corollary}
 
 \end{document}
