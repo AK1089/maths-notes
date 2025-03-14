@@ -11,7 +11,7 @@
 \name{Avish Kumar}
 \email{ak2461@cam.ac.uk}
 \website{https://ak1089.github.io/maths/notes}
-\version{1.19}
+\version{1.22}
 \disclaimer{These notes are unofficial and may contain errors. While they are written and published with permission, they are not endorsed by the lecturer or University.}
 
 % Auxiliary files
@@ -49,10 +49,7 @@ f^*(\text{``Call me!"}) =
     who uses a \textit{decoder} to convert it back into the original plaintext.
 \end{definition}
 
-Given a source and a channel, described probabilistically,
-we want to design an encoder and decoder
-in order to transmit source information across the channel.
-We might want certain properties:
+Given a source and a channel, described probabilistically, we want to design an encoder and decoder in order to transmit source information across the channel. We might want certain properties:
 
 \begin{enumerate}
     \item Economy: we would like to minimise the amount of unnecessary information sent: the code should not be too long, as it wastes time and money.
@@ -60,36 +57,24 @@ We might want certain properties:
     \item Privacy: we may want only someone with the decoder to be able to read the message.
 \end{enumerate}
 
-Accomplishing this last desideratum is the aim of \textit{cryptography} in particular,
-while \textit{coding} deals with the first two.
-How might we achieve these?
+Accomplishing this last desideratum is the aim of \textit{cryptography} in particular, while \textit{coding} deals with the first two. How might we achieve these?
 
 \begin{remark}[Economy and Reliability]
 	\label{economy-and-reliability}
-    Morse code is economic in that it attempts to minimise message length.
-    This is done by giving the shorter codes to
-    letters which are used more frequently.
-    For example, $E = \cdot$, while $Q = -- \cdot --$.
+    Morse code is \textit{economic} in that it attempts to minimise message length.
+    This is done by giving shorter codes to letters which are used more frequently:
+    $E = \cdot$, while $Q = -- \cdot --$.
 
-	The ISBN system for numbering books is reliable.
-	Each book has a unique ten-digit ISBN:
-	the first nine digits encode information about the book
-	(its publisher, ID, and region)
-	while the last digit is a \textit{check digit}
-	chosen such that $10 a_1 + 9 a_2 + \dots + 2a_9 + a_{10} \equiv 0 \pmod{11}$.
+	The ISBN system for numbering books is \textit{reliable}. Each book has a unique ten-digit ISBN: the first nine digits encode information about the book (its publisher, ID, and region) while the last digit is a \textit{check digit} chosen such that $10 a_1 + 9 a_2 + \dots + 2a_9 + a_{10} \equiv 0 \pmod{11}$.
 	
-	This has robust error-detection capabilities.
-	For example, a transposition of any two digits $a_{i}$ and $a_{j}$
-	will add $(j-i)(a_{j} - a_i) \not\equiv 0 \pmod{11}$
-	to the left hand side.
-	This means a single error can be detected,
-	since the congruence will be broken.
+	This has robust error-detection capabilities. For example, a transposition of any two digits $a_{i}$ and $a_{j}$ will add $(j-i)(a_{j} - a_i) \not\equiv 0 \pmod{11}$ to the left hand side. This means a single error can be detected, since the congruence will be broken.
 \end{remark}
 
 % ================================================================== %
 
 \subsection{Communication Channels}
 \label{section-noiseless-communication-channels}
+\vskip 8pt
 
 \begin{definition}[Channel]
 	\label{channel-definition}
@@ -2657,7 +2642,7 @@ We now motivate the famous Reed-Muller code, using  a construction specific to l
 
 \begin{proposition}[Bar Product Properties]
 	\label{bar-product-properties}
-    For $C_1$ and $C_2$ as above, the bar product satisfies:
+    For nested linear codes $C_2 \subs C_1$, the bar product satisfies:
     \begin{enumerate}
 	    \item $\rank(C_1|C_2) = \rank(C_1) + \rank(C_2)$.
 	    \item $w(C_1|C_2) = \min \set{2w(C_1), \, w(C_2)}$.
@@ -2690,7 +2675,7 @@ Now, we are almost ready to define the Reed-Muller code. We set up some notation
 	    x + y &= (x_1 + y_1, \dots, x_n + y_n) \\
 	    x \land y &= (x_1 y_1, \dots, x_n y_n)
 	\end{align*}
-	Then $(\F_2^n, +, \land)$ is a ring: in fact, it is the product ring of $n$ copies of the ring $(\F_2^n, +, \times)$, with operations defined componentwise.
+	Then $(\F_2^n, +, \land)$ is a ring: in fact, it is the product ring of $n$ copies of the ring $(\F_2, +, \times)$, with operations defined componentwise.
 	
 	For $A, B \subs X$, recall the \textit{symmetric difference} $A \triangle B = (A \setminus B) \cup (B \setminus A) = (A \cup B) \setminus (A \cap B)$. This gives us the indicator function relations:
 	\begin{align*}
@@ -2827,7 +2812,7 @@ Indeed, $\mathrm{RM}(d, 0)$ and $\mathrm{RM}(d, d)$ are always the repetition an
 The results we will prove later, especially when we study cryptography, are going to involve a lot of formal algebra, and especially the study of groups and rings. While we do not formally prove all the material we use, an overview of these mathematical objects will be helpful later on. We begin with an introduction here.
 
 \begin{note}
-	These definitions and results should of course all be familiar already!
+	These definitions and results should of course all be familiar already! More discussion and proofs can be found in \textit{IB Groups, Rings and Modules}, \textit{IB Linear Algebra}, and \textit{II Galois Theory}.
 \end{note}
 
 \begin{definition}[Group]
@@ -2992,7 +2977,7 @@ Much like when we defined linear codes in \S\ref{section-algebraic-linear-codes}
 \end{corollary}
 
 \begin{corollary}
-    If $n$ is odd, then $f(X) = X^n - 1$ has no repeated roots. But then $X^n - 1 = f_1(X) \times \dots \times f_k(X)$ for distinct irreducible polynomials $f_i(X) \in \F_2[X]$. The number of cyclic codes of length $n$ is therefore $2^k$.
+    If $n$ is odd, then $f(X) = X^n - 1$ has no repeated roots. This means that we can factor $X^n - 1 = f_1(X) \times \dots \times f_k(X)$ into distinct irreducible polynomials $f_i(X) \in \F_2[X]$. The number of cyclic codes of length $n$ is therefore $2^k$.
 \end{corollary}
 
 \begin{proposition}[Generator Basis]
@@ -3006,7 +2991,7 @@ Much like when we defined linear codes in \S\ref{section-algebraic-linear-codes}
 \begin{prf}
     We show linear independence first. Suppose that $f(X)g(X) \equiv 0 \pmod{X^n-1}$ for some $f(X) \in \F_2[X]$ with $\deg(f) \leq n - k - 1$. Then $\deg(fg) \leq n-1$, so $f(X)g(X) = 0 \Ra f(X)=0$.
     
-    Now, we show that this set spans. Let $p(X) \in \F_2[X]$, representing an element of $C$ Without loss of generality, we may assume that $\deg(p) < n$. Then $p(X) = f(X)g(X)$ for some $f(X) \in \F_2[X]$ with degree $\deg(f) = \deg(p) - \deg(g) < n - k$.
+    Now, we show that this set spans. Let $p(X) \in \F_2[X]$, representing an element of $C$. Without loss of generality, we may assume that $\deg(p) < n$. Then $p(X) = f(X)g(X)$ for some $f(X) \in \F_2[X]$ with degree $\deg(f) = \deg(p) - \deg(g) < n - k$.
     
     But then $p(X)$ is in the span of this set, as required, so this set is a basis for $C$.
 \end{prf}
@@ -3105,9 +3090,9 @@ With this alternative ``polynomial-first" definition, we may define the BCH code
 		1 & \alpha^{\delta-1} & \alpha^{2(\delta-1)} & \cdots & \alpha^{(\delta-1)(n-1)} \\
 	\end{pmatrix}.
 	\]
-	This is a Vandermonde matrix from the previous proposition, where the $x_i$ are $\alpha^i$ (at least when factors are pulled out). Thus any $\delta-1$ columns of $H$ are linearly independent.
+	Any $\delta-1$ columns form a Vandermonde matrix from the previous proposition, where the $x_i$ are $\alpha^i$ (at least when factors are pulled out). Thus any $\delta-1$ columns of $H$ are linearly independent.
 	
-	But a codeword in $C$ is just a dependence relation between the columns of $H$, and so the weight of $C$ is at least $\delta$ as desired!
+	But a codeword in $C$ is just a dependence relation between the columns of $H$, and so the weight of $C$ is at least $\delta$ as desired, since the determinant is non-zero (as $\alpha_i \neq \alpha_j$ for $i \neq j$).
 \end{prf}
 
 \begin{note}
@@ -3146,7 +3131,7 @@ With this alternative ``polynomial-first" definition, we may define the BCH code
 
 How do we decode BCH codes? Suppose that $K$ is a field containing $\F_2$ and that $\alpha$ is an $n\th$ root of unity in $K$, where $n$ is odd. Then we choose $\delta \leq n$ to be the design distance, and consider the set $\set{\alpha, \alpha^2, \dots, \alpha^{\delta-1}}$ to be the generator of our code $C$. That is:
 \[
-C = \set{f(X) \pmod{X^n-1} : f(\alpha^i) = 1 \; \text{for all } 1 \leq i < \delta}.
+C = \set{f(X) \pmod{X^n-1} : f(\alpha^i) = 0 \; \text{for all } 1 \leq i < \delta}.
 \]
 We send $c \in C$ and receive $r = c + e$ for some \textit{error vector} which we call $e$. By the Design Distance Theorem (\ref{design-distance-theorem}), the minimum distance of $C$ is at least $\delta$, and so we can correct at least $t = \floor{\frac{\delta-1}{2}}$ errors. Identify $r$, $c$, and $e$ with polynomials in the quotient ring $\F_2^n/(X^n-1)$.
 
@@ -3163,7 +3148,7 @@ We send $c \in C$ and receive $r = c + e$ for some \textit{error vector} which w
 	\label{error-locator-polynomial-recovery}
     The error-locator polynomial $\sigma(X)$ has constant term 1, and satisfies the congruence:
     \[
-	\sigma(X) \sum_{j=1}^L r(\alpha^j)X^j \equiv w(X) \pmod{X^{2t+1}}
+	\sigma(X) \sum_{j=1}^{2t} r(\alpha^j)X^j \equiv w(X) \pmod{X^{2t+1}}
 	\]
 	for some polynomial $w(X)$ of degree at most $t$. Moreover, $\sigma(X)$ is the \textit{unique} polynomial of least degree which satisfies this congruence.
 \end{theorem}
@@ -3197,6 +3182,7 @@ We send $c \in C$ and receive $r = c + e$ for some \textit{error vector} which w
 We now consider a function between vector spaces $\F_2^d$. These will represent a common mechanism used in digital logic, called a \textit{shift register}.
 
 \begin{definition}[Feedback Shift Register]
+	\label{feedback-shift-register}
     A \textit{general feedback shift register} is a function $f: \F_2^d \to \F_2^d$ of the form:
     \[
 	f(x_0, \dots, x_{d-1}) = f(x_1, \dots, x_{d-1}, c(x_0, \dots, x_{d-1})),
@@ -3338,6 +3324,7 @@ However, the algorithm does always find the \textit{minimal solution}. That is, 
 \pagebreak
 \section{Cryptography}
 \subsection{Cryptosystems}
+\label{section-cryptography-systems}
 
 In \S\ref{section-noiseless-coding-problem}, we remarked that there were three very common desiderata for the communication problem over a possibly noisy channel.
 
@@ -3349,9 +3336,10 @@ In \S\ref{section-noiseless-coding-problem}, we remarked that there were three v
 
 We have focused thus far on the first two of these problems: in the noiseless case, we sought to make our codes as efficient as possible (optimising in \S\ref{section-noiseless-optimal-coding}) and in the noisy case, we sought to prove bounds on how accurate we could make our codes even over an unreliable channel.
 
-Now, we turn from \textit{coding} to \textit{cryptography}, which focuses on preserving \textit{privacy}. What if we not only want our receiver to be able to reliably decode what we want to say, but for \textit{nobody else} to be able to do so, even if they can intercept out message?
+Now, we turn from \textit{coding} to \textit{cryptography}, which focuses on preserving \textit{privacy}. What if we not only want our receiver to be able to reliably decode what we want to say, but for \textit{nobody else} to be able to do so, even if they can intercept our message?
 
 \begin{definition}[Cryptosystem]
+	\label{cryptosystem}
 	\textit{Encryption} is the process of turning unencrypted original text into a secret, encrypted message which only our desired recipient can access.
     We use the phrase ``plaintext" to refer to this unencrypted text, and ``ciphertext" to refer to the result.
     
@@ -3397,6 +3385,7 @@ Other famous examples include the Enigma code used by the German army in World W
 Now, we want to make our cryptosystem resistant to adversaries. What does this mean?
 
 \begin{remark}[Three Levels of Attack]
+	\label{three-levels-of-attack}
     From now on, we use terminology standard in the world of cryptography, where the sender of a message (who knows the plaintext) is named Alice, and the recipient is named Bob. An \textit{eavesdropper}, who is an adversary trying to crack the cryptosystem and decipher the secret message intended only for Bob, is aptly named Eve.
     
     We assume that Eve may know the functions $d$ and $e$, and the probability distributions used over $\calM$ and $\calK$, but not the specific key $k$ chosen itself. They seek to read messages from the encrypted ciphertext, and decipher the message $m$ (or more generally, discover the key $k$).
@@ -3407,13 +3396,381 @@ Now, we want to make our cryptosystem resistant to adversaries. What does this m
 	    \item[L2.] ``Known plaintext": Eve has a considerable length of ciphertext as well as the plaintext to which this decrypts, and wants to break the key in full generality.
 	    \item[L3.] ``Chosen plaintext": Eve has access to the encryption function $e$, and can encrypt any plaintext of her choice.
 	\end{enumerate}
+	These are in increasing order of power.
+	
 	We describe cryptosystems by the levels of attack to which they are resistant. Of course, this is often a qualitative judgment: sometimes it is the case that a message is decipherable, but it would take trillions of years for even a supercomputer to find the plaintext.
 	
 	In modern ``industrial scale applications", we want as high a resistance as possible.
 	
 	For sufficiently long pieces of normal (non-random) English text, the Caesar Shift cipher is vulnerable even to level 1. However, if the text being sent is purely a random sequence of letters, then Eve's job becomes much harder!
 	
-	Good cryptosystems require mathematics as well as good engineering and management.
+	Good cryptosystems require mathematics as well as good engineering and management. In this section, we aim to quantify properties of how secure a cryptosystem may be, in terms of the time to crack it, the probability of perfect security, and so on.
 \end{remark}
+
+% ================================================================== %
+
+\subsection{Unicity Distance}
+\label{section-cryptography-unicity-distance}
+
+Heuristically, the \textit{unicity distance} of a code is a measure of how long a message one can send before it becomes noticeably easier to decipher. We will work towards quantifying this intuition, using concepts found in our study of entropy (introduced in \S\ref{section-noiseless-entropy} and further studied in \S\ref{section-error-control-operational-capacity}).
+
+From now on, we will take our cryptosystem (\ref{cryptosystem}) to be $(\calM, \calK, \calC)$, and suppose that $\calM$ and $\calK$ are both finite sets. We define $M$ and $K$ to be random variables taking values in $\calM$ and $\calK$ (the message and the key respectively), and define $C = e(M, K)$ to be the ciphertext.
+
+\begin{definition}[Equivocation]
+    The \textit{key equivocation} is the conditional entropy $H(K \mid C)$. Similarly, the \textit{message equivocation} is the conditional entropy $H(M \mid C)$.
+    
+    (In English, equivocation is the use of imprecise, dubious language with the intent to mislead.)
+\end{definition}
+
+
+\begin{proposition}[Equivocation Inequality]
+    The message equivocation is at most the key equivocation: $H(M \mid C) \leq H(K \mid C)$.
+\end{proposition}
+
+\begin{prf}
+    Since $M = d(C, K)$, we know that $H(M \mid C, K) = 0$. We now use Proposition \ref{conditional-entropy-equality}:
+    \begin{align*}
+		H(K \mid C) &= H(K, C) - H(C) \\
+		&= H(M, K, C) - H(M \mid K, C) - H(C) \\
+		&= H(M, K, C) - H(C) \\
+		&= H(K \mid M, C) + H(M, C) - H(C) \\
+		&= H(K \mid M, C) + H(M \mid C) \\
+		&\leq H(M \mid C)
+	\end{align*}
+	using the fact that entropy is non-negative.
+\end{prf}
+
+\begin{note}
+	A cryptosystem is said to have \textit{perfect secrecy} if $H(M \mid C) = H(M)$.
+\end{note}
+
+\begin{definition}[Unicity Distance]
+    The \textit{unicity distance} of a cryptosystem is the least $n > 0$, if it exists, such that the conditional entropy $H(K \mid C^{(n)}) = 0$. If there is no such $n$, we say that $U$ is infinite.
+    
+    In words, this is the smallest length of ciphertext required to uniquely determine the key.
+\end{definition}
+
+\begin{corollary}
+    We have $H(K \mid C^{(n)}) = H(K, C^{(n)}) - H(C^{(n)}) = H(K, M^{(n)}) - H(C^{(n)})$. But this is equal to $H(K) + H(M^{(n)}) - H(C^{(n)})$, allowing us to calculate $U$ more easily.
+\end{corollary}
+
+\begin{note}
+	From now on, we assume that all keys are equally likely, so $H(K) = \log \abs \calK$. We further assume that entropy of $M^{(n)}$ is $nH$, where $H = H(M)$ is the entropy of a single piece of plaintext. Finally, we assume that all observed ciphertext is equally likely, so $H(C^{(n)}) = n \log \abs \Sigma$.
+\end{note}
+
+\begin{corollary}
+    We have $H(K \mid C^{(n)}) = \log \abs \calK + nH - n \log \abs \Sigma$. The unicity distance given our three assumptions is therefore:
+    \[
+	U = \frac{\log \abs \calK}{\log \abs \Sigma - H(M)}.
+	\]
+	(or more precisely, the ceiling of this).
+\end{corollary}
+
+\begin{corollary}
+    To make $U$ large, we should make the key space $\abs \calK$ large, or send messages with very little redundancy, defined to be $R = 1 - H/\log\abs\Sigma$. We should also not use a single key for a piece of plaintext longer than the unicity distance.
+\end{corollary}
+
+% ================================================================== %
+
+\subsection{Stream Ciphers}
+\label{section-cryptography-stream-ciphers}
+
+We now consider \textit{streams}, as in \S\ref{section-algebraic-shift-registers}, which are sequences in $\F_2$. We will have:
+\begin{align*}
+    \text{plaintext: } &p_0, p_1, p_2, \dots \\
+    \text{key stream: } &k_0, k_1, k_2, \dots \\
+    \text{ciphertext: } &z_0, z_1, z_2, \dots \quad \where z_n = p_n + k_n.
+\end{align*}
+Here, every $p_i$, $k_i$, and thus $z_i$ is in $\F_2$, and addition is taken in $\F_2$.
+
+\begin{definition}[One-Time Pad]
+	\label{one-time-pad}
+    Take $(k_n)$ to be an entirely random stream: independently and identically distributed random variables with $\P[k_i = 0] = \P[k_i = 1] = 1/2$.
+    
+    Then $(z_n) = (p_n) + (k_n)$ is \textit{also} a sequence of independently and identically distributed random variables which take values 0 and 1 with equal probability!
+    
+    Without knowing the exact key stream $(k_n)$, deciphering the code is entirely impossible. A  \textit{one-time pad} is such a key stream, so named because they were handed out for use only one time, with the intention of being destroyed afterwards.
+    
+    Of course, the code is easy to decipher if one \textit{does} have the key, as $(p_n) = (z_n) + (k_n)$.
+\end{definition}
+
+This code has perfect secrecy, but it has problems. How do we construct such a random sequence? More importantly, how do we \textit{share} knowledge of the key stream?
+
+The first problem is surprisingly tricky in real life. The second problem is the same problem we started with: if we could share a key reliably and privately, why not just share the message?
+
+In most applications, this is not practical: we instead share $k_0, k_1, \dots, k_{d-1}$ and construct the rest of the key stream $(k_n)$ using a feedback shift register (\ref{feedback-shift-register}) of length $d$.
+
+\begin{proposition}[Eventual Periodicity]
+    Let $(x_n)$ be a sequence produced by a linear feedback shift register of length $d$. Then $(x_n)$ is \textit{eventually periodic}: there are integers $M, N < 2^d$ such that $x_{r+N} = x_r$ for all $r \geq M$.
+\end{proposition}
+
+\begin{prf}
+    Let $v_i = (x_i, x_{i+1}, \dots, x_{i+d-1})$, so $f: \F_2^d \to \F_2^d$ maps $v_i \mapsto v_{i+1}$. As $f(\mathbf 0) = \mathbf 0$, if some $v_i = \mathbf 0$ for $i < 2^d$, then the sequence is all zeros from this point onwards, and this statement holds.
+    
+    Otherwise, if all $v_i$ are non-zero for $0 \leq i < 2^d$, then $v_0, \dots, v_{2^d-1}$ are $2^d$ elements in $\F_2^d \setminus \set{\mathbf 0}$. This has only $2^d - 1$ elements, so by the pigeonhole principle $v_a = v_b$ for some $0 \leq a < b < 2^d$. Let $M = a$ and $N = b-a$. Then by definition $v_r = v_{r+N}$ when $r = M$, and it follows by induction that this holds for all $r \geq M$ (since if $v_k = v_{k+N}$, then $v_{k+1} = f(v_k) = f(v_{k+N}) = v_{k+1+N}$).
+    
+    Thus the sequence is eventually periodic.
+\end{prf}
+
+\begin{corollary}
+    For a \textit{general} feedback shift register, this still holds, with the bound being $M, N \leq 2^d$.
+\end{corollary}
+
+\begin{note}
+	The Berlekamp-Massey algorithm (discussed in \S\ref{section-algebraic-berlekamp-massey}) tells us that a one-time pad generated in this way is unsafe at Level 2 of our three levels of attack (from Remark \ref{three-levels-of-attack}).
+\end{note}
+
+Stream ciphers are used frequently, because of how easy and cheap they are to generate and decode. However, they have several issues; it is very hard to avoid them being decoded given sufficient time.
+
+Adding output streams gives no advantage: if $(x_n)$ and $(y_n)$ are generated by LFSRs with feedback polynomials $P(X)$ and $Q(X)$, then $(x_n + y_n)$ is generated by $P(X)Q(X)$. While $(x_ny_n)$ is also the output of an LFSR, $x_ky_k = 0$ around 75\% of the time.
+
+Now, suppose we have three streams $(x_n)$, $(y_n)$, and $(z_n)$. We might try doing something clever, by using one stream as a ``flag" for which other stream to use.
+\[
+k_n = \begin{cases}
+	x_n & z_n = 0 \\
+	y_n & z_n = 1
+\end{cases}
+\]
+But this is actually also unhelpful! We can write $k_n = z_ny_n + (1-z_n)x_n = x_n + (x_n + y_n)k_n$, so in fact $(k_n)$ is also a stream generated by an LFSR.
+
+Stream ciphers are examples of \textit{symmetric cryptosystems}, where the decryption algorithm is easily deduced from the encryption algorithm. Indeed, in the case of a one-time pad (\ref{one-time-pad}), the algorithms are exactly the same: add the key $(k_n)$ to the ciphertext!
+
+We want something which is less vulnerable, and for that we turn to \textit{asymmetric cryptosystems}.
+
+% ================================================================== %
+
+\subsection{Public Key Cryptosystems}
+\label{section-cryptography-public-key}
+
+The aim of a \textit{public key cryptosystem} is to be asymmetric. We divide the key into two pieces:
+\begin{enumerate}
+    \item a public key, used for encryption
+    \item a private key, used for decryption
+\end{enumerate}
+The goal is to create an encryption system which is secure at Level 3 from Remark \ref{three-levels-of-attack}. In particular, if an adversary knows the encryption and decryption algorithms, as well as the public key (but not the private key), it should still be hard to find the private key and decrypt messages.
+
+\begin{note}
+	Here, we avoid the problem of key exchange. In fact, we ideally do not share the private key at all over any exchange, which means no adversary can steal it!
+\end{note}
+
+The idea is therefore to find ``one-way problems", in which an encryption computation is easy, but the corresponding decryption computation is very hard without the private key. Furthermore, the private key should not be easily computable from the public key!
+
+We base these on difficult mathematical  problems.
+
+\begin{remark}[One-Way Mathematical Problems]
+	\label{one-way-mathematical-problems}
+    One such problem is that of \textit{factoring}. Given very large primes $p$ and $q$, we form $N = pq$. It is very easy to do so simply by multiplying two numbers together! However, suppose we are merely given $N$, and told that it is the product of two very large primes. Now, we can't do anything except try prime numbers until we find something that works, and there are a lot of possible primes to check!
+    
+    This is a hard one-way problem, because we have a bijection between pairs of primes and a set of specific numbers of the form $N = pq$, but computing one direction of this bijection is very easy (multiply) but the other direction is very hard (guess and check).
+    
+    Another such problem is that of the \textit{discrete logarithm}. Suppose $p$ is a large prime, and $g$ is a primitive root modulo $p$: that is, it generates $\Zbygp{p}$. Given $x$, can we find $a$ such that $x \equiv g^a \pmod p$? This is very difficult to do, but the reverse (given $g$ and $a$, can we compute $g^a \pmod p$?) is very easy!
+    
+    Here, we are using a different definition of \textit{easy} which focuses not really on how complicated the mathematics is, nor how easy it is for a person to solve the problem, nor even how hard it is to write code to solve the problem with a computer! Rather, we care about a measure of asymptotic complexity: on a computer, are there algorithms which do not scale badly?
+\end{remark}
+
+In fact, we can formalise this definition.
+
+\begin{definition}[Polynomial Time Algorithm]
+    An algorithm with input size $n$ is said to run in \textit{polynomial time} if the number of operations it takes to compute the output is bounded by $c \cdot n^d$ for some constants $c$ and $d$.
+\end{definition}
+
+\begin{note}
+	If $N$ is written in binary with $B$ digits, then an algorithm for factoring $N$ has an input size of $B = \log_2 N$, not $N$.
+\end{note}
+
+\begin{remark}[Polynomial Time Algorithms]
+	\label{polynomial-time-algorithms}
+	The class of problems solvable in polynomial time is called P. Problems in this class include:
+	\begin{itemize}
+		\item normal arithmetic operations on integers, like addition and division with remainders.
+		\item computing the highest common factor of two numbers, using Euclid's algorithm.
+		\item modular exponentiation (computing $x^y$ modulo $N$), using successive squaring.
+		\item testing primality, thanks to the AKS primality test developed in 2002: the first algorithm to test primality to be general, unconditional, and run in polynomial time.
+	\end{itemize}
+	More importantly, there are no known algorithms to solve the problems of factoring or the discrete logarithm from Remark \ref{one-way-mathematical-problems}.
+	
+	The fastest known algorithms for factorisation involves testing every prime up to $\sqrt N$, which takes a number of operations in $\calO(\sqrt N) = \calO(2^{B/2})$ if $N$ has $B$ binary digits.
+	
+	Likewise, for the discrete logarithm we use Shank's ``baby-step giant-step" algorithm. Taking $m = \lceil \sqrt p \rceil$, write $a = qm + r$ with $0 \leq q, r \leq m$. Then $g^a \equiv g^{qm+r} \equiv x \pmod p$, and so we have $g^{qm} \equiv xg^{-r} \pmod p$. We make lists for $g^{qm}$ and $x g^{-r}$ modulo $p$ for all $q$ and $r$, and look for a match: this takes $\calO(\sqrt p \log p)$ operations.
+	
+	RSA Laboratories, a computer security company founded by the three creators of the RSA encryption system, offered large cash prizes until 2007 for the successful factorisation of a number from their list of semiprimes (numbers of the form $pq$ for distinct primes $p$ and $q$).
+	
+	As quantum computers get better, there are fears that they may break encryption systems. Shor's algorithm is an algorithm for factoring two integers which runs in polynomial time on a quantum computer, but doesn't work on a classical computer.
+\end{remark}
+
+We now consider a particular cryptosystem.
+
+\begin{definition}[The Rabin Cryptosystem]
+    Our private key will be a pair of large distinct primes $p$ and $q$ which are both congruent to 3 modulo 4. Our public key will be $N = pq$.
+    
+    We take $\calM = \calC = \set{0, 1, \dots, N-1}$, and encrypt:
+	$e(m) \equiv m^2 \pmod N$.
+	
+	We should avoid $m$ which are not coprime to $N$, as this could leak information about $p$ and $q$ (which would be very bad). We should also avoid $m < \sqrt N$: with these $m$, we are simply computing the regular square root!
+\end{definition}
+
+\begin{proposition}[Decrypting the Rabin Cryptosystem]
+    Suppose that $p = 4k-1$ is prime, and that $x^2 \equiv d \pmod p$. Then given $d$, we can find its square root $x$ easily, using the solution $x \equiv d^k \pmod p$.
+\end{proposition}
+
+\begin{prf}
+    This is easy if $d = 0$, so assume otherwise. Then:
+    \begin{align*}
+		d^{2k-1} &\equiv x^{2(2k-1)} \equiv x^{p} \equiv 1 \implies (d^k)^2 \equiv d \pmod p
+	\end{align*}
+	by Fermat's Little Theorem, and so this indeed gives a solution.
+\end{prf}
+
+We can use this to decrypt a received message $c$ under the Rabin cryptosystem! We take advantage of the fact that we know the factorisation $N = pq$, and easily find $x_1$ and $x_2$ with:
+\begin{align*}
+    x_1^2 &\equiv c \pmod p \\
+    x_2^2 &\equiv c \pmod q
+\end{align*}
+using the above result. Then, the Chinese Remainder Theorem (\ref{chinese-remainder-theorem}) yields an $x$ with:
+\[
+\left.\begin{aligned}
+x \equiv x_1 \pmod p \\
+x \equiv x_2 \pmod q
+\end{aligned}\right\rbrace \implies
+x^2 \equiv c \pmod N
+\]
+In fact, this $x$ is easy to compute: we may run Euclid's algorithm to find integers $r$ and $s$ with $rp + qs = 1$, and then use $x \equiv (sq)x_1 + (rp)x_2 \pmod N$.
+
+\begin{proposition}[Uniqueness of Roots]
+    Let $p$ be an odd prime, and $d \not\equiv 0 \pmod p$. Then if $x^2 \equiv d \pmod p$ is solvable, it has exactly two solutions (square roots).
+    
+    If $p$ and $q$ are distinct odd primes with $N = pq$, and $(d, N) = 1$, then if $x^2 \equiv d \pmod N$ is solvable, it has exactly four solutions.
+\end{proposition}
+
+\begin{prf}
+    Suppose $x^2 \equiv y^2 \pmod p$. Then $p \mid (x+y)(x-y)$, so $p \mid x+y$ or $p \mid x-y$. This means we must have $x + y \equiv 0 \pmod p$ or $x - y \equiv 0 \pmod p$, so $x \equiv \pm y \pmod p$.
+    
+    Now suppose $x_0$ is a solution to $x^2 \equiv d \pmod N$. By the Chinese Remainder Theorem, there are solutions with $x \equiv \pm x_0$ modulo $p$ and $q$, which gives rise to four independent solutions by choosing the $\pm$ in all $2 \times 2$ possible ways. By the first uniqueness result, these are \textit{all} the solutions.
+\end{prf}
+
+\begin{corollary}
+    When decrypting the Rabin code, we must compute all four possible solutions. Our message should therefore include sufficient redundancy to make it clear which solution is intended.
+\end{corollary}
+
+Now, we want to comment on how good a cipher this is. In fact, we can make a quantitative claim about the difficulty of cracking it! Recall from Remark \ref{polynomial-time-algorithms} that factoring is a ``hard" problem.
+
+\begin{proposition}[Rabin Difficulty Theorem]
+    Breaking the Rabin code is ``as difficult as" factoring $N$. That is, if we have an ``oracle" which can factor numbers instantly, we can easily crack the Rabin code, and if we have an oracle which can crack the Rabin code, we can use it to easily factor numbers.
+\end{proposition}
+
+\begin{prf}
+    If we can factor $N = pq$, then we have broken the code, since we can simply decrypt the code as if we were the intended recipient! It remains to show the converse.
+    
+    Suppose we can break the Rabin code: in particular, this gives an algorithm for extracting square roots modulo $N$. We choose $x \pmod N$ at random, and use our algorithm to find a $y$ satisfying $x^2 \equiv y^2 \pmod N$, since we can do this easily. Then with probability $1/2$, $x \not\equiv \pm y \pmod N$, since there are four square roots of $x^2$ modulo $N$. Then $(x-y, N)$ is a non-trivial factor of $N$.
+    
+    We can repeat this with new random choices of $x$ to keep halving our probability of failure, and thereby give ourselves arbitrarily high success probability of finding $p$ or $q$.
+\end{prf}
+
+\begin{note}
+	More formal discussion of this sort of ``reducibility of problems" can be found in the course \textit{II Automata and Formal Languages}.
+\end{note}
+
+% ================================================================== %
+
+\subsection{RSA Encryption}
+\label{section-cryptography-rsa}
+
+The RSA encryption scheme, named for its creators Rivest, Shamir, and Adelman, is perhaps the most famous cryptosystem in the world. It is another asymmetric cryptosystem, which again uses the property of factorisation being difficult.
+
+\begin{note}
+	As with a lot of cryptography, we use results from courses like \textit{IA Numbers and Sets} and \textit{II Number Theory}. Proofs of these results are omitted and non-examinable.
+\end{note}
+
+\begin{definition}[Euler Totient Function]
+    For integers $N$, the \textit{Euler Totient Function} $\phi(N)$ is the number of integers less than $N$ which are coprime to $N$: $\phi(N) = \#\set{1 \leq x \leq N : (x, N) = 1}$.
+\end{definition}
+ 
+\begin{theorem}[Euler-Fermat Theorem]
+	\label{euler-fermat-theorem}
+    If $x$ is coprime to $N$, then $x^{\phi(N)} \equiv 1 \pmod N$.
+\end{theorem}
+
+\begin{theorem}[Chinese Remainder Theorem]
+	\label{chinese-remainder-theorem}
+	Suppose we are given integers $m_1 \ldots m_k$ such that $m_i > 1$ for all $i$, and  $(m_i, m_j) = 1$ for all $i \neq j$. Then for any given integers $a_1, \ldots, a_k$, the simultaneous congruence
+	\[
+	x \equiv \begin{cases}
+		a_1 \pmod{m_i} \\
+		\ \vdots \\
+		a_k \pmod{m_k}
+	\end{cases}
+	\]
+	has a solution which is unique modulo $M = \prod m_i$.
+\end{theorem}
+
+\begin{prf}
+    In \textit{IA Numbers and Sets} and \textit{II Number Theory}.
+\end{prf}
+
+Now, we are ready to set up the RSA cryptosystem!
+
+Suppose we have $N = pq$ for large distinct primes $p$ and $q$. Then $\phi(N) = (p-1)(q-1)$. We pick an integer $e$ which is coprime to $\phi(N)$. We solve for $d$ such that $de \equiv 1 \pmod{\phi(N)}$. This is easy to do if we know $N = pq$: subtraction and multiplication to find $\phi(N)$ is trivial, and we can solve for $d$ easily using Euclid's algorithm.
+
+Then our \textit{public key} is $(N, e)$ and our \textit{private key} is $(N, d)$. For any $m$ coprime to $N$, we encrypt:
+\begin{align*}
+    m \mapsto c &\where c \equiv m^e \pmod N \\
+    c \mapsto m &\where m \equiv c^d \pmod N
+\end{align*}
+How do we know that this works? Well, given some $c \equiv m^e \pmod N$, we write:
+\[
+c^d \equiv (m^e)^d \equiv m^{de} \equiv m^1 \equiv m \pmod N
+\quad \because de \equiv 1 \pmod{\phi(N)} \ 
+\text{by Theorem \ref{euler-fermat-theorem}}.
+\]
+(We suppose here that $c$ and $N$ are coprime, which is true if $m$ was generated correctly.)
+
+\begin{note}
+	With this scheme, one never shares the private key! This is a very clever use of asymmetry: it is hard to find $d$ merely given $e$, and so the private key remains secret.
+\end{note}
+
+Now, we want to prove a theorem about RSA. We will use the notation $O_p(x)$ to denote the \textit{order} of $x$ in $\Zbygp{p}$, which is the cyclic group of the $p-1$ elements $\set{1 \dots p-1}$ under multiplication, which is also denoted by $\F_p^\times = \F_p \setminus \set 0$ (the non-zero elements of the field of $p$ elements).
+
+\begin{theorem}[Semiprime Order Theorem]
+	\label{semiprime-order-theorem}
+    Let $N = pq$ for distinct odd primes $p$ and $q$. Suppose that $\phi(N) \mid 2^a b$, with integers $a$ and $b$ such that $b$ is odd. Furthermore, let $x$ be coprime to $N$, with $1 \leq x < N$.
+    
+    Then if $O_p(x^b) \neq O_q(x^b)$, there exist some $0 \leq t < a$ such that the greatest common divisor of $x^{2^tb}-1$ and $N$ is in fact a non-trivial factor of $N$. That is, $x^{2^tb}$ divides by $p$ or $q$.
+    
+    Moreover, the number of $x$ satisfying $O_p(x^b) \neq O_q(x^b)$ is at least $\phi(N) / 2$.
+\end{theorem}
+
+\begin{prf}
+    Let $y \equiv x^b \pmod N$. By the Euler-Fermat Theorem, $y^{2^a} \equiv (x^b)^{2^a} \equiv x^{\phi(N)} \equiv 1 \pmod N$, and so $O_p(y)$ and $O_q(y)$ are both powers of 2. This is because if this were not true, then the order of $y$ modulo $N$ (which is the product of $O_p(y)$ and $O_q(y)$ could not be a factor of $2^a$).
+    
+    We are given that they are not equal, and so we have $y^{2^t} \equiv 1 \pmod p$ without loss of generality (possibly swapping $p$ and $q$). This gives the highest common factor of $y^{2^t}-1$ and $N$ as $p$, which is non-trivial as required.
+    
+    To show the second part, recall that $\Zbygp{N} = \set{x + N\Z : 1 \leq x < N, \, (x, N) = 1}$. We want to find the size of the set $X = \set{x \in \Zbygp{N} : O_p(x^b) \neq O_q(x^b)}$ to be at least $\phi(N)/2$.
+    
+    But in fact $\phi(N)$ is the size of $\Zbygp{N}$ by definition, and so we want to show that at least half the elements in the group satisfy this relation.
+    
+    We show that if we partition $\Zbygp{p}$ into subsets according to the value of $O_p(x^b)$, then each subset has a size of at most $\tfrac{1}{2} \abs{\Zbygp{p}} = \tfrac{1}{2}(p-1)$. This suffices to show the result, because if $y \in \Zbygp{q}$ then we must have:
+    \[
+	\# \set{x \in \Zbygp{p} : O_p(x^b) \neq O_q(y^b)} \geq \tfrac{1}{2} (p-1)
+	\implies \abs X \geq \tfrac{1}{2}(p-1)(q-1) = \tfrac{1}{2}\phi(N).
+	\]
+	We exhibit a subset of $\Zbygp{p}$ of size \textit{exactly} half of the original set, which itself suffices to show every partition is at most this large.
+	
+	Let $g$ be a primitive root modulo $p$. Then $(g^b)^{2^a} \equiv 1 \pmod p$, and so $O_p(g^b)$ is a power of 2. If $x = g^\delta$, then $x^b = (g^b)^\delta$, and so we must have:
+	\[
+	O_p(x^b) = \begin{cases}
+		O_p(g^b) & \text{if $\delta$ is odd} \\
+		\leq \tfrac{1}{2} O_p(g^b) & \text{if $\delta$ is even} \\
+	\end{cases}
+	\]
+	But then $\set{g^\delta \pmod p : \delta \text{ is odd}}$ is the required subset! This proves that there is a partition of $\Zbygp{p}$ with the desired property, and so $\abs X \geq \tfrac{1}{2} \phi(N)$ as required.
+\end{prf}
+
+\begin{corollary}
+    Finding the RSA private key $(N, d)$ from the public key $(N, e)$ is essentially as difficult as factoring $N$. If we know how to factor $N = pq$, then we can find $\phi(N)$ very easily, then simply compute $d$ as $e^{-1}$ modulo $\phi(N)$. Conversely, if we know $d$ and $e$, then $\phi(N) \mid de-1$. Then, writing $de-1 = 2^ab$ and use the above theorem to attempt to factor $N$ using random choices of $x$. Since at least half the $x$ work, our chances of success become arbitrarily large very quickly.
+\end{corollary}
+
+\begin{note}
+	We have shown that finding the private key from the public key is as hard as factoring $N$. This is not the same as proving whether \textit{decrypting} an RSA message is this hard: there may be some alternate method!
+\end{note}
 
 \end{document}
