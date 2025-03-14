@@ -363,97 +363,109 @@
 }
 
 \newcommand{\makecover}{%
-  \begingroup
-  \newpage
-  \thispagestyle{empty}
-  
-  % If this is a problem set...
-  \ifcsname @psetnumber\endcsname
-  	\begin{center}
-	    \gdef\@headertitle{\@course \ (Sheet \@psetnumber)}  
-	    \thispagestyle{plain}
-	    {\Huge \@course \par}
-	    \vspace{0.5cm}
-	    {\large Problem Sheet \@psetnumber \par}
-	    \vspace{0.2cm}
-	    {\large \@name \  (\texttt{\@email}) \par}
-  	\end{center}
-    
-    \setcounter{secnumdepth}{-1}
-    \endgroup
-  \else
-    \gdef\@headertitle{\@course}
-    
-    \begin{center}
-      \vspace*{-0.5cm}
-      
-      % Top matter
-      {\Large \textcolor{darkgray}{\@university} \par}
-      \vspace{0.3cm}
-      {\small \textcolor{darkgray}{\@tripospart} \par}
-      
-      \vspace{2cm}
-      
-      % Decorative element
-      \decorativeline
-      \vspace{1.5cm}
-      
-      % Course title
-      {\Huge \textcolor{coverblue}{\textbf{\@course}} \par}
-      \ifcsname @subtitle\endcsname
-        \vspace{0.5cm}
-        {\Large \textcolor{darkgray}{\@subtitle} \par}
-      \fi
-      
-      \vspace{1.5cm}
-      \decorativeline
-      
-      \vspace{1.5cm}
-      
-      % Lecture information
-      {\large Lectured by \@lecturer, \@term \par}
-      \vspace{2.8cm}
-      
-      % Author information in a subtle box
-      \begin{tikzpicture}
-        \node[inner sep=1.5em, rounded corners, 
-              fill=coverblue!5, text=darkgray] {
-          \begin{tabular}{c}
-            Notes by \@name \\
-            \ttfamily\small \@email \\
-            \ifcsname @website\endcsname
-              \small\url{\@website}
-            \fi
-          \end{tabular}
-        };
-      \end{tikzpicture}
-      
-      \vfill
-      
-      % Version and disclaimer in a footer-like area
-      \begin{tikzpicture}
-        \node[inner sep=1.5em, text width=0.8\textwidth, 
-              align=center, text=darkgray] {
-          \ifcsname @version\endcsname
-            {\small Version \@version}\\[0.3cm]
-          \fi
-          {\small\itshape 
-            \ifcsname @disclaimer\endcsname
-              \@disclaimer
-            \fi
-          }
-        };
-      \end{tikzpicture}
-      
-      \vspace{1cm}
-    \end{center}
-    
-    % Table of contents
-    \newpage
-    \tableofcontents
-    \endgroup
-    \newpage
-  \fi
+	\begingroup
+	\newpage
+	\thispagestyle{empty}
+	  
+	% If this is a problem set...
+	\ifcsname @psetnumber\endcsname
+	\begin{center}
+		\gdef\@headertitle{\@course \ (Sheet \@psetnumber)}  
+		\thispagestyle{plain}
+		{\Huge \@course \par}
+		\vspace{0.5cm}
+		{\large Problem Sheet \@psetnumber \par}
+		\vspace{0.2cm}
+		{\large \@name \  (\texttt{\@email}) \par}
+	\end{center}
+	    
+	\setcounter{secnumdepth}{-1}
+	\endgroup
+	\else
+	\gdef\@headertitle{\@course}
+	    
+	\begin{center}
+		\vspace*{-0.5cm}
+		      
+		% Top matter
+		{\Large \textcolor{darkgray}{\@university} \par}
+		\vspace{0.3cm}
+		{\small \textcolor{darkgray}{\@tripospart} \par}
+		      
+		\vspace{2cm}
+		      
+		% Decorative element
+		\decorativeline
+		\vspace{1.5cm}
+		      
+		% Course title
+		{\Huge \textcolor{coverblue}{\textbf{\@course}} \par}
+		\ifcsname @subtitle\endcsname
+		\vspace{0.5cm}
+		{\Large \textcolor{darkgray}{\@subtitle} \par}
+		\fi
+		      
+		\vspace{1.5cm}
+		\decorativeline
+		      
+		\vspace{1.5cm}
+		      
+		% Lecture information
+		\ifcsname @lecturer\endcsname
+			{\large 
+			Lectured by \@lecturer
+				\ifcsname @term\endcsname
+					, \@term
+				\fi
+				\par
+			}
+			\else
+			\ifcsname @term\endcsname
+				{\large Lectured during \@term \par}
+			\fi
+		\fi
+		\vspace{2.8cm}
+		      
+		% Author information in a subtle box
+		\begin{tikzpicture}
+			\node[inner sep=1.5em, rounded corners, 
+			fill=coverblue!5, text=darkgray] {
+				\begin{tabular}{c}
+					Notes by \@name              \\
+					\ttfamily\small \@email      \\
+					\ifcsname @website\endcsname 
+					\small\url{\@website}        
+					\fi                          
+				\end{tabular}
+			};
+		\end{tikzpicture}
+		      
+		\vfill
+		      
+		% Version and disclaimer in a footer-like area
+		\begin{tikzpicture}
+			\node[inner sep=1.5em, text width=0.8\textwidth, 
+			align=center, text=darkgray] {
+				\ifcsname @version\endcsname
+				{\small Version \@version}\\[0.3cm]
+				\fi
+				{\small\itshape 
+					\ifcsname @disclaimer\endcsname
+					\@disclaimer
+					\fi
+				}
+			};
+		\end{tikzpicture}
+		      
+		\vspace{1cm}
+	\end{center}
+	    
+	% Table of contents
+	\newpage
+	\tableofcontents
+	\endgroup
+	\newpage
+	\fi
 }
 
 % Define the style for the cover page: clear header and footer
@@ -466,4 +478,3 @@
 \renewcommand{\headrulewidth}{0.3pt}
 \fancyhead[L]{\small\textbf{\thepage} $\; \cdot \;$ \small\textbf{\@headertitle}}
 \fancyhead[R]{\small\textbf{\@name}}
-
