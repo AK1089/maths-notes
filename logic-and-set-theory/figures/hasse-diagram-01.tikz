@@ -1,0 +1,70 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (0) at (0, -2) {$\varnothing$};
+		\node [style=none] (1) at (-0.5, -1.5) {};
+		\node [style=none] (3) at (-2, 0) {$\set{0}$};
+		\node [style=none] (4) at (-1.5, -0.5) {};
+		\node [style=none] (5) at (2, 0) {$\set{1}$};
+		\node [style=none] (6) at (1.5, 0.5) {};
+		\node [style=none] (7) at (0, 2) {$\set{2}$};
+		\node [style=none] (8) at (0.5, 1.5) {};
+		\node [style=none] (9) at (-0.5, 1.5) {};
+		\node [style=none] (10) at (1.5, -0.5) {};
+		\node [style=none] (11) at (0.5, -1.5) {};
+		\node [style=none] (12) at (-1.5, 0.5) {};
+		\node [style=none] (13) at (0, 2.75) {};
+		\node [style=none] (14) at (0, -2.75) {};
+		\node [style=none] (15) at (10, -4.5) {$\varnothing$};
+		\node [style=none] (16) at (9.5, -4) {};
+		\node [style=none] (17) at (7, -1.5) {$\set{0}$};
+		\node [style=none] (18) at (7.5, -2) {};
+		\node [style=none] (19) at (13, -1.5) {$\set{2}$};
+		\node [style=none] (20) at (12.5, -1) {};
+		\node [style=none] (24) at (12.5, -2) {};
+		\node [style=none] (25) at (10.5, -4) {};
+		\node [style=none] (26) at (7.5, -1) {};
+		\node [style=none] (28) at (10, -5.25) {};
+		\node [style=none] (29) at (10, -2) {};
+		\node [style=none] (30) at (10, -4) {};
+		\node [style=none] (31) at (9.5, -1) {};
+		\node [style=none] (33) at (10, -1.5) {$\set{1}$};
+		\node [style=none] (34) at (7, 1.5) {$\set{0,1}$};
+		\node [style=none] (36) at (13, 1.5) {$\set{1,2}$};
+		\node [style=none] (37) at (12.5, 2) {};
+		\node [style=none] (39) at (7.5, 2) {};
+		\node [style=none] (41) at (10, 2) {};
+		\node [style=none] (42) at (10, 1.5) {$\set{0,2}$};
+		\node [style=none] (43) at (7, -1) {};
+		\node [style=none] (44) at (13, -1) {};
+		\node [style=none] (45) at (13, 1) {};
+		\node [style=none] (46) at (7, 1) {};
+		\node [style=none] (47) at (7.5, 1) {};
+		\node [style=none] (48) at (12.5, 1) {};
+		\node [style=none] (49) at (10.5, -1) {};
+		\node [style=none] (50) at (9.5, 1) {};
+		\node [style=none] (51) at (10.5, 1) {};
+		\node [style=none] (52) at (10, 4.5) {$\set{0,1,2}$};
+		\node [style=none] (53) at (9.5, 4) {};
+		\node [style=none] (54) at (10, 4) {};
+		\node [style=none] (55) at (10.5, 4) {};
+		\node [style=none] (56) at (10, 5.25) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=transition] (11.center) to (10.center);
+		\draw [style=transition] (6.center) to (8.center);
+		\draw [style=transition] (12.center) to (9.center);
+		\draw [style=transition] (1.center) to (4.center);
+		\draw [style=transition] (25.center) to (24.center);
+		\draw [style=transition] (16.center) to (18.center);
+		\draw [style=transition] (43.center) to (46.center);
+		\draw [style=transition] (44.center) to (45.center);
+		\draw [style=transition] (30.center) to (29.center);
+		\draw [style=transition] (31.center) to (47.center);
+		\draw [style=transition] (49.center) to (48.center);
+		\draw [style=transition] (26.center) to (50.center);
+		\draw [style=transition] (20.center) to (51.center);
+		\draw [style=transition] (39.center) to (53.center);
+		\draw [style=transition] (41.center) to (54.center);
+		\draw [style=transition] (37.center) to (55.center);
+	\end{pgfonlayer}
+\end{tikzpicture}

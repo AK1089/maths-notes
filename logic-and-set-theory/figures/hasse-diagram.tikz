@@ -1,0 +1,35 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (0) at (0, 3) {f};
+		\node [style=none] (1) at (-2, 1) {d};
+		\node [style=none] (2) at (2, 1) {e};
+		\node [style=none] (3) at (-4, -1) {b};
+		\node [style=none] (4) at (0, -1) {c};
+		\node [style=none] (5) at (-2, -3) {a};
+		\node [style=none] (6) at (-0.5, 2.5) {};
+		\node [style=none] (7) at (-1.5, 1.5) {};
+		\node [style=none] (8) at (0.5, 2.5) {};
+		\node [style=none] (9) at (1.5, 1.5) {};
+		\node [style=none] (10) at (-2.5, 0.5) {};
+		\node [style=none] (11) at (-3.5, -0.5) {};
+		\node [style=none] (12) at (-1.5, 0.5) {};
+		\node [style=none] (13) at (-0.5, -0.5) {};
+		\node [style=none] (14) at (-0.5, -1.5) {};
+		\node [style=none] (15) at (-1.5, -2.5) {};
+		\node [style=none] (16) at (-3.5, -1.5) {};
+		\node [style=none] (17) at (-2.5, -2.5) {};
+		\node [style=none] (18) at (1.5, 0.5) {};
+		\node [style=none] (19) at (0.5, -0.5) {};
+		\node [style=none] (20) at (0, 3.5) {};
+		\node [style=none] (21) at (-2, -3.5) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=transition] (17.center) to (16.center);
+		\draw [style=transition] (11.center) to (10.center);
+		\draw [style=transition] (15.center) to (14.center);
+		\draw [style=transition] (13.center) to (12.center);
+		\draw [style=transition] (7.center) to (6.center);
+		\draw [style=transition] (9.center) to (8.center);
+		\draw [style=transition] (19.center) to (18.center);
+	\end{pgfonlayer}
+\end{tikzpicture}
