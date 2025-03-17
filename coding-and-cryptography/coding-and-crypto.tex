@@ -11,7 +11,7 @@
 \name{Avish Kumar}
 \email{ak2461@cam.ac.uk}
 \website{https://ak1089.github.io/maths/notes}
-\version{1.22}
+\version{1.23}
 \disclaimer{These notes are unofficial and may contain errors. While they are written and published with permission, they are not endorsed by the lecturer or University.}
 
 % Auxiliary files
@@ -3740,7 +3740,9 @@ Now, we want to prove a theorem about RSA. We will use the notation $O_p(x)$ to 
 \end{theorem}
 
 \begin{prf}
-    Let $y \equiv x^b \pmod N$. By the Euler-Fermat Theorem, $y^{2^a} \equiv (x^b)^{2^a} \equiv x^{\phi(N)} \equiv 1 \pmod N$, and so $O_p(y)$ and $O_q(y)$ are both powers of 2. This is because if this were not true, then the order of $y$ modulo $N$ (which is the product of $O_p(y)$ and $O_q(y)$ could not be a factor of $2^a$).
+    Let $y \equiv x^b \pmod N$. By the Euler-Fermat Theorem, $y^{2^a} \equiv (x^b)^{2^a} \equiv x^{\phi(N)} \equiv 1 \pmod N$, and so $O_p(y)$ and $O_q(y)$ are both powers of 2.
+    
+    If this were not true, then the order of $y$ modulo $N$ (which is the product of $O_p(y)$ and $O_q(y)$) could not be a factor of $2^a$, which is a contradiction.
     
     We are given that they are not equal, and so we have $y^{2^t} \equiv 1 \pmod p$ without loss of generality (possibly swapping $p$ and $q$). This gives the highest common factor of $y^{2^t}-1$ and $N$ as $p$, which is non-trivial as required.
     
@@ -3754,8 +3756,9 @@ Now, we want to prove a theorem about RSA. We will use the notation $O_p(x)$ to 
 	\implies \abs X \geq \tfrac{1}{2}(p-1)(q-1) = \tfrac{1}{2}\phi(N).
 	\]
 	We exhibit a subset of $\Zbygp{p}$ of size \textit{exactly} half of the original set, which itself suffices to show every partition is at most this large.
+	Let $g$ be a primitive root modulo $p$.
 	
-	Let $g$ be a primitive root modulo $p$. Then $(g^b)^{2^a} \equiv 1 \pmod p$, and so $O_p(g^b)$ is a power of 2. If $x = g^\delta$, then $x^b = (g^b)^\delta$, and so we must have:
+	Then $(g^b)^{2^a} \equiv 1 \pmod p$, and so $O_p(g^b)$ is a power of 2. If $x = g^\delta$, then $x^b = (g^b)^\delta$, and so we must have:
 	\[
 	O_p(x^b) = \begin{cases}
 		O_p(g^b) & \text{if $\delta$ is odd} \\
@@ -3766,11 +3769,164 @@ Now, we want to prove a theorem about RSA. We will use the notation $O_p(x)$ to 
 \end{prf}
 
 \begin{corollary}
-    Finding the RSA private key $(N, d)$ from the public key $(N, e)$ is essentially as difficult as factoring $N$. If we know how to factor $N = pq$, then we can find $\phi(N)$ very easily, then simply compute $d$ as $e^{-1}$ modulo $\phi(N)$. Conversely, if we know $d$ and $e$, then $\phi(N) \mid de-1$. Then, writing $de-1 = 2^ab$ and use the above theorem to attempt to factor $N$ using random choices of $x$. Since at least half the $x$ work, our chances of success become arbitrarily large very quickly.
+    Finding the RSA private key $(N, d)$ from the public key $(N, e)$ is essentially as difficult as the problem of factoring $N$.
+    \begin{enumerate}
+	    \item If we know how to factor $N = pq$, then we can find $\phi(N)$ very easily, then simply compute $d$ as $e^{-1}$ modulo $\phi(N)$.
+	    \item Conversely, if we know $d$ and $e$, then $\phi(N) \mid de-1$. Then, writing $de-1 = 2^ab$ and use the above theorem to attempt to factor $N$ using random choices of $x$. Since at least half the $x$ work, our chances of success become arbitrarily large very quickly.
+	\end{enumerate}
 \end{corollary}
 
 \begin{note}
 	We have shown that finding the private key from the public key is as hard as factoring $N$. This is not the same as proving whether \textit{decrypting} an RSA message is this hard: there may be some alternate method!
+\end{note}
+
+This is a very effective, near-unbreakable cryptosystem. However, it is computationally slow: the calculations required are necessarily intense. Symmetric cryptosystems are often much faster, so we are interested in the problem of \textit{key sharing}.
+
+% ================================================================== %
+
+\subsection{Key Exchange and Diffie-Hellman}
+
+For the problem of \textit{key sharing}, or \textit{key exchange}, Alice and Bob now wish to agree a secret key $k$ for communication. Once they have this key agreed, they can communicate using a shared symmetric cryptosystem, which is faster and easier.
+
+Adi Shamir (one of the creators of RSA) proposed the following system:
+\begin{enumerate}
+    \item Alice and Bob publicly agree on some prime $p$.
+    \item Alice privately chooses $1 \neq a \in \Zbygp{p}$ and computes $a'$ with $aa' \equiv 1 \pmod {p-1}$.
+    \item Bob privately chooses $1 \neq b \in \Zbygp{p}$ and computes $b'$ with $bb' \equiv 1 \pmod {p-1}$.
+    \item Alice chooses some $K$ to be the key and sends Bob $m_1 \equiv K^a$.
+    \item Bob sends back $m_2 \equiv m_1^b \equiv (K^a)^b \equiv K^{ab}$.
+    \item Alice sends back $m_3 \equiv m_2^{a'} \equiv (K^{ab})^{a'} \equiv K^{aa'b} \equiv K^b$.
+    \item Bob computes $K' = m_3^{b'} \equiv (K^b)^{b'} \equiv K^{bb'} \equiv K$.
+\end{enumerate}
+So the parties have agreed on a shared key $K$, without ever having transmitted it! The messages which were actually sent (and which Eve could therefore have seen) are $m_1$, $m_2$, and $m_3$, which are $K^a$, $K^{ab}$, and $K^b$. This cannot be used to recover $K$ without solving the discrete logarithm problem, and so Alice and Bob are free to use $K$ as the key for a symmetric encryption system!
+
+\begin{remark}[The Padlock Analogy]
+	The above system for key exchange works much like adding padlocks to a box. Alice has a padlock of her own (exponentiating by $a$) and only she has the key (exponentiating by $a'$) which unlocks this lock (reverses the operation. The same goes for Bob, with $b$ and $b'$.
+	
+	In real life, this might look like the below diagram. Even if Eve is able to intercept all the boxes in transit and inspect them, they are all locked, and so she can't do anything!
+	
+	\begin{center}
+		\includegraphics[width=0.9\linewidth]{figures/key-exchange-padlocks.png}
+	\end{center}
+\end{remark}
+
+We now consider one of the most famous key exchange methods, which is called the \textit{Diffie-Hellmann} key exchange algorithm, and is one of the most famous methods.
+
+Let $p$ be a large prime, and $g$ be a primitive root modulo $p$.
+\begin{enumerate}
+    \item Alice chooses a number $\alpha$ and sends $g^\alpha \pmod p$ to Bob.
+    \item Bob chooses a number $\beta$ and sends $g^\beta \pmod p$ to Alice.
+    \item Both parties now compute $k = g^{\alpha\beta} = (g^\alpha)^\beta = (g^\beta)^\alpha$, and use this as their secret key.
+\end{enumerate}
+Neither party knows both $\alpha$ and $\beta$, only their own, which means no attacker can steal all of the information required to compute $k$. This system therefore works even if Alice and Bob communicate only on a channel compromised by Eve!
+
+To break this system and find $k$, Eve must compute $g^{\alpha\beta}$ using only $g$, $g^\alpha$, and $g^\beta$. It is conjectured (but not strictly proven) that this is as hard as the discrete logarithm problem.
+
+% ================================================================== %
+
+\subsection{Signatures and Authenticity}
+
+We now consider another desideratum: message signatures. When Alice sends an encrypted secret message to Bob, she may have multiple goals in mind.
+
+\begin{enumerate}
+    \item Secrecy/Confidentiality: both Alice and Bob can be absolutely confident that no third party has read the original unencrypted message.
+    \item Authenticity: both Alice and Bob can be absolutely confident that they are indeed talking to each other, and not a third party.
+    \item Integrity: both Alice and Bob can be absolutely confident that no third party has tampered with the original message.
+\end{enumerate}
+
+Suppose Bob wants to be absolutely certain that the person with whom they are in communication is Alice rather than an impostor. How might we achieve this using RSA?
+
+If Alice's private key is $(N, d)$ and her public key is $(N, e)$, then anyone can encrypt a message but only Alice can decrypt it. We might think to ``flip this around", and get Alice to encrypt using the \textit{private} key $(N, d)$: remember that RSA is entirely symmetrical in $d$ and $e$.
+
+In fact, this is how the process works! Bob picks some arbitrary message $\mu$, and sends it to Alice without encrypting it. Alice then encrypts this message using $(N, d)$ as the encryption key (her private key) and sends back the result. Then, anyone can decrypt this message, but that doesn't matter, since it was arbitrary! In particular, Bob can decrypt it using $(N, e)$, and verify that the result matches the original text $\mu$.
+
+The only way to create a message which decrypts to $\mu$ under the public key $(N, e)$ is to have the private key $d$, and so Bob knows that his interlocutor must be Alice!
+
+We now consider the problem of \textit{integrity}. First, why is this even important?
+
+\begin{remark}[Homomorphism Attack]
+	\label{remark-homomorphism-attack}
+    Suppose a bank creates a message of the form $(m_1, m_2, m_3)$, denoting the name of the client $m_1$, the amount of money $\$m_2$ to be credited to their account, and the password $m_3$ of the person authorising the transaction.
+    
+    These messages are encoded using RSA as $(z_1, z_2, z_3) = (m_1^e, m_2^e, m_3^e)$ all modulo $N$ using the bank's public encryption key $(N, e)$. Only the bank can decrypt this code.
+    
+    An attacker can enter into a transaction which credits \$100 to their account. Then, they can steal the encrypted password, or for example change $z_2$ to $z_2^3 \equiv m_2^{3e}$, stealing \$1 million!
+\end{remark}
+
+\begin{note}
+	Even if an attacker didn't know that RSA was being used, they could simply transmit the same message repeatedly. We can prevent this attack vector by insisting that every message comes with a \textit{timestamp}.
+\end{note}
+
+So for integrity, we might want to consider the signature of a \textit{message}, rather than the sender. We suppose that all users have a private key and a public key. We want a \textit{signature map}:
+\[
+s : \calM \times \calK \to \calS
+\where \begin{cases}
+	\calM & \text{is the set of all possible messages} \\
+	\calK & \text{is the set of all possible keys} \\
+	\calS & \text{is the set of all possible signatures} \\
+\end{cases}
+\]
+Alice signs a message $m$ with $s(m, K_A)$, where $K_A \in \calK$ is her private key. Ideally, Bob can verify that this is Alice's signature using Alice's public key $K_A'$. The signature should therefore be a \textit{trapdoor} function: something which is very easy to do one way and very difficult to reverse, much like in the discrete logarithm problem.
+
+For example, we may use RSA. If Alice has private key $(N, d)$ and public key $(N, e)$, then she may sign a message $m$ with $s = m^d \pmod N$. Anyone can verify that $(m, s)$ is a valid signed message using the public key $(N, e)$, and therefore knows that Alice has sent the message!
+
+\begin{definition}[Hash Function]
+    A \textit{hash function} is a one-way function which is pre-image resistant and collision-resistant. In particular, $h : \calM \to \set{1, \dots, N}$ is a hash function if:
+    \begin{enumerate}
+	    \item Given a message $m \in \calM$, it is easy to hash the message and compute $h(m)$.
+	    \item Given $1 \leq H \leq N$, it is very difficult to recover the original message $m$ with $H = h(m)$.
+	    \item Given two messages $m_1 \neq m_2$ in $\calM$, the hashes $h(m_1)$ and $h(m_2)$ are different with an extremely high probability.
+	\end{enumerate}
+	In practice, these hash functions are constructed in such a way as to be ``very non-local", or chaotic: tiny changes to the input message $m$ (say flipping one bit of a binary string) makes the resulting hash totally different in a very unpredictable way.
+	
+	Hash functions are publicly known. Some of the most common ones are SHA-256 and MD5, which use a large sequence of binary operations and ``mixing up the data".
+\end{definition}
+
+\begin{corollary}
+    It is easy to check that some data input maps to a given hash value. However, if the input data is unknown, it is deliberately very difficult to reconstruct.
+\end{corollary}
+
+\begin{corollary}
+    A hash function is a trapdoor function!
+\end{corollary}
+
+This is a huge advantage, because it allows us to check data integrity too! When Alice wants to send a message to Bob, she encrypts her plaintext $\mu$ using Bob's public key to create an encrypted message $m$. She then computes the hash $h(m)$ using the publicly agreed hash function, then uses her own private key to encrypt $h(m)$ to form the signature. She then sends $m$ and $s$. Bob can:
+\begin{enumerate}
+    \item Decrypt $m$ using his own private key, and thus both parties are confident that only Bob is able to read the original message $\mu$.
+    \item Compute $h(m)$ himself using the publicly agreed hash function.
+    \item Decrypt the signature using Alice's public key. This should result in the hash $h(m)$ which he calculated. If there is a discrepancy, then he knows that either some message was corrupted, or that he is not talking to Alice. But if there is a match, then he knows for sure that only Alice could possibly have sent this message!
+\end{enumerate}
+
+We therefore have a ``perfect" system! Alice has total confidence that only Bob can see the message, and Bob has total confidence that Alice sent the exact message $\mu$ he decrypted.
+
+An attacker Eve can read $m$ and $s$, and can decrypt $s$ into $h(m)$ using Alice's public key. She can therefore also verify that the message came from Alice, but not read it. What if Eve wants to forge a message from Alice? She could easily find $h(m)$, but would need to sign it using Alice's private key, which is difficult.
+
+Even if Alice finds a way to alter the message in transit (such as in the Homomorphism Attack from Remark \ref{remark-homomorphism-attack}), any slightly changed version $m'$ of $m$ changes $h(m')$ to something completely unrecognisable, and so Eve could not sign the new hash with Alice's private key.
+
+Another common signature scheme is the ElGamal Signature Scheme, developed in 1985. As usual, we take $p$ to be a large prime and $g$ to be a primitive root modulo $p$. Furthermore, we take the function $h : \calM \to \set{1, \dots, p-1}$ to be a collision-resistant hash function.
+
+Alice first chooses a random integer $1 < u < p$ to be her private key, and then sets the public key to be $(p, g, y)$, where $y \equiv g^u \pmod p$. This is published for anyone to see.
+
+When Alice wants to sign a message $m$, she chooses a random key $1 < k < p$ which is coprime to $p-1$, and finds $k'$ with $kk' = 1 \pmod{p-1}$. She then calculates the two numbers:
+\[
+r \equiv g^k \pmod p
+\qquad
+s \equiv k'(h(m) - ur) \pmod{p-1}.
+\]
+This $s$ has the property that $h(m) \equiv ur + ks \pmod{p-1}$. She then sends the signature $(r, s)$ for the message $m$. In order to verify that Alice sent the original message, anyone can compute $v_1 = y^r \cdot r^s$ and $v_2 = g^{h(m)}$, both modulo $p$.
+
+\begin{proposition}[ElGamal Check]
+    The signature $(r, s)$ is valid for message $m$ if $v_1 = v_2$.
+\end{proposition}
+
+\begin{prf}
+    We have $v_1 \equiv y^r \cdot r^s \equiv (g^u)^r \cdot (g^k)^s \equiv g^{ur} \cdot g^{ks} \equiv g^{ur + ks} \equiv g^{h(m)} \equiv v_2 \pmod p$ if $v_1$ and $v_2$ are constructed correctly using the above signature scheme, where the crucial equivalence follows from the relation $h(m) \equiv ur + ks \pmod{p-1}$.
+    
+    It is harder to show that this signature is difficult to forge. Given some $m$, there is no other $m$ with the same $v_2 = g^{h(m)}$, so the attacker can only choose $r$ and $s$. But this only works out to the correct $v_1$ if $r$ and $s$ match the correct values, which can only be calculated knowing $u$.
+\end{prf}
+
+\begin{note}
+	Of course, like any signature scheme, this is vulnerable to \textit{replay attacks}, where an attacker simply repeats a message they've already seen transmitted with the corresponding signature! To combat this attack, we can insist that each message comes with a ``nonce" (number used once, like a timestamp), which allows the recipient to ensure each message only comes through one time.
 \end{note}
 
 \end{document}
