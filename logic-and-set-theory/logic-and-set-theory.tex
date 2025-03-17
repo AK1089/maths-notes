@@ -11,7 +11,7 @@
 \name{Avish Kumar}
 \email{ak2461@cam.ac.uk}
 \website{https://ak1089.github.io/maths/notes}
-\version{1.19}
+\version{1.23}
 \disclaimer{These notes are unofficial and may contain errors. While they are written and published with permission, they are not endorsed by the lecturer or University.}
 
 % Auxiliary files
@@ -606,6 +606,7 @@ Induction has allowed us to prove things. Now, we need a tool to \textit{constru
 For well-ordered sets $X$ and $Y$, we write $X \leq Y$ for ``$X$ is order-isomorphic to some initial segment of $Y$". Is this notation sensible? In fact, it is: we have trichotomy for this relation.
 
 \begin{theorem}[Order-Isomorphism Trichotomy]
+	\label{order-isomorphism-trichotomy}
     Let $X$ and $Y$ be well-ordered. Then $X \leq Y$ or $Y \leq X$.
 \end{theorem}
 
@@ -687,7 +688,7 @@ Now, we consider \textit{ordinals}. These are the same as the well-ordered sets 
 \end{definition}
 
 \begin{note}
-	This definition is still quite informal: we give a more formal definition later on. % TODO: backlink here when formal definition given in Ch. 5
+	This definition is still quite informal: later on, Definition \ref{ch5-formal-ordinal} is more rigorous.
 \end{note}
 
 \begin{definition}[Relation on Ordinals]
@@ -1224,6 +1225,7 @@ This section will require a lot of basic definitions and examples before we see 
 \end{note}
 
 \begin{theorem}[Schr\"oder-Bernstein Theorem]
+	\label{schroder-bernstein-theorem}
     Let $A$ and $B$ be sets. If there are injections $f: A \to B$ and $g: B \to A$, then in fact there is some bijection $h: A \to B$.
 \end{theorem}
 
@@ -1386,6 +1388,7 @@ The \textit{Axiom of Choice} is the assertion that for any set $X = \set{A_i : i
 In fact, the seminal result of this section will be that two results we have seen before are in fact equivalent to the Axiom of Choice, and thus equivalent to each other: Zorn's Lemma and the Well-Ordering Principle (Theorems \ref{zorns-lemma} and \ref{well-ordering-principle}).
 
 \begin{theorem}[Axiom of Choice Equivalence]
+	\label{ac-zl-wop}
     The Axiom of Choice is equivalent to Zorn's Lemma (\ref{zorns-lemma}), which is itself equivalent to the Well-Ordering Principle (\ref{well-ordering-principle}). That is, each of these imply the others.
 \end{theorem}
 
@@ -1501,7 +1504,7 @@ Similarly, if $S$ is a set of formulae, we regard the notion of a \textit{defini
 
 % ================================================================== %
 
-\subsection{Language}
+\subsection{Languages}
 \label{section-first-order-language}
 
 Now, having introduced a heuristic idea of logic, we begin to consider it formally.
@@ -1573,7 +1576,7 @@ Really, a formula is a finite string from $\Omega \cup \Pi$, variables, and the 
     
     If $p$ and $q$ are formulae, then any occurrence of a variable in $p$ or $q$ remains of the same type in the formula $(p \Ra q)$.
     
-    If $p$ is a formula, and a variable $x$ has at least one free ocrrence in $p$, then every free occurrence of $x$ in $p$ becomes bound in the formula $(\forall x)p$. Everything else is unchanged.
+    If $p$ is a formula, and a variable $x$ has at least one free ocurrence in $p$, then every free occurrence of $x$ in $p$ becomes bound in the formula $(\forall x)p$. Everything else is unchanged.
     
     We let $\mathrm{FV}(p)$ be the set of free variables in a formula $p$. These are variables with at least one free occurrence in $p$.
     
@@ -1646,7 +1649,7 @@ Now, having formalised interpretation, we consider the truth values of formulae 
 
 \begin{definition}[Model]
 	\label{first-order-predicate-model}
-    If $L = L(\Omega, \Pi)$ is a first order language, and $A$ is an $L$-structure, then we say that a formula $p \in L$ ``\textit{holds} in $A$", or ``$p$ is \textit{satisfied} in $A$", or ``$p$ is \textit{true} in $A$", or ``$A$ is a \textit{definition-propositional-model} of $p$", if $p_A = A^n$. Equivalently, if $p_A : A^n \to \set{0, \, 1}$ is the constant function 1, where $n = \# \mathrm{FV}(p)$.
+    If $L = L(\Omega, \Pi)$ is a first order language, and $A$ is an $L$-structure, then we say that a formula $p \in L$ ``\textit{holds} in $A$", or ``$p$ is \textit{satisfied} in $A$", or ``$p$ is \textit{true} in $A$", or ``$A$ is a \textit{model} of $p$", if $p_A = A^n$. Equivalently, if $p_A : A^n \to \set{0, \, 1}$ is the constant function 1, where $n = \# \mathrm{FV}(p)$.
 \end{definition}
 
 \begin{corollary}
@@ -1660,7 +1663,6 @@ Now, having formalised interpretation, we consider the truth values of formulae 
 \end{definition}
 
 Now, it's time to formalise some existing structures we know and love into first-order theories. To do this, we must write down sets $\Omega$ and $\Pi$, define the arities of all of their elements, and then write down sentences in the language $L = L(\Omega, \Pi)$.
-
 
 \begin{example}[Group Theory]
     The language of group theory is $\Omega = \set{m, i, e}$ with arities $\alpha(m) = 2$, $\alpha(i) = 1$, $\alpha(e) = 0$, and $\Pi = \varnothing$. We now define  a \textit{theory} of groups.
@@ -1869,7 +1871,7 @@ This allows us to write down what a proof in first-order predicate logic looks l
 	    \item $(\forall y)((x=y) \Ra ((x=z) \Ra (y=z))) \Ra ((x=y) \Ra ((x=z) \Ra (y=z)))$ \hfill (A6)
 	    \item $(x=y) \Ra ((x=z) \Ra (y=z))$ \hfill (MP)
 	    \item $x=y$ \hfill (premise)
-	    \item $(x=y) \Ra (y=z)$ \hfill (MP)
+	    \item $(x=z) \Ra (y=z)$ \hfill (MP)
 	    \item $(\forall z)((x=z) \Ra (y=z))$ \hfill (Gen)
 	    \item $(\forall z)((x=z) \Ra (y=z)) \Ra ((x=x) \Ra (y=x))$ \hfill (A6)
 	    \item $(x=x) \Ra (y=x)$ \hfill (MP)
@@ -2054,7 +2056,7 @@ But then we would need $T$ to be the theory of groups together with the ``senten
 	S = T \cup \set{\lnot t_1, \, \lnot t_2, \, \lnot t_3, \, \dots}
 	\where t_n = (\exists x_1)(\exists x_2)\dots(\exists x_n)(\forall x)(x = x_1 \lor \dots \lor x = x_n).
 	\]
-	Any finite subset of $S$ as a model. For example, $C_n$, where $n = 1 + \max \set{i : \lnot t_i \in S}$, is a model of $S$. But then by compactness, $S$ has a model, which is a contradiction.
+	Any finite subset of $S$ has a model. For example, $C_n$, where $n = 1 + \max \set{i : \lnot t_i \in S}$, is a model of $S$. But then by compactness, $S$ has a model, which is a contradiction.
 \end{prf}
 
 \begin{corollary}
@@ -2100,7 +2102,7 @@ There is also another version of this theorem, which is in some sense the opposi
 \subsection{Peano Arithmetic}
 \label{section-first-order-peano-arithmetic}
 
-We now wish to axiomatise the natural numbers $\N$ as a first-order theory. In fact, the key property of $\N$ is \textit{induction}: in fact, this uniquely determines the set! We will try to construct our set using the property of induction with some axioms.
+We now wish to axiomatise the natural numbers $\N$ as a first-order theory. Now, the key property of $\N$ is \textit{induction}: in fact, this uniquely determines the set! We will try to construct our set using the property of induction with some axioms.
 
 The language then consists of operation symbols $\Omega = \set{0, S, +, \times}$, with arities 0, 1, 2, and 2. We take no predicates, so $\Pi = \varnothing$. 0 is the constant ``zero", $S$ is the ``successor" operator $n \mapsto n + 1$, and addition $+$ and multiplication $\times$ will be constructed in the familiar way.
 
@@ -2167,7 +2169,7 @@ Set theory is really just another mathematical theory. We will axiomatise it as 
 
 % ================================================================== %
 
-\subsection{Zermelo-Fraenkel Set Theory (ZF)}
+\subsection{The Zermelo-Fraenkel Axioms}
 \label{section-set-theory-zf}
 
 We will study a particular first-order axiomatisation of set theory, developed by Ernst Zermelo and Abraham Fraenkel. This is often referred to as ZF for short.
@@ -2175,7 +2177,7 @@ We will study a particular first-order axiomatisation of set theory, developed b
 The language of this theory has no operation symbols, so $\Omega = \varnothing$. There is a single predicate $\in$, which has arity 2. This is going to be the ``is a member of" predicate.
 
 \begin{definition}[Set-Theoretic Universe]
-    A \textit{definition-propositional-model} of ZF will be denoted by $V$, which is a non-empty set with an interpretation of the binary predicate $\in_V \subs V \times V$. Elements of $V$ will then be called \textit{sets}.
+    A \textit{model} (\ref{definition-propositional-model}) of ZF will be denoted by $V$, which is a non-empty set with an interpretation of the binary predicate $\in_V \subs V \times V$. Elements of $V$ will then be called \textit{sets}.
 
 	If $(a, b)$ is in $\in_V$, we say ``$a$ is a member of $b$", or ``$a$ is an element of $b$", or ``$b$ contains $a$".
 	
@@ -2225,7 +2227,7 @@ These axioms do not guarantee that any sets exist! Let us construct the first se
     \[
 	(\forall x)(
 	x \in f \Ra
-	\underbrace{(\exists y)(\exists z)(x = \set{y, \set{y, z}}))}_{\text{$x$ is an ordered pair}}
+	\underbrace{(\exists y)(\exists z)(x = \set{y, \set{y, z}})}_{\text{$x$ is an ordered pair}})
 	\land 
 	(\forall x)(\forall y)(\forall z) (
 	\underbrace{((x, y) \in f) \land ((x, z) \in f) \Ra y=z}_{\text{function outputs are unique}}).
@@ -2320,6 +2322,7 @@ What about the set of all sets in $V$? This would be infinite, but in fact it is
 So we cannot easily construct infinite sets with the above axioms. We should add a new axiom, which asserts the existence of such sets directly.
 
 \begin{definition}[Successor Set]
+	\label{successor-set}
     We say that $x$ is a \textit{successor set} if $(\varnothing \in x) \land (\forall y \in x)(y^+ \in x)$. Here, $(\forall y \in x)p$ is shorthand for $(\forall y)(y \in x \Ra p)$, for any formula $p$, and $y^+ = y \cup \set{y}$ as in Remark \ref{remark-on-infinity-in-sets}.
     
     Using $0 = \varnothing$, $1 = 0^+$, and so on, it is clear that 0, 1, 2, and so on are all in any successor set.
@@ -2372,6 +2375,7 @@ First, let us investigate the notion of a \textit{class}. We have discussed thes
 \end{corollary}
 
 \begin{definition}[Function Class]
+	\label{function-class}
     A \textit{function class} is a subset $F \subs V \times V$ with $F = p_V$ for some formula $p$ with precisely two free variables $x$ and $y$, which in $V$ satisfies the sentence:
     \[
 	(\forall x)(\forall y)(\forall z)((p \land p[z/y]) \Ra (y = z)).
@@ -2421,6 +2425,7 @@ In \S\ref{section-posets-axiom-of-choice}, we studied the Axiom of Choice. This 
 % ================================================================== %
 
 \subsection{Induction and Recursion}
+\label{section-set-theory-induction-recursion}
 
 We now aim to prove slightly more general versions of induction and recursion than the ones we have used previously. Then, we provide a more proper definition of ordinals than the one in \S\ref{section-ordinals-ordinals-intro}, which will allow us to further characterise the universe $V$.
 
@@ -2449,7 +2454,7 @@ Every member of $\omega$ is transitive, by an easy $\omega$-induction. In fact, 
     
     In the spirit of Definition by Recursion (\ref{definition-by-recursion}), we define an \textit{attempt} to be a function $f$ with:
     \[
-	(\dom f = \omega)
+	(\dom f \in \omega)
 	\land
 	(f(0) = x)
 	\land
@@ -2462,10 +2467,481 @@ Every member of $\omega$ is transitive, by an easy $\omega$-induction. In fact, 
 	(``f \text{ and } g \text{ are attempts}" \land (n \in \dom f \cap \dom g) \Ra f(u) = g(u)).
 	\]	
 	Likewise, we may prove that every $n \in \omega$ is in the domain of some attempt.
+	\[
+	(\forall n \in \omega)(\exists f)(``f \text{ is an attempt}" \land n \in \dom f).
+	\]
+	We can prove this by $\omega$-induction, defining $w = \set{n \in \omega : (\exists f)(``f \text{ is an attempt}" \land n \in \dom f)}$.
+	
+	We show $w$ is a successor set, whence it follows $w = \omega$. The set $\set{(0, x)}$ is an attempt, so $0 \in w$. If $n \in w$, then take $f$ to be an attempt defined at $n$. Since the members of $n$ are transitive, we have $n \subs \dom f$, and so $n^+ \subs \dom f$. Replacing $f$ by this extension, we can take $\dom f = n^+$ without loss of generality.
+	
+	Then $g = f \cup \set{(n^+, \bigcup f(n))}$ is an attempt defined at $n^+$, so $n^+ \in w$. This proves that $w$ must be a successor set, and thus contains $\omega$, and so every $n \in \omega$ is in the domain of some attempt.
+	
+	Now, let $p$ be a formula with free variables $y$ and $z$, defined as:
+	\[
+	(\exists f)(``f \text{ is an attempt}" \land f(y) = z).
+	\]
+	By the fact that two attempts agree on their common domain, we have:
+	\[
+	(\forall y)(\forall z)(\forall u)((p \land p[u/z]) \Ra z = u).
+	\]
+	But this is exactly the definition of a function-class (\ref{function-class}), so $p$ defines a function-class! By (Rep), the image of $\omega$ under this function-class is a set. We form $w$, with $z \in w$ if and only if $(\exists y)p(y, z)$.
+	Informally, $w = \set{x, \bigcup x, \bigcup \bigcup x, \dots}$.
+	
+	Then, we form $t = \bigcup w$. We show that $t$ is transitive and that $x \subs t$. The latter is easy: $\set{(0, x)}$ is an attempt, and so $x \in w$, and therefore $x \subs t$.
+	
+	For the former, we fix an arbitrary $a \in t$. We want to show that in fact $a \subs t$. Since $a \in t$, there is some $z \in w$ with $a \in z$. But then $z = f(u)$ for some attempt $f$ and $n \in \dom f$. We know that there is an attempt $g$ defined at $n^+$, so $n^+ \in \dom g$, and hence $n \in \dom g$ by transitivity.
+	
+	But then $g(n) = f(n) = z$, and so $g(n^+) = \bigcup g(n) = \bigcup z$. Therefore $\bigcup z = w$, and hence we have $a \subs \bigcup z \subs t$. This proves transitivity of $t$, as desired!
 \end{prf}
 
 \begin{corollary}
-    Since the intersection of a non-empty set of transitive sets is transitive, there is a smallest transitive set containing $x$. This is called the \textit{transitive closure} of $x$, denoted by $\mathrm{TC}(x)$.
+    Since the intersection of a non-empty set of transitive sets is transitive, there is a smallest transitive set containing $x$. This is called the \textit{transitive closure} of $x$, denoted by $\mathrm{TC}(x)$. In fact, the set we constructed in the above proof is this transitive closure.
 \end{corollary}
+
+\begin{theorem}[Principle of $\in$-duction]
+    For any formula $p$ with free variables $\mathrm{FV}(x, t_1, \dots, t_n)$, the following sentence holds in ZF:
+    \[
+	(\forall t_1) \dots (\forall t_n)
+	\left( (\forall x)((\forall y \in x) p[y/x] \Ra p) \Ra (\forall x)p \right).
+	\]
+	That is, if you can always deduce $p$ simply from seeing it hold from all members of $x$, then in fact you can deduce it for all $x$.
+\end{theorem}
+
+\begin{prf}
+    We fix values of $t_1, \dots, t_n$. Assume that $(\forall x)((\forall y \in x) p[y/x] \Ra p)$ holds. That is, for all $x$, $p(x)$ holds whenever $p(y)$ holds for all $y \in x$.
+    
+    Assume that $\lnot (\forall x) p$, and fix some $x$ for which $\lnot p(x)$ holds. At this point, we want to choose some $\in$-minimal counterexample in $\set{y : \lnot p(y)}$, but this may not be a set.
+    
+    Fix any transitive set $t$ with $x \in t$, such as the transitive closure of $\set x$. We can now form the set of counterexamples in $t$: define $u = \set{y \in t : \lnot p(y)}$ using (Sep).
+    
+    Since $x \in u$, by (Found) $u$ has some $\in$-minimal member. Call this $z$. If $y \in z$, then $y \in t$, since $t$ is transitive. Also, by minimality of $z$, $p(y)$ holds (otherwise $y \in z$ would be a counterexample). In fact, this is true for any $y \in z$, and so by assumption, $p(z)$ holds. This is a counterexample, and so the sentence in the theorem really does always hold.
+\end{prf}
+
+Given all the axioms of ZF apart from (Found), the above theorem is equivalent to (Found). We have proved one direction, and will now prove the other.
+
+\begin{theorem}[Foundation Equivalence]
+	We call a set $x$ \textit{regular} if $(\forall y)(x \in y \Ra ``y \text{ has an $\in$-minimal member}")$.
+    Then we may restate the Axiom of Foundation as $(\forall x)(``x \text{ is regular}")$.
+\end{theorem}
+
+\begin{prf}
+    We prove this by $\in$-duction. Fix a set $x$, and assume $y$ is regular for all $y \in x$. Let $z$ be a set with $x \in z$. We need to show that $z$ has an $\in$-minimal member.
+    
+    This is easy to do if $x$ is itself such an $\in$-minimal member of $z$. If not, then $y \in z$ for some $y \in x$. By the $\in$-duction hypothesis, $y$ is regular, and so $z$ still has an $\in$-minimal member!
+\end{prf}
+
+Now, we move on from induction to recursion.
+
+\begin{theorem}[Principle of $\in$-cursion]
+    Let $G$ be a function-class given by some formula $p$, which is \textit{defined everywhere}. In terms of $p$, this states that $(\forall x)(\exists y)(p(x, y))$.
+    
+    Then there is a function-class $F$, given by some formula $q$, such that $(\forall x)(F(x) = G(F|_x))$. Moreover, $F$ is unique, and also defined everywhere.
+\end{theorem}
+
+\begin{prf}
+    The restriction $F|_x$ is $\set{(s, F(s)) : s \in x}$, which is the image of $x$ under the function-class $s \mapsto (s, F(s))$, given by the formula $(\exists z)(q(s, z) \land t = (s, z))$. By (Rep), $F|_x$ is therefore a set.
+    
+    First, we prove uniqueness. Assuming that $F_1$ and $F_2$ both work, we prove $(\forall x)(F_1(x) = F_2(x))$ by $\in$-duction. Fix a set $x$ and assume $F_1(y) = F_2(y)$ for all $y \in x$. Then $F_1|_x = F_2|_x$, and thus $F_1(x) = G(F_1|_x) = G(F_2|_x) = F_2(x)$ as required.
+    
+    Now, we prove existence. We write ``$f$ is an attempt" to mean that $f$ is a function such that $\dom f$ is transitive and $(\forall x \in \dom f)(f(x) = G(f|_x))$.
+    
+    If $x \in \dom f$, then $x \subs \dom f$ by transitivity, and so $f|_x$ is well-defined. An easy $\in$-duction then yields the result that if $x$ is in the domain of two attempts $f$ and $g$, then $f(x) = g(x)$. A similar argument shows that $(\forall x)(\exists f)(``f \text{ is an attempt}" \land x \in \dom f)$.
+    
+    Fix a set $x$, and assume that for every $y \in x$, there is an attempt defined at $y$. The domain of this attempt contains the transitive closure $t$ of $\set y$, and the restriction of this attempt to $t$ is still an attempt. This means that for every $y \in x$, there is a unique attempt $f_y$ with $\dom f_y = t$.
+    
+    Then $\set{f_y : y \in x}$ is a set by (Rep), and $f' = \bigcup \set{f_y : y \in x}$ is an attempt with $x \subs \dom f'$. We can finally define $f = f' \cup \set{(x, G(f'|_x))}$.
+    
+    Let $q$ be the formula $(\exists f)(``f \text{ is an attempt}" \land y = f(x))$. Then $q$ defines a function-class $F$, and this is defined everywhere by the fact that every $x$ is in the domain of some attempt. By definition of an attempt, $(\forall x \in \dom f)(f(x) = G(f|_x))$ as required.
+\end{prf}
+
+\begin{note}
+	We can generalise $\in$-duction and $\in$-cursion to other relation-classes. These are formulae $r$ in two free variables, with the interpretation being a subset of $V \times V$. If the formula is $(x \in y)$, then the associated relation really is the $\in$ relation.
+\end{note}
+
+\begin{definition}[Well-Founded]
+    A relation-class $r$ is \textit{well-founded} if every non-empty set has an $r$-minimal member:
+    \[
+	(\forall x)
+	(\lnot (x \neq \varnothing) \Ra y \in x \land (\forall z \in x)(\lnot r(z, y))).
+	\]
+	A relation-class $r$ is \textit{local} if for every set $x$, the $r$-predecessors of $x$ form a set:
+	\[
+	(\forall x)(\exists y)(\forall z)(z \in y \Leftrightarrow r(z, x)).
+	\]
+\end{definition}
+
+\begin{corollary}
+    If $r$ is a local relation-class, then we can define the notion of $r$-closure, much like the notion of transitive closure. If $r$ is also well-founded, then we can prove $r$-duction and $r$-cursion.
+\end{corollary}
+
+\begin{corollary}
+    In what follows, we can restrict our attention to relations defined on sets. If $r$ is a relation on a set $a$ (that is, $r \subs a \times a$) then $r$ is automatically local. For any $x \in a$, we can simply form $\set{y \in a : r(x, y)}$ by (Sep). We thus only need to assume well-foundedness.
+\end{corollary}
+
+\begin{note}
+	This definition identifies the key properties of the $\in$ relation which were actually needed for $\in$-duction and $\in$-cursion. Both well-foundedness and locality were trivial for $\in$ (in fact, the former is simply given by the Axiom of Foundation).
+\end{note}
+
+\begin{note}
+	We often write $r(x, y)$ and $(y, x) \in r$ in the familiar way, as $xry$.
+\end{note}
+
+The next result shows that any well-founded relation on a set can be modelled by $\in$, provided that we assume a further property: extensionality.
+
+\begin{definition}[Extensional]
+    Let $r$ be a relation on a set $a$. We say that $r$ is \textit{extensional} if:
+    \[
+	(\forall x \in a)(\forall y \in a)
+	((\forall z \in a)(zrx \Leftrightarrow zry) \Ra x = y).
+	\]
+	That is, $x$ and $y$ are equal if they share the same $r$-predecessors. The Axiom of Extensionality is the statement that this holds for the $\in$ relation over the whole universe of sets. 
+\end{definition}
+
+We now use this to extend Proposition \ref{subset-collapse-result} to something more general and powerful.
+
+\begin{theorem}[Mostowski's Collapsing Theorem]
+	\label{mostowkis-collapsing-theorem}
+    Let $r$ be a well-founded extensional relation on a set $a$. Then there is a transitive set $b$ and a bijection $f : a \to b$ such that:
+    \[
+	(\forall x \in a)(\forall y \in a)
+	(yrx \Leftrightarrow f(y) \in f(x))
+	\]
+	Moreover, the pair $(b, f)$ is unique.
+\end{theorem}
+
+\begin{prf}
+    By $r$-cursion, there is a function-class $f$ with $(\forall x \in a)(f(x) = \set{f(y) : y \in a, yrx})$. Define $b = \set{f(x) : x \in a}$, which is a set by (Rep).
+    Since the collection of pairs $\set{(x, f(x)) : x \in a}$ is also a set by (Rep), we can take $f$ to be a function!
+    
+    We claim that this pair $(b, f)$ works. Firstly, $b$ is transitive: for any $z \in b$, there is some $x \in a$ with $z = f(x)$, and so $z = \set{f(y) : y \in a, yrx}$. Thus if $w \in z$, then by definition $y \in b$.
+    
+    Next, by definition $f$ is surjective, and for $x$ and $y$ in $a$, $yrx$ implies $f(y) \in f(x)$. It thus remains to show that $f$ is injective, which indeed will automatically prove that $f(y) \in f(x)$ implies $yrx$. This is as $f(y) \in f(x)$ means $f(y) = f(z)$ for some $z \in a$ with $zrx$, and so injectivity yields $y = z$.
+    
+    To show injectivity, we say ``$f$ is injective at $x$" to mean that $(\forall y \in a)(f(y) = f(x) \Ra y = x)$. We need then to show that $f$ is injective at $x$ for all $x \in a$, which we do by $r$-duction.
+    
+    We fix $x \in a$, and assume $f$ is injective at $s$ for all $s \in a$ with $srx$. Now, assume that $y \in a$ with $f(y) = f(x)$. That is, we have:
+    \[
+	\set{f(t) : t \in a, try} = \set{f(s) : s \in a, srx}
+	\]
+	By the induction hypothesis, $\set{t : t \in a, try} = \set{s : s \in a, srx}$, so by extensionality $y=x$.
+	
+	Now, we prove that this is in fact unique. Assume that $(b, f)$ and $(b', f')$ both work. We prove by $r$-duction that $(\forall x \in a)(f(x) = f'(x))$.
+	Fix some $x \in a$ and assume $f(y) = f'(y)$ for all $y \in a$ with $yrx$. Then if $w \in f(x)$, transitivity yields $w \in b$, so $w = f(y)$ for $y \in a$. Since $f(y) \in f(x)$, $yrx$, and by induction $w = f(y) = f'(y) \in f'(x)$. By symmetry, extensionality yields $f = f'$.
+\end{prf}
+
+\begin{note}
+	In some sense, $f$ is an order-isomorphism between $a$ with relation $r$ and $b$ with relation $b$. This is what we mean by $r$ being \textit{modelled} by $\in$.
+\end{note}
+
+\begin{corollary}
+    Since $\in$ is well-founded and extensional everywhere, we really did need both of these assumptions on $r$: this is the strongest possible result.
+\end{corollary}
+
+% ================================================================== %
+
+\subsection{Ordinals Redux}
+\label{section-set-theory-ordinals}
+
+Now, we make good on our promise from \S\ref{section-ordinals-ordinals-intro} to define ordinals more formally.
+
+\begin{definition}[Ordinal]
+	\label{ch5-formal-ordinal}
+    An \textit{ordinal} is a transitive set $\alpha$ which is well-ordered by $\in$. Equivalently, $\in$ is a linear order on $\alpha$, by the Axiom of Foundation.
+\end{definition}
+
+\begin{note}
+	For $a$ a set and $r$ a well-ordering of $a$, Mostowski's Collapsing Theorem yields a set $b$ such that $(a, r)$ is order-isomorphic to $(b, \in)$. That is, $b$ is an ordinal, and so by uniqueness for any set $a$ which is well-ordered, there is a unique ordinal $b$ isomorphic to this. We call this the \textit{order type}.
+\end{note}
+
+\begin{note}
+	We let ON denote the class of ordinals. This is a proper class, by the Burali-Forti paradox (Theorem \ref{burali-forti-paradox}). The order-isomorphism class of every well-ordered set has a unique ordinal in it.
+\end{note}
+
+We now wish to prove some familiar properties of ordinals using this new definition.
+
+\begin{proposition}[Ordinal Properties]
+    Let $\alpha$ and $\beta$ be ordinals, and $a$ be a set of ordinals. Then:
+    \begin{enumerate}
+	    \item[(i)] Every member of $\alpha$ is an ordinal.
+	    \item[(ii)] $\alpha \in \beta$ if and only if $\alpha < \beta$.
+		\item[(iii)] Either $\alpha \in \beta$, $\beta \in \alpha$, or $\alpha = \beta$, so $\in$ is a linear order on ON.
+		\item[(iv)] $\alpha^+ = \alpha \cup \set \alpha$.
+		\item[(v)] $\bigcup a$ is an ordinal, with $\bigcup \alpha = \sup a$.
+	\end{enumerate}
+\end{proposition}
+
+\begin{prf}
+    Since $\alpha$ is transitive, for $x \in \alpha$ we have $x = \set{y \in \alpha : y \in x}$, which is the proper initial segment $I_x$ of $\alpha$. Then (i) and (ii) follow immediately.
+    
+    Then, (iii) follows from (ii) and the trichotomy of the order-isomorphism relation (Theorem \ref{order-isomorphism-trichotomy}), given the fact that order-isomorphic ordinals are identical.
+    
+    We prove (iv) by letting $\gamma = \alpha \cup \set \alpha$ be the \textit{successor} of $\alpha$ (in the sense of ZF, rather than in the sense of ordinals from \S\ref{section-ordinals-ordinals-intro}). It is then straightforward to check that $\gamma$ is an ordinal: if $x \in \gamma$, then $x = \alpha$ or $x \in \alpha$, so $x$ is an ordinal. Furthermore, $\gamma$ conists of a maximum element $\alpha$ and the set $\alpha$ as a proper initial segment. So in fact $\gamma = \alpha^+$ in the sense of original ordinal arithmetic.
+    
+    Finally, we want to prove that $\bigcup a$ is an ordinal and that $\bigcup \alpha = \sup a$. The union of transitive sets is itself transitive, so indeed the first part of this holds. It then follows from (ii) and (iii) that we have $\beta \leq \alpha$ if and only if $\beta = \alpha$ or $\beta \in \alpha$ if and only if $\beta \subs \alpha$.
+    
+    But then $a$ is a nested set of well-ordered sets, which are each well-ordered by $\in$. Therefore, by Proposition \ref{nested-collection-upper-bound}, $\bigcup a$ is itself well-ordered by $\in$, and is therefore an ordinal itself. It is clear that $\bigcup a = \sup a$ in the original sense, completing the proof.
+\end{prf}
+
+\begin{note}
+	Recall from \S\ref{section-ordinals-order-isomorphism} that $\alpha < \beta$ means that $\alpha$ is order-isomorphic to a proper initial segment of $\beta$. The first two points show that $\beta$ really is the set of ordinals strictly less than $\beta$.
+\end{note}
+
+\begin{note}
+	Here, $\alpha^+$ is as in the chapter on ordinals: a well-ordered set with $\alpha$ a proper initial segment plus one more element which is a maximum. This has an order-type, and we prove here in (iv) that this is a successor of $\alpha$ in the new sense.
+\end{note}
+
+\begin{note}
+	Lastly, we see that a set $x$ of well-ordered sets has an upper bound. We prove here that it is equal to the union of the set!
+\end{note}
+
+\begin{example}[Ordinals up to $\omega$]
+    Firstly, $0 = \varnothing$ is an ordinal.
+    
+    By (iv) of the above proposition, an $\omega$-induction shows that every member of $\omega$ is an ordinal. By (v), we then see that $\bigcup \omega = \omega$ is also an ordinal, as it is transitive!
+    
+    Then $\omega = \sup \omega$, and so the $\omega$ from \S\ref{section-ordinals-ordinals-intro} really is the same as the smallest successor set (\ref{successor-set}) we defined earlier to be $\omega$.
+\end{example}
+
+% ================================================================== %
+
+\subsection{A Picture of the Universe}
+
+Now, our idea is to build up the set-theoretic universe $V$. We start with $\varnothing$, and repeatedly apply the operations $\wp$ and $\bigcup$, as we are allowed to do from the axioms (Pow) and (Un) of ZF.
+
+This gives us $\varnothing$, then $\wp\varnothing$, then $\wp\wp\varnothing$, and then $\bigcup\set{\varnothing, \wp\varnothing, \wp\wp\varnothing, \dots}$, and so on. This is starting to look quite familiar: this is very similar to how we constructed ordinals in \S\ref{section-ordinals-ordinals-intro}!
+
+Formally, we define sets $V_\alpha$ by $\in$-cursion, for any $\alpha \in \mathrm{ON}$. This process generates the \textit{von Neumann Hierarchy} of sets, which is an infinite hierarchy of sets with the ordinals along the middle.
+
+\ctikzfig{von-neumann-hierarchy}
+
+Our aim now is to show that \textit{every} set in the universe $V$ appears somewhere in this universe: if $X \in V$, then $X \in V_\alpha$ for some $\alpha \in \mathrm{ON}$. This is reminiscent of Hartog's Lemma (Theorem \ref{hartogs-lemma}), which stated that for any set $X$ there is always an ordinal which is ``bigger" than $X$.
+
+\begin{proposition}[Ordinal Transitivity]
+    $V_\alpha$ is transitive for all ordinals $\alpha \in \mathrm{ON}$.
+\end{proposition}
+
+\begin{prf}
+    We show this by $\in$-duction on $\alpha$., where the base case of $V_0 = \varnothing$ is obvious.
+    
+    If $\alpha = \beta + 1$, then assume $V_\beta$ is transitive. Let $x \in V_\alpha$ and $y \in x$. We need to show that $y \in V_\alpha$. But since $x \in V_\alpha = \wp V_\beta$, we have $y \in x \subs V_\beta$, and by transitivity of $V_\beta$ we have $y \subs V_\beta$. Therefore $y \in \wp V_\beta = V_\alpha$, exactly as required.
+    If $\alpha$ is a non-zero limit ordinal, then $V_\alpha$ is the union of the transitive sets $V_\beta$ for $\beta < \alpha$, and hence it is itself transitive.
+\end{prf}
+
+\begin{proposition}[Ordinal Nesting]
+    For all ordinals $\alpha \leq \beta$, we have $V_\alpha \subs V_\beta$.
+\end{proposition}
+
+\begin{prf}
+    We perform $\in$-duction on $\beta$. It is clearly enough to consider the case $\alpha < \beta$, which makes the base case of $\beta = 0$ trivial.
+    
+    If $\beta = \gamma + 1$, then $\alpha \leq \gamma$, so $V_\alpha \subs V_\gamma$, and so $V_\alpha \in \wp V_\gamma = V_\beta$. This is transitive, so $V_\alpha \subs V_\beta$.
+    If $\beta$ is a non-zero limit ordinal, then for $\alpha < \beta$, $V_\alpha \subs V_\beta$ by definition.
+\end{prf}
+
+Now, we are ready to prove that the von Neumann hierarchy really is exhaustive!
+
+\begin{theorem}[Exhaustivity of von Neumann Hierarchy]
+    The von Neumann hierarchy exhausts the set-theoretic universe $V$. That is, every set $x$ is a member of $V_\alpha$ for some ordinal $\alpha$: the sentence $(\forall x)(\exists \alpha \in \mathrm{ON})(x \in V_\alpha)$ holds in ZF.
+\end{theorem}
+
+\begin{prf}
+    If $x \in V_\alpha$, then $x \subs V_\alpha$ by transitivity. Conversely, if $x \subs V_\alpha$, then $x \in \wp V_\alpha = V_{\alpha + 1}$. But then this theorem is equivalent to the assertion that $(\forall x)(\exists \alpha \in \mathrm{ON})(x \subs V_\alpha)$.
+    
+    For any set $x$, the least ordinal $\alpha$ with $x \subs V_\alpha$ is called the \textit{rank} of $\alpha$, and denoted $\rank(x)$. We thus show that every set has a rank by $\in$-duction.
+    
+    Fix a set $x$, and assume that every $y \in x$ has a rank. Set $\alpha = \sup \set{\rank(y)^+ : y \in x}$. By (Rep), this is a valid construction. For $y \in x$, we have $y \subs V_{\rank(y)}$, and so $y \in V_{\rank(y) + 1} \subs V_\alpha$.
+    
+    But $y$ was an arbitrary element of $x$, so it follows immediately that $x \subs V_\alpha$.
+\end{prf}
+
+\begin{corollary}
+    Here, $\rank(x) \leq \sup \set{\rank(y)^+ : y \in x}$. In fact, we can prove a stronger result!
+\end{corollary}
+
+\begin{proposition}[Rank Relation]
+    Indeed, $\rank(x) = \sup \set{\rank(y)^+ : y \in x}$ for every set $x$.
+\end{proposition}
+
+\begin{prf}
+    We need only show that $x \in V_\alpha$ implies that $\rank(x) < \alpha$. If $x \in V_\alpha$, then $\alpha \neq 0$, so either:
+    \begin{itemize}
+	    \item $\alpha = \beta + 1$, in which case $x \in \wp V_\beta$, so $x \subs V_\beta$, and hence $\rank(x) \leq \beta < \alpha$, or
+	    \item $\alpha$ is a non-zero limit ordinal, in which case $x \in V_\beta$ for some $\beta < \alpha$. But then, since $V_\beta$ is transitive, we have $x \subs V_\beta$, which means $\rank(x) \leq \beta < \alpha$ once again.
+	\end{itemize}
+	If, $\alpha = \rank(x)$, then for any $y \in x$, $y \in V_\alpha$, and so $\rank(y) < \alpha$ as above. But then $\rank(y)^+ \leq \alpha$, so we have $\sup \set{\rank(y)^+ : y \in x} \leq \alpha = \rank(x)$ as required.
+\end{prf}
+
+\begin{corollary}
+    The above result and an easy $\in$-duction shows that $\rank(\alpha) = \alpha$ for all $\alpha \in \mathrm{ON}$.
+\end{corollary}
+
+% ================================================================== %
+
+\pagebreak
+\section{Cardinals}
+
+We are interested in the size of sets. For two sets $x$ and $y$, we introduce the notation ``$x \equiv y$" to mean ``$(\exists f)(``f \text{ is a bijection from $x$ to $y$})$".
+
+This defines an equivalence class on $V$. We want to define some sort of \textit{cardinality} of $x$ to be a set $\card(x)$ such that $\card(x) = \card(y)$ if and only if $x \equiv y$.
+
+A natural option is to take $\card(x)$ to be the $\equiv$-equivalence class $\set{y : y \equiv x}$. But in fact for any non-empty set $x$, this is a proper class (not a set), and so we cannot do this! Another more sensible option might be to instead take some representative of this class.
+
+We can certainly do this in ZFC (that is, given the Axiom of Choice) by choosing some arbitrary representative. Can we do something similar in ZF alone? It turns out we can!
+
+\begin{definition}[Cardinality in ZFC]
+    In ZFC, we define $\card(x)$ to be the least ordinal $\alpha \in \mathrm{ON}$ such that $\alpha \equiv x$.
+\end{definition}
+
+\begin{note}
+	This is always possible: the Axiom of Choice is equivalent to the Well-Ordering Principle by Theorem \ref{ac-zl-wop}, and so we can well-order $x$.
+\end{note}
+
+\begin{definition}[Cardinality in ZF]
+    In ZF, we define the \textit{essential rank} $\mathrm{ess} \rank(x)$ of a set $x$ to be the least ordinal $\alpha \in \mathrm{ON}$ such that there exists a set $y$ with $\rank(y) = \alpha$ and $y \equiv x$.
+    
+    Now, we can define the cardinality of a set $x$. Take $\alpha = \mathrm{ess} \rank(x)$, and consider $V_{\alpha + 1}$. We define the cardinality $\card(x) = \set{y \in V_{\alpha + 1} : y \equiv x}$.
+\end{definition}
+
+\begin{note}
+	In this chapter, we will work in ZFC from now on. Rather than focusing on the precise definition of cardinality, we care mainly about the rule ``$\card(x) = \card(y)$ if and only if $x \equiv y$".
+\end{note}
+
+\begin{definition}[Cardinal]
+    A set $m$ is called a \textit{cardinal} if $m = \card(x)$ for some set $x$.
+    
+    We say that $m$ is the \textit{cardinality} of $x$.
+\end{definition}
+
+% ================================================================== %
+
+\subsection{The Alephs}
+
+Let's consider a special type of ordinal. Remember that here, we use the formal set-theoretic notion of ordinals from \S\ref{section-set-theory-ordinals}, rather than the original definitions fron \S\ref{section-ordinals-ordinals-intro}. Of course, these are equivalent, but we use results about transitivity.
+
+\begin{definition}[Initial Ordinal]
+    An ordinal $\alpha$ is called an \textit{initial ordinal} if $(\forall \beta \in \mathrm{ON})(\beta < \alpha \Ra \lnot(\alpha \equiv \beta))$.
+\end{definition}
+
+\begin{example}[Initial Ordinals]
+    For any $x$, the Hartog ordinal constructed in the proof of Hartog's Lemma (Theorem \ref{hartogs-lemma}) is an initial ordinal. Similarly, for any $n \in \omega$, $\gamma(n) = n^+$ is also an initial ordinal, by an easy $\omega$-induction. Every member of $\omega$ is an initial ordinal, and thus so is $\omega$.
+\end{example}
+
+\begin{note}
+	Not every ordinal is an initial ordinal! $\omega^2$ is not an initial ordinal, as $\omega^2 \equiv \omega$. In fact, as $\omega$ is countably infinite, \textit{every} infinite countable ordinal bijects with $\omega$ (by definition of countability).
+\end{note}
+
+\begin{corollary}
+     The first initial ordinal after $\omega$ is $\omega_1$, the smallest uncountable ordinal.
+\end{corollary}
+
+In fact, we can list all initial ordinals!
+
+\begin{definition}[Recursive $\omega$-ordinals]
+    We define a series of ordinals $\omega_\alpha$ for $\alpha \in \mathrm{ON}$ using $\in$-cursion, with $\omega_0 = \omega$.
+    \begin{align*}
+	    \omega_{\alpha + 1} &= \gamma(\omega_\alpha) \\
+	    \omega_{\lambda} &= \sup \set{\omega_\alpha : \alpha < \lambda}
+	\end{align*}
+	where $\gamma(\omega_\alpha)$ refers to the Hartog ordinal, and $\lambda$ is a non-zero limit ordinal.
+\end{definition}
+
+\begin{proposition}[Initial Ordinals]
+    The ordinals $\omega_\alpha$ for $\alpha \in \mathrm{ON}$ are precisely the infinite initial ordinals.
+\end{proposition}
+
+\begin{prf}
+    For ordinals $\alpha < \beta$, if $\beta$ injects into $\alpha$, then by the Schr\"oder-Bernstein Theorem (\ref{schroder-bernstein-theorem}), we must have $\alpha \equiv \beta$. Thus if $\beta$ is an initial ordinal, then $\beta$ does not inject into $\alpha$ for any $\alpha < \beta$.
+    
+    We prove first that $\omega_\alpha$ is an initial ordinal for all $\alpha \in \mathrm{ON}$, using induction on $\alpha$. The cases where $\alpha = 0$ and $\alpha+1$ is a successor ordinal are trivial, so we consider the limit case of $\omega_\lambda$.
+    
+    Suppose that $\omega_\lambda = \gamma$ for some $\gamma < \omega_\lambda$. Then $\gamma < \omega_\beta$ for some $\beta < \lambda$, and so an easy induction on $\lambda$ shows that $\omega_\beta < \omega_\lambda$. But then $\omega_\beta$ injects into $\gamma$, which is a contradiction, since by the induction hypothesis $\omega_\beta$ is an initial ordinal.
+    
+    Conversely, let $\delta$ be an infinite initial ordinal. Once again, an easy induction shows that $\alpha < \omega_\alpha$ for all ordinals $\alpha \in \mathrm{ON}$. There is therefore a \textit{least} ordinal $\alpha$ with $\delta < \omega_\alpha$.
+    
+    Since $\delta$ is infinite, $\alpha \neq 0$. Also, if $\alpha$ is a limit ordinal, then $\delta < \omega_\beta$ for some $\beta < \alpha$, contradicting the minimality of $\alpha$, so in fact $\alpha$ is a successor.
+    
+    This means that for some ordinal $\beta \in \mathrm{ON}$, we have $\omega_\beta \leq \delta < \omega_{\beta + 1} = \gamma(\omega_\beta)$. By definition of $\gamma(\omega_\beta)$, $\delta$ must inject into $\omega_\beta$, and so since $\delta$ is an initial ordinal, we must have $\omega_\beta \equiv \delta$.
+\end{prf}
+
+\begin{definition}[Cardinal Numbers]
+    We write $\aleph_\alpha$ (pronounced ``aleph-alpha") for the cardinality $\card(\omega_\alpha)$.
+\end{definition}
+
+\begin{note}
+	In ZFC, the $\aleph$-numbers are the cardinalities of infinite sets. In ZF, we must restrict this definition to only the well-ordered sets, as we do not have the Well-Ordering Principle (\ref{well-ordering-principle}).
+\end{note}
+
+% ================================================================== %
+
+\subsection{Cardinal Arithmetic}
+
+\begin{note}
+	We often write $m$, $n$, and $p$ for cardinals and $M$, $N$, and $P$ for sets with these cardinalities.
+\end{note}
+
+\begin{definition}[Cardinal Ordering]
+    Write $m \leq n$ if $M$ injects into $N$, and $m < n$ if $m \leq n$ but $m \neq n$. This is well-defined (it does not depend on the specific choices of $M$ and $N$).
+\end{definition}
+
+\begin{corollary}
+    This relation yields a partial order on cardinals: the Schr\"oder-Bernstein Theorem proves antisymmetry, while transitivity is obvious by function composition.
+\end{corollary}
+
+\begin{corollary}
+    In fact, in ZFC $\leq$ yields a linear order on cardinals.
+\end{corollary}
+
+\begin{definition}[Cardinal Arithmetic]
+    We define $m + n = \card(M \sqcup N)$, $mn = \card(M \times N)$, and $m^n = \card(M^N)$. Here, the set $M^N$ refers to the set of functions from $N$ to $M$.
+    
+    Once again, these definitions are independent of the choices of $M$ and $N$.
+\end{definition}
+
+\begin{remark}[Properties of Cardinal Arithmetic]
+    We have commutativity and associativity of cardinal addition and multiplication:
+    \begin{align*}
+	    m + n = n + m \qquad (m + n) + p = m + (n + p) \\
+	    m \times n = n \times m \qquad (m \times n) \times p = m \times (n \times p)
+	\end{align*}
+	We also have distributivity: $(m+n)p = mp \times np$.
+	
+	Exponentiation also has familiar properties:
+	\[
+	(mn)^p = m^p \times n^p \qquad m^{n + p} = m^n \times m^p \qquad (m^n)^p = m^{np}.
+	\]
+	If $m \leq n$, then $m + p \leq n + p$, and $mp \leq np$. Additionally, $m^p \leq n^p$ and $p^m \leq p^n$. So cardinal arithmetic is quite intuitive and familiar! All of these properties can be checked by writing down injections between suitably chosen sets.
+\end{remark}
+
+\begin{proposition}[$m \leq 2^m$]
+    For any cardinal $m$, we have the inequality $m \leq 2^m$.
+\end{proposition}
+
+\begin{prf}
+    This follows by Cantor's diagonal argument, which shows that there is no surjection from $M \to 2^M = \set{0, 1}^M= \wp M$. Therefore $\aleph_0 < 2^{\aleph_0}$.
+\end{prf}
+
+\begin{note}
+	Compared to ordinal arithmetic, in which we had $\omega = 2^\omega$, cardinal arithmetic seems much more logical! Similarly, we have $2 \times \aleph_0 = \aleph_0 \times 2 = \aleph_0$, but $2 \times \omega = \omega \neq \omega \times 2$.
+\end{note}
+
+\begin{theorem}[Squaring Cardinals]
+    For all ordinals $\alpha$, we have $\aleph_\alpha \times \aleph_\alpha = \aleph_\alpha$.
+\end{theorem}
+
+\begin{prf}
+    We prove $\omega_\alpha \times \omega_\alpha \equiv \omega_\alpha$ by induction on $\alpha$. The base case is $\omega \times \omega \equiv \omega$, as required. Now, assume that for all $\beta < \alpha$, we have $\omega_\beta \times \omega_\beta \equiv \omega_\beta$. We define a well-ordering of $\omega_\alpha \times \omega_\alpha$ by:
+    \[
+	(x, y) < (w, z) \iff \begin{cases}
+		\max \set{x, y} < \max \set{w, z} \\
+		\max \set{x, y} = \max \set{w, z} = \delta
+		\text{ and either $y < z$ or $x < w$}.
+	\end{cases}
+	\]
+	Now, fix some $\delta \in \omega_\alpha \times \omega_\alpha$ and choose $\beta < \omega_\alpha$ such that $I_\delta \subs \beta \times \beta$. If $\delta = (x, y)$, then for example $\beta = \max \set{x, y} + 1$ is sufficient. By the induction hypothesis, either $\beta$ is finite or (as $\card(\beta) < \omega_\alpha$) we have $\beta \times \beta \equiv \beta$. Then $\card(I_\delta) \leq \card(\beta \times \beta) < \omega_\alpha$, and so the order type of $I_\delta$ is $\delta < \omega_\alpha$.
+	
+	But then $\omega_\alpha \times \omega_\alpha$ is a well-ordered set whose proper initial segments have order types less than $\omega_\alpha$, and so the order type of $\omega_\alpha \times \omega_\alpha$ is at most $\omega_\alpha$, which shows that $\aleph_\alpha \times \aleph_\alpha \leq \aleph_\alpha$.
+	
+	The reverse can be shown easily: $\aleph_\alpha \times \aleph_\alpha \geq  \aleph_\alpha \times 1 = \aleph_\alpha$, proving equality.
+\end{prf}
 
 \end{document}
