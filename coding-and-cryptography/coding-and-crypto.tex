@@ -11,7 +11,7 @@
 \name{Avish Kumar}
 \email{ak2461@cam.ac.uk}
 \website{https://ak1089.github.io/maths/notes}
-\version{1.23}
+\version{1.24}
 \disclaimer{These notes are unofficial and may contain errors. While they are written and published with permission, they are not endorsed by the lecturer or University.}
 
 % Auxiliary files
@@ -3785,6 +3785,7 @@ This is a very effective, near-unbreakable cryptosystem. However, it is computat
 % ================================================================== %
 
 \subsection{Key Exchange and Diffie-Hellman}
+\label{section-cryptography-key-exchange}
 
 For the problem of \textit{key sharing}, or \textit{key exchange}, Alice and Bob now wish to agree a secret key $k$ for communication. Once they have this key agreed, they can communicate using a shared symmetric cryptosystem, which is faster and easier.
 
@@ -3825,6 +3826,7 @@ To break this system and find $k$, Eve must compute $g^{\alpha\beta}$ using only
 % ================================================================== %
 
 \subsection{Signatures and Authenticity}
+\label{section-cryptography-signatures}
 
 We now consider another desideratum: message signatures. When Alice sends an encrypted secret message to Bob, she may have multiple goals in mind.
 
@@ -3921,12 +3923,103 @@ This $s$ has the property that $h(m) \equiv ur + ks \pmod{p-1}$. She then sends 
 
 \begin{prf}
     We have $v_1 \equiv y^r \cdot r^s \equiv (g^u)^r \cdot (g^k)^s \equiv g^{ur} \cdot g^{ks} \equiv g^{ur + ks} \equiv g^{h(m)} \equiv v_2 \pmod p$ if $v_1$ and $v_2$ are constructed correctly using the above signature scheme, where the crucial equivalence follows from the relation $h(m) \equiv ur + ks \pmod{p-1}$.
-    
-    It is harder to show that this signature is difficult to forge. Given some $m$, there is no other $m$ with the same $v_2 = g^{h(m)}$, so the attacker can only choose $r$ and $s$. But this only works out to the correct $v_1$ if $r$ and $s$ match the correct values, which can only be calculated knowing $u$.
 \end{prf}
+
+\begin{note}
+	It is harder to show that this signature is difficult to forge. Given some $m$, there is no other $m$ with the same $v_2 = g^{h(m)}$, so the attacker can only choose $r$ and $s$. But this only works out to the correct $v_1$ if $r$ and $s$ match the correct values, which can only be calculated knowing $u$. It is thus believed that forging signatures is at least as hard as the discrete logarithm problem.
+\end{note}
 
 \begin{note}
 	Of course, like any signature scheme, this is vulnerable to \textit{replay attacks}, where an attacker simply repeats a message they've already seen transmitted with the corresponding signature! To combat this attack, we can insist that each message comes with a ``nonce" (number used once, like a timestamp), which allows the recipient to ensure each message only comes through one time.
 \end{note}
+
+\begin{proposition}[ElGamal Choice of Key]
+    It is essential that a different choice of $k$ is used to sign each message.
+\end{proposition}
+
+\begin{prf}
+    If messages $m_1$ and $m_2$ are signed with key $k$ as $(r, s_1)$ and $(r, s_2)$, then:
+	\[
+	\left.\begin{aligned}
+		    h(m_1) &\equiv ur + ks_1 \\
+		    h(m_2) &\equiv ur + ks_2
+	\end{aligned}\right\rbrace \implies
+	h(m_1) - h(m_2) \equiv k(s_1 - s_2) \pmod{p-1}
+	\]
+	Let $d = (s_1 - s_2, p-1)$, and set:
+	\[
+	h' = \frac{h(m_1) - h(m_2)}{d} \qquad
+	s' = \frac{s_1 - s_2}{d} \qquad
+	p' = \frac{p_1 - p_2}{d}
+	\]
+	so that $h \equiv ks' \pmod{p'}$. As $(s', p') = 1$, we can solve for $k' \pmod{p'}$. Then $k \equiv k_0 \pmod{p'}$ for some $k_0$, and $k \equiv k_0 + \lambda p' \pmod{p-1}$ for some $0 \leq \lambda < d$. One can easily check these $d$ values to determine $k$ using $g^k \equiv r \pmod p$, and solve $h(m) \equiv ur + ks_1 \pmod{p-1}$ for $u$.
+\end{prf}
+
+% ================================================================== %
+
+\subsection{Bit Commitment and Secret Sharing}
+\label{section-cryptography-bit-commitment}
+
+Suppose Alice and Bob are playing a game, and want to decide who goes first by simulating a coin toss. However, they don't have access to a common source of randomness, and each worries that the other is going to cheat. They decide to use a scheme whereby each person chooses Heads/Tails, and Alice wins if the two choices match, while Bob wins otherwise.
+
+If Bob simply announces his coin toss, Alice can clearly just say that her choice was the opposite. To combat this, she may be forced to write her choice down and put it in a sealed envelope, so that she can't change it after finding out Bob's choice.
+
+How might we construct such a ``sealed envelope"? Alice wants to send a message such that:
+\begin{enumerate}
+    \item[(a)] Bob can see the message but cannot decipher it until Alice sends more information.
+    \item[(b)] Once Bob is given the key to the message, he can be confident that Alice has not changed her choice since the message was originally delivered.
+\end{enumerate}
+
+\begin{note}
+	Apart from simulating coin tossing for games, the problem of \textit{bit commitment} has a wide range of applications, from election design to financial transactions.
+\end{note}
+
+One solution is to use RSA. Bob cannot read the message until Alice sends the private key, and the message cannot be changed after being sent, nor can the prime factorisation be faked.
+
+Another solution is to use coding theory.
+
+\begin{remark}[Application of Coding Theory to Bit Commitment]
+    Suppose Alice and Bob have access to both a noisy and a clear channel. These are BSCs with error probabilities of $p$ and 0 respectively.
+    
+    Bob chooses a linear code $C$ of length $n$ with distance $d \ll np$. Alice chooses some linear map $\phi : C \to \F_2$. Both of these are publicly known. To send a bit $m \in \F_2$, Alice chooses some codeword $c$ such that $\phi(c) = m$, and sends it over the \textit{noisy} channel, so that Bob receives $r$.
+    
+    Later, when she wants to reveal the code, she sends $c$ again, but over the \textit{clear} channel. Bob verifies that $d(r, c) \approx np$. With very high probability (given good choices of $n$ and $d$), this scheme means Bob cannot read the message ahead of time, but also that Alice cannot cheat.
+    
+    Since $d \ll np$, Bob cannot recover $c$ from $r$ to find $m$, but it is less obvious that Alice cannot cheat. She knows that $d(r, c) \approx np$, but importantly, she does not know $r$ in advance! If she sends any other codeword $c'$ at reveal time, she will have to ensure that $d(r, c') \approx np$, and her only option is therefore to send some $c'$ very close to $c$. But then if $d$ is sufficiently large, this is not possible, since $d(c', c) \geq d$.
+    
+    Of course, due to noise, this is not always guaranteed to work, though the probability can be made sufficiently large by choosing very large $n$ and $d$.
+\end{remark}
+
+A third solution is to use hashing. Suppose Alice has a message $m \in \F_2$ to send. Suppose we have a hash function $h : \F_2^n \to \N$, where $n$ is a very large number. Then Alice picks something in $\F_2^{n-1}$ at random, and appends $m$ to the end to obtain $m' \in \F_2^n$.
+
+With this, she computes $h(m')$, and sends it to Bob. Bob cannot reverse this hash without trying every one of the $2^n$ elements in $\F_2^n$, which is intractable if $n$ is sufficiently large, or cracking the hash function (which is usually very difficult, if $h$ is well-designed).
+
+When Alice wants to reveal the message $m$, she sends $m'$, and Bob verifies that $h(m')$ is the hash he was originally told, so that Alice has not altered $m'$ from her original choice. Then $m$ is the last entry of $m'$, and so Alice has successfully committed this bit.
+
+\begin{note}
+	This last scheme generalises easily to arbitrary messages: simply append ``noise" (the key), hash the combination of the message and noise, and then reveal the key!
+\end{note}
+
+The last problem we will consider is that of \textit{secret sharing}. Suppose we have a group of people, and they each know a portion of a secret, such as the location of a military base, or the Coca-Cola recipe. For authorisation purposes, we want to make sure that any subgroup of $k$ people can put their knowledge together to gain access to the secret, but no fewer.
+
+That is, we want to ensure that no small group knows the secret, even if they put their information together, but any larger group knows it collectively!
+
+We can do this using linear polynomials. We choose $k$ coefficients $a_1, \dots, a_k$ at random, with $0 \leq a_j \leq p-1$, and choose distinct $x_1, \dots, x_n$ with $1 \leq x_j \leq p-1$. We set $a_0$ to be our secret $S$. Then, we may construct the polynomial $P$ of degree $k$ with:
+\[
+P(x) = a_0 + a_1 x + \dots + a_{k-1} x^{k-1}.
+\]
+Each person $r$ receives $x_r$ and $P(x_r)$. With any $k$ points, it is thus always possible to reconstitute the original polynomial $P(x)$, and then evaluate $P(0) = a_0 = S$. But if we have fewer points, there are many different polynomials which pass through the interpolated points, and so we cannot find the value of $P(0)$ for sure!
+
+\begin{remark}[Absolute Certainty]
+    A common thread across a lot of these schemes (and indeed the entire course) is that we often can never guarantee absolute certainty in a scheme working. Usually, the best we can do is to find a scheme which we can extend to large numbers and which reaches arbitrarily high probabilities of working if we do use large enough numbers.
+    
+    For example, in a BSC with non-zero error probability $p$, if we send a message of length $n$, there is a probability of at least $p^n$ that our message is corrupted to the zero string. There is no possible way we can avoid this, even in principle: no error correcting scheme can possibly deal with this! In real life, what we do is put bounds on how likely an error can possibly be, and then navigate the frontier of the tradeoff between accuracy and efficiency: supposing we are willing to accept a 1\% chance of error, how efficiently can we transmit a message?
+    
+    A similar result goes for the Berlekamp-Massey algorithm from \S\ref{section-algebraic-berlekamp-massey}. Without other guarantees on the behaviour of our sequence, we can never find the correct generating function with 100\% certainty in finite time, only find the minimal polynomial which works on what we have seen.
+    
+    Finally, many of these principles hold for cryptography. With any cryptosystem, there is a non-zero probability that the attacker Eve guesses the correct key on the first try, and then it is impossible to stop her deciphering the code without also preventing Bob from doing so! Likewise, any hash function is reversible on the first try with non-zero probability, any $N$ can be factorised on the first guess of a random prime, and any discrete logarithm can be found by guessing correctly on the first try.
+    
+    In mathematics, we are often tempted to draw distinctions between \textit{absolute certainty} and \textit{possibility of failure}: what can happen and what cannot. In real life, however, it is often not worth caring about any probability which is sufficiently small! An event which has only a one-in-a-googleplex chance of occurring will almost certainly never happen in the entire life of the universe, and so it is \textit{not worth worrying about} when constructing schemes for the real world, even though avoiding it may be an interesting theoretical problem.
+\end{remark}
 
 \end{document}
